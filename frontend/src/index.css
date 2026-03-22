@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;800;900&family=Share+Tech+Mono&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #020D05;
+  font-family: 'Exo 2', sans-serif;
+  color: #86EFAC;
+  overflow-x: hidden;
+}
+
+/* Organic noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(34,197,94,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(74,222,128,0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(22,163,74,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Root network pattern background */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cpath d='M60 60 Q80 40 100 20 M60 60 Q40 40 20 20 M60 60 Q90 70 110 90 M60 60 Q30 70 10 90 M60 60 Q60 30 60 0 M60 60 Q60 90 60 120' stroke='%2322C55E' stroke-width='0.3' fill='none' opacity='0.06'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* All content above backgrounds */
+#root { position: relative; z-index: 1; }
+
+/* Custom scrollbar — vine style */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #020D05; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #22C55E, #16A34A);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover { background: #4ADE80; }
+
+/* ── ANIMATIONS ─────────────────────────────────────── */
+
+@keyframes grow {
+  from { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+  to   { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+}
+
+@keyframes pulseEco {
+  0%,100% { box-shadow: 0 0 8px rgba(34,197,94,0.3); }
+  50%     { box-shadow: 0 0 24px rgba(34,197,94,0.6), 0 0 48px rgba(34,197,94,0.2); }
+}
+
+@keyframes vineGrow {
+  from { stroke-dashoffset: 1000; opacity: 0; }
+  to   { stroke-dashoffset: 0;    opacity: 1; }
+}
+
+@keyframes floatUp {
+  0%,100% { transform: translateY(0) rotate(0deg);   opacity: 0.6; }
+  50%     { transform: translateY(-20px) rotate(5deg); opacity: 1; }
+}
+
+@keyframes chlorophyll {
+  0%,100% { filter: hue-rotate(0deg)   brightness(1);   }
+  33%     { filter: hue-rotate(15deg)  brightness(1.1); }
+  66%     { filter: hue-rotate(-10deg) brightness(0.95); }
+}
+
+@keyframes cellDivide {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  50%  { transform: scale(1.15); opacity: 1;   }
+  100% { transform: scale(1);   opacity: 0.6; }
+}
+
+@keyframes rootSpread {
+  from { stroke-dashoffset: 500; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes pollenFloat {
+  0%   { transform: translateY(100vh) translateX(0)    rotate(0deg);   opacity: 0;   }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(-100px) translateX(30px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes leafSway {
+  0%,100% { transform: rotate(-3deg) scale(1); }
+  50%     { transform: rotate(3deg)  scale(1.02); }
+}
+
+@keyframes bioGlow {
+  0%,100% { text-shadow: 0 0 10px rgba(74,222,128,0.5), 0 0 20px rgba(34,197,94,0.3); }
+  50%     { text-shadow: 0 0 20px rgba(74,222,128,0.8), 0 0 40px rgba(34,197,94,0.5), 0 0 60px rgba(22,163,74,0.3); }
+}
+
+@keyframes sprout {
+  0%   { transform: scaleY(0) translateY(10px); opacity: 0; }
+  60%  { transform: scaleY(1.1) translateY(-2px); opacity: 1; }
+  100% { transform: scaleY(1) translateY(0); opacity: 1; }
+}
+
+@keyframes dataFlow {
+  0%   { stroke-dashoffset: 100; opacity: 0.3; }
+  50%  { opacity: 1; }
+  100% { stroke-dashoffset: 0;   opacity: 0.3; }
+}
+
+/* ── ECO CARD BASE ──────────────────────────────────── */
+.eco-card {
+  background:    #071A0C;
+  border:        1px solid #1A4A25;
+  border-radius: 12px;
+  position:      relative;
+  overflow:      hidden;
+  transition:    all 0.25s ease;
+}
+
+.eco-card:hover {
+  border-color:  #22C55E;
+  box-shadow:    0 0 20px rgba(34,197,94,0.15),
+                 inset 0 0 20px rgba(34,197,94,0.03);
+}
+
+/* Organic corner decoration */
+.eco-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 60px; height: 60px;
+  background: radial-gradient(circle at top left, rgba(34,197,94,0.08), transparent);
+  pointer-events: none;
+}
+
+/* ── ECO LABEL ──────────────────────────────────────── */
+.eco-label {
+  font-family:    'Share Tech Mono', monospace;
+  font-size:      9px;
+  color:          rgba(34,197,94,0.5);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* ── ECO HEADING ────────────────────────────────────── */
+.eco-heading {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  color:       #4ADE80;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: bioGlow 4s ease infinite;
+}
+
+/* ── VINE BORDER ────────────────────────────────────── */
+.vine-border {
+  position: relative;
+}
+.vine-border::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    #22C55E 20%,
+    #4ADE80 50%,
+    #22C55E 80%,
+    transparent
+  );
+  animation: dataFlow 3s ease infinite;
+}
+
+/* ── BIOLUMINESCENT BUTTON ──────────────────────────── */
+.bio-button {
+  background:    rgba(34,197,94,0.1);
+  border:        1px solid #22C55E;
+  border-radius: 8px;
+  color:         #4ADE80;
+  font-family:   'Exo 2', sans-serif;
+  font-weight:   700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor:        pointer;
+  transition:    all 0.2s;
+  position:      relative;
+  overflow:      hidden;
+}
+.bio-button:hover {
+  background:  rgba(34,197,94,0.2);
+  box-shadow:  0 0 20px rgba(34,197,94,0.3),
+               0 0 40px rgba(34,197,94,0.1);
+  transform:   translateY(-1px);
+}
+.bio-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg,
+    transparent 30%,
+    rgba(74,222,128,0.1) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+}
+.bio-button:hover::before {
+  transform: translateX(100%);
+}
+
+/* ── INPUT FIELD ────────────────────────────────────── */
+input, select, textarea {
+  background:    #040F07 !important;
+  border:        1px solid #1A4A25 !important;
+  border-radius: 8px !important;
+  color:         #86EFAC !important;
+  font-family:   'Share Tech Mono', monospace !important;
+}
+input:focus, select:focus {
+  border-color:  #22C55E !important;
+  box-shadow:    0 0 12px rgba(34,197,94,0.2) !important;
+  outline:       none !important;
+}
+
+/* Range sliders */
+input[type="range"] { accent-color: #22C55E; }
+
+/* ── PROGRESS BARS ──────────────────────────────────── */
+.eco-bar {
+  height:        6px;
+  background:    rgba(34,197,94,0.1);
+  border-radius: 3px;
+  overflow:      hidden;
+}
+.eco-bar-fill {
+  height:        100%;
+  border-radius: 3px;
+  background:    linear-gradient(90deg, #16A34A, #22C55E, #4ADE80);
+  box-shadow:    0 0 8px rgba(34,197,94,0.4);
+  transition:    width 0.8s ease;
+}
+
+html { scroll-behavior: smooth; }

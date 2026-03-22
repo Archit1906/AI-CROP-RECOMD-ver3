@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\archi\OneDrive\Desktop\AI PROJECT\Croprecomd\backend\ml\test.py", line 9, in <module>
+    c.fit(X, y)
+  File "C:\Users\archi\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\base.py", line 1329, in wrapper
+    estimator._validate_params()
+  File "C:\Users\archi\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\base.py", line 492, in _validate_params
+    validate_parameter_constraints(
+  File "C:\Users\archi\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_param_validation.py", line 98, in validate_parameter_constraints
+    raise InvalidParameterError(
+sklearn.utils._param_validation.InvalidParameterError: The 'cv' parameter of CalibratedClassifierCV must be an int in the range [2, inf), an object implementing 'split' and 'get_n_splits', an iterable or None. Got 'prefit' instead.
