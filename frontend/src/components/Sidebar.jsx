@@ -189,7 +189,7 @@ const Sidebar = () => {
         {/* Replay Intro button */}
         <button
           onClick={() => {
-            sessionStorage.removeItem('seed_intro_shown')
+            sessionStorage.removeItem('intro_shown')
             window.location.reload()
           }}
           style={{

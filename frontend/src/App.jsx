@@ -11,16 +11,16 @@ import Chatbot from './pages/Chatbot';
 import GovernmentSchemes from './pages/GovernmentSchemes';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { useState } from 'react';
-import SeedToForest from './components/SeedToForest';
+import VineIntro from './components/VineIntro';
 import EcoBg from './components/EcoBg';
 
 export default function App() {
   const [introComplete, setIntroComplete] = useState(
-    () => sessionStorage.getItem('seed_intro_shown') === 'true'
+    () => sessionStorage.getItem('intro_shown') === 'true'
   )
 
   const handleIntroComplete = () => {
-    sessionStorage.setItem('seed_intro_shown', 'true')
+    sessionStorage.setItem('intro_shown', 'true')
     setIntroComplete(true)
   }
 
@@ -28,7 +28,7 @@ export default function App() {
     <ThemeProvider>
       <EcoBg />
       {!introComplete && (
-        <SeedToForest onComplete={handleIntroComplete} />
+        <VineIntro onComplete={handleIntroComplete} />
       )}
       <div style={{
         opacity: introComplete ? 1 : 0,
