@@ -2,7 +2,7 @@ import { useRef, useCallback } from 'react'
 
 export default function DialKnob({
   label, value, min, max, unit, optimal_min, optimal_max,
-  color = '#22C55E', onChange, size = 120
+  color = 'var(--primary)', onChange, size = 120
 }) {
   const svgRef = useRef(null)
   const dragging = useRef(false)
@@ -81,7 +81,7 @@ export default function DialKnob({
       {/* Label */}
       <p style={{
         fontFamily:"'Share Tech Mono', monospace",
-        fontSize: 9, color:'#22C55E88',
+        fontSize: 9, color:'var(--primary-dim)',
         letterSpacing: 3, textTransform:'uppercase',
         margin: 0, textAlign:'center'
       }}>
@@ -95,11 +95,11 @@ export default function DialKnob({
 
         {/* Outer ring decoration */}
         <circle cx={CX} cy={CY} r={R + 8} fill="none"
-          stroke="#22C55E11" strokeWidth={1} strokeDasharray="4 6" />
+          stroke="var(--primary-glow)" strokeWidth={1} strokeDasharray="4 6" />
 
         {/* Track arc (background) */}
         <path d={describeArc(START_ANGLE, END_ANGLE, R)}
-          fill="none" stroke="#22C55E22" strokeWidth={8}
+          fill="none" stroke="var(--primary-glow)" strokeWidth={8}
           strokeLinecap="round" />
 
         {/* Optimal range arc */}
@@ -117,18 +117,18 @@ export default function DialKnob({
 
         {/* Start dot */}
         <circle cx={startPt.x} cy={startPt.y} r={3}
-          fill="#22C55E44" />
+          fill="var(--primary-dim)" />
 
         {/* End dot */}
         <circle cx={endPt.x} cy={endPt.y} r={3}
-          fill="#22C55E44" />
+          fill="var(--primary-dim)" />
 
         {/* Thumb indicator */}
         {(() => {
           const tp = polarToXY(fillAngle, R)
           return (
             <circle cx={tp.x} cy={tp.y} r={6}
-              fill={arcColor} stroke="#020D05" strokeWidth={2}
+              fill={arcColor} stroke='var(--bg)' strokeWidth={2}
               style={{ filter:`drop-shadow(0 0 6px ${arcColor})` }} />
           )
         })()}
@@ -149,7 +149,7 @@ export default function DialKnob({
 
         {/* Optimal indicator dot */}
         <circle cx={CX} cy={CY + 26} r={3}
-          fill={isOptimal ? '#00FF41' : '#22C55E44'}
+          fill={isOptimal ? '#00FF41' : 'var(--primary-dim)'}
           style={{ filter: isOptimal ? 'drop-shadow(0 0 4px #00FF41)' : 'none' }} />
       </svg>
       
@@ -163,9 +163,9 @@ export default function DialKnob({
         }}
         style={{
           width:70, textAlign:'center',
-          background:'#020D05',
-          border:'1px solid #22C55E44',
-          borderRadius:2, color:'#22C55E',
+          background:'var(--bg)',
+          border:'1px solid var(--primary-dim)',
+          borderRadius:2, color:'var(--primary)',
           fontFamily:"'Share Tech Mono'",
           fontSize:11, padding:'4px 6px',
           outline:'none'
@@ -175,7 +175,7 @@ export default function DialKnob({
       {/* Optimal range label */}
       <p style={{
         fontFamily:"'Share Tech Mono'", fontSize:8,
-        color: isOptimal ? '#00FF4188' : '#22C55E55',
+        color: isOptimal ? '#00FF4188' : 'var(--primary)55',
         margin:0, letterSpacing:1
       }}>
         {isOptimal ? '// OPTIMAL' : `OPT: ${optimal_min}–${optimal_max}`}

@@ -135,13 +135,13 @@ export default function GovernmentSchemes() {
   const getCountdown = (deadlineStr) => {
     const deadline = new Date(deadlineStr)
     const diff     = deadline - now
-    if (diff <= 0) return { label:t('gov_nge.expired'), color:'#16A34A', urgent:true, expired:true }
+    if (diff <= 0) return { label:t('gov_nge.expired'), color:'var(--primary)', urgent:true, expired:true }
     const days    = Math.floor(diff / 86400000)
     const hours   = Math.floor((diff % 86400000) / 3600000)
     const minutes = Math.floor((diff % 3600000) / 60000)
     const seconds = Math.floor((diff % 60000) / 1000)
-    if (days === 0)  return { label:`${hours}h ${minutes}m ${seconds}s`, color:'#16A34A', urgent:true,  expired:false }
-    if (days <= 7)   return { label:`${days}d ${hours}h left`,           color:'#16A34A', urgent:true,  expired:false }
+    if (days === 0)  return { label:`${hours}h ${minutes}m ${seconds}s`, color:'var(--primary)', urgent:true,  expired:false }
+    if (days <= 7)   return { label:`${days}d ${hours}h left`,           color:'var(--primary)', urgent:true,  expired:false }
     if (days <= 30)  return { label:`${days} days left`,                 color:'#A3E635', urgent:false, expired:false }
     return              { label:`${days} days left`,                     color:'#00FF41', urgent:false, expired:false }
   }
@@ -170,7 +170,7 @@ export default function GovernmentSchemes() {
   }
 
   return (
-    <div style={{ padding:24, background:'#020D05', minHeight:'100vh' }}>
+    <div style={{ padding:24, background:'var(--bg)', minHeight:'100vh' }}>
 
       {/* Header */}
       <div style={{ display:'flex', justifyContent:'space-between',
@@ -178,17 +178,17 @@ export default function GovernmentSchemes() {
                     paddingBottom:0 }}>
         <div>
           <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
-                      color:'#22C55E66', letterSpacing:4, margin:'0 0 6px' }}>
+                      color:'var(--primary-dim)', letterSpacing:4, margin:'0 0 6px' }}>
             {t('gov_nge.clr_req')}
           </p>
           <h1 style={{ fontFamily:"'Exo 2'", fontSize:28, fontWeight:900,
-                       color:'#22C55E', margin:'0 0 6px', letterSpacing:4,
-                       textShadow:'0 0 20px #22C55E66' }}>
+                       color:'var(--primary)', margin:'0 0 6px', letterSpacing:4,
+                       textShadow:'0 0 20px var(--primary-dim)' }}>
             {t('gov_nge.title')}
           </h1>
           <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-            <span style={{ background:'#22C55E33', border:'1px solid #16A34A',
-                           color:'#16A34A', fontFamily:"'Share Tech Mono'",
+            <span style={{ background:'var(--primary-dim)', border:'1px solid var(--primary)',
+                           color:'var(--primary)', fontFamily:"'Share Tech Mono'",
                            fontSize:9, padding:'2px 8px', letterSpacing:2 }}>
               {t('gov_nge.restricted')}
             </span>
@@ -203,8 +203,8 @@ export default function GovernmentSchemes() {
           {/* Refresh button */}
           <button onClick={handleRefresh} style={{
             padding: '8px 14px', background: 'transparent',
-            border: '1px solid #22C55E44', borderRadius: 2,
-            color: '#22C55E66', fontFamily: "'Courier New'",
+            border: '1px solid var(--primary-dim)', borderRadius: 2,
+            color: 'var(--primary-dim)', fontFamily: "'Courier New'",
             fontSize: 9, letterSpacing: 2, cursor: 'pointer',
             display: 'flex', alignItems: 'center'
           }}>
@@ -214,7 +214,7 @@ export default function GovernmentSchemes() {
           {/* Bookmarks toggle */}
           <button onClick={() => setShowBookmarked(!showBookmarked)}
             style={{
-              padding:'10px 16px', border:`1px solid ${showBookmarked ? '#A3E635' : '#22C55E44'}`,
+              padding:'10px 16px', border:`1px solid ${showBookmarked ? '#A3E635' : 'var(--primary-dim)'}`,
               background: showBookmarked ? '#A3E63522' : 'transparent',
               color: showBookmarked ? '#A3E635' : '#666680',
               fontFamily:"'Exo 2'", fontSize:10, letterSpacing:2,
@@ -226,11 +226,11 @@ export default function GovernmentSchemes() {
           {/* Verify Clearance — opens eligibility checker */}
           <button onClick={() => setEligibilityScheme('all')}
             style={{
-              padding:'10px 20px', border:'1px solid #86EFAC',
-              background:'#86EFAC11', color:'#86EFAC',
+              padding:'10px 20px', border:'1px solid var(--tertiary)',
+              background:'var(--tertiary)11', color:'var(--tertiary)',
               fontFamily:"'Exo 2'", fontSize:10, letterSpacing:2,
               cursor:'pointer', borderRadius:2,
-              boxShadow:'0 0 15px #86EFAC22'
+              boxShadow:'0 0 15px var(--tertiary)22'
             }}>
             {t('gov_nge.verify_clr')}
           </button>
@@ -248,13 +248,13 @@ export default function GovernmentSchemes() {
       {/* Stats bar */}
       <div style={{ display:'flex', gap:12, marginBottom:20 }}>
         {[
-          { label:t('gov_nge.tot_dir'), value:stats.total || 0,                               color:'#22C55E' },
+          { label:t('gov_nge.tot_dir'), value:stats.total || 0,                               color:'var(--primary)' },
           { label:t('gov_nge.act_sch'),   value:stats.active || 0,                              color:'#00FF41' },
           { label:t('gov_nge.new_seas'),  value:stats.isNew || 0,                               color:'#A3E635' },
-          { label:t('gov_nge.expired'),          value:stats.expired || 0,                             color:'#16A34A' },
+          { label:t('gov_nge.expired'),          value:stats.expired || 0,                             color:'var(--primary)' },
         ].map(stat => (
           <div key={stat.label} style={{
-            background:'#040F07', border:`1px solid ${stat.color}33`,
+            background:'var(--bg-deep)', border:`1px solid ${stat.color}33`,
             borderRadius:2, padding:'10px 16px', flex:1, textAlign:'center'
           }}>
             <p style={{ fontFamily:"'Exo 2'", fontSize:20, fontWeight:900,
@@ -271,20 +271,20 @@ export default function GovernmentSchemes() {
       </div>
 
       {/* Search + Filters — FIX: all wired to state */}
-      <div style={{ background:'#040F07', border:'1px solid #22C55E44',
-                    borderLeft:'3px solid #22C55E', borderRadius:2,
+      <div style={{ background:'var(--bg-deep)', border:'1px solid var(--primary-dim)',
+                    borderLeft:'3px solid var(--primary)', borderRadius:2,
                     padding:'16px', marginBottom:20 }}>
         <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
-                    color:'#22C55E66', letterSpacing:3, margin:'0 0 10px' }}>
+                    color:'var(--primary-dim)', letterSpacing:3, margin:'0 0 10px' }}>
           {t('gov_nge.idx_query')}
         </p>
         <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
           {/* Search input — FIX: onChange wired */}
           <div style={{ flex:1, minWidth:200, display:'flex',
                         alignItems:'center', gap:8,
-                        background:'#020D05', border:'1px solid #22C55E44',
+                        background:'var(--bg)', border:'1px solid var(--primary-dim)',
                         borderRadius:2, padding:'8px 12px' }}>
-            <span style={{ color:'#22C55E66' }}>⌕</span>
+            <span style={{ color:'var(--primary-dim)' }}>⌕</span>
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder={t("gov_nge.search_pl")}
               style={{ background:'transparent', border:'none', outline:'none',
@@ -292,7 +292,7 @@ export default function GovernmentSchemes() {
                        fontSize:12, letterSpacing:1, width:'100%' }} />
             {search && (
               <button onClick={() => setSearch('')}
-                style={{ background:'none', border:'none', color:'#22C55E',
+                style={{ background:'none', border:'none', color:'var(--primary)',
                          cursor:'pointer', fontSize:14 }}>×</button>
             )}
           </div>
@@ -302,9 +302,9 @@ export default function GovernmentSchemes() {
             <button key={f.key} onClick={() => setActiveFilter(f.key)}
               style={{
                 padding:'8px 14px', border:'1px solid',
-                borderColor: activeFilter===f.key ? '#22C55E' : '#22C55E33',
-                background:  activeFilter===f.key ? '#22C55E22' : 'transparent',
-                color:       activeFilter===f.key ? '#22C55E'   : '#666680',
+                borderColor: activeFilter===f.key ? 'var(--primary)' : 'var(--primary-dim)',
+                background:  activeFilter===f.key ? 'var(--primary-glow)' : 'transparent',
+                color:       activeFilter===f.key ? 'var(--primary)'   : '#666680',
                 fontFamily:"'Exo 2'", fontSize:9,
                 letterSpacing:2, cursor:'pointer', borderRadius:2,
                 transition:'all 0.15s'
@@ -343,18 +343,18 @@ export default function GovernmentSchemes() {
       {schemes.filter(s => s.is_expired).length > 0 && (
         <div style={{ marginBottom: 16 }}>
           <p style={{ fontFamily: "'Courier New'", fontSize: 8,
-                       color: '#22C55E44', letterSpacing: 3, margin: '0 0 8px' }}>
+                       color: 'var(--primary-dim)', letterSpacing: 3, margin: '0 0 8px' }}>
             {t('gov_nge.exp_dir')} {schemes.filter(s => s.is_expired).length} {t('gov_nge.sch_closed')}
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {schemes.filter(s => s.is_expired).map(s => (
               <div key={s.id} style={{
-                background: '#1A0000', border: '1px solid #22C55E22',
+                background: '#1A0000', border: '1px solid var(--primary-glow)',
                 borderRadius: 2, padding: '6px 12px',
                 opacity: 0.5
               }}>
                 <p style={{ fontFamily: "'Courier New'", fontSize: 9,
-                             color: '#16A34A', margin: 0,
+                             color: 'var(--primary)', margin: 0,
                              textDecoration: 'line-through', letterSpacing: 1 }}>
                   {s.name}
                 </p>
@@ -369,13 +369,13 @@ export default function GovernmentSchemes() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 16 }}>
           {[1,2,3,4,5,6].map(i => (
             <div key={i} style={{
-              background: '#040F07', border: '1px solid #22C55E11',
+              background: 'var(--bg-deep)', border: '1px solid var(--primary-glow)',
               borderRadius: 4, padding: 20, height: 280,
               animation: 'shimmer 1.5s infinite'
             }}>
-              <div style={{ height: 12, background: '#22C55E11', borderRadius: 2, marginBottom: 12 }} />
-              <div style={{ height: 20, background: '#22C55E11', borderRadius: 2, marginBottom: 8, width: '60%' }} />
-              <div style={{ height: 60, background: '#22C55E11', borderRadius: 2 }} />
+              <div style={{ height: 12, background: 'var(--primary-glow)', borderRadius: 2, marginBottom: 12 }} />
+              <div style={{ height: 20, background: 'var(--primary-glow)', borderRadius: 2, marginBottom: 8, width: '60%' }} />
+              <div style={{ height: 60, background: 'var(--primary-glow)', borderRadius: 2 }} />
             </div>
           ))}
         </div>
@@ -385,7 +385,7 @@ export default function GovernmentSchemes() {
       {filtered.length === 0 ? (
         <div style={{ textAlign:'center', padding:'60px 20px' }}>
           <p style={{ fontFamily:"'Exo 2'", fontSize:16,
-                      color:'#22C55E44', letterSpacing:4 }}>
+                      color:'var(--primary-dim)', letterSpacing:4 }}>
             {t('gov_nge.no_dir')}
           </p>
           <p style={{ fontFamily:"'Share Tech Mono'", color:'#444',
@@ -403,8 +403,8 @@ export default function GovernmentSchemes() {
             return (
               <div key={scheme.id}
                 style={{
-                  background:'#040F07',
-                  border:`1px solid ${isExpanded ? scheme.color : '#22C55E33'}`,
+                  background:'var(--bg-deep)',
+                  border:`1px solid ${isExpanded ? scheme.color : 'var(--primary-dim)'}`,
                   borderTop:`2px solid ${scheme.color}`,
                   borderRadius:2, padding:'20px',
                   transition:'all 0.2s', position:'relative',
@@ -441,7 +441,7 @@ export default function GovernmentSchemes() {
                   <button onClick={() => toggleBookmark(scheme.id)}
                     style={{
                       background: isBookmarked ? '#A3E63522' : 'transparent',
-                      border:`1px solid ${isBookmarked ? '#A3E635' : '#22C55E33'}`,
+                      border:`1px solid ${isBookmarked ? '#A3E635' : 'var(--primary-dim)'}`,
                       color: isBookmarked ? '#A3E635' : '#666680',
                       padding:'6px 8px', cursor:'pointer', borderRadius:2,
                       fontSize:14, transition:'all 0.15s'
@@ -461,7 +461,7 @@ export default function GovernmentSchemes() {
                   </span>
                   {scheme.tags.map(tag => (
                     <span key={tag} style={{
-                      background:'#22C55E11', color:'#22C55E88',
+                      background:'var(--primary-glow)', color:'var(--primary-dim)',
                       fontFamily:"'Share Tech Mono'", fontSize:8,
                       padding:'2px 8px', letterSpacing:2, borderRadius:1
                     }}>
@@ -485,7 +485,7 @@ export default function GovernmentSchemes() {
                   {scheme.description}
                 </p>
 
-                <div style={{ borderTop:'1px solid #22C55E22', paddingTop:12, marginBottom:12 }}>
+                <div style={{ borderTop:'1px solid var(--primary-glow)', paddingTop:12, marginBottom:12 }}>
                   <p style={{ fontFamily:"'Share Tech Mono'", fontSize:8,
                                color:'#666680', margin:'0 0 4px', letterSpacing:2 }}>
                     {t('gov_nge.grant_amt')}
@@ -531,7 +531,7 @@ export default function GovernmentSchemes() {
                 {/* EXPANDED DETAIL VIEW */}
                 {isExpanded && (
                   <div style={{
-                    background:'#020D05', border:`1px solid ${scheme.color}33`,
+                    background:'var(--bg)', border:`1px solid ${scheme.color}33`,
                     borderRadius:2, padding:'14px', marginBottom:12
                   }}>
                     <div style={{ marginBottom:10 }}>
@@ -540,7 +540,7 @@ export default function GovernmentSchemes() {
                         {t('gov_nge.reqs')}
                       </p>
                       <p style={{ fontFamily:"'Share Tech Mono'", fontSize:11,
-                                   color:'#86EFAC', margin:0 }}>
+                                   color:'var(--tertiary)', margin:0 }}>
                         {scheme.eligibility.toUpperCase()}
                       </p>
                     </div>
@@ -591,8 +591,8 @@ export default function GovernmentSchemes() {
                     style={{
                       padding:'10px 12px',
                       background:'transparent',
-                      border:'1px solid #22C55E44',
-                      color:'#22C55E',
+                      border:'1px solid var(--primary-dim)',
+                      color:'var(--primary)',
                       fontFamily:"'Share Tech Mono'", fontSize:14,
                       cursor:'pointer', borderRadius:1,
                       transition:'all 0.15s'
@@ -618,25 +618,25 @@ export default function GovernmentSchemes() {
           onClick={e => { if(e.target===e.currentTarget) { setEligibilityScheme(null); setEligibilityResult(null) }}}>
 
           <div style={{
-            background:'#040F07', border:'1px solid #86EFAC',
+            background:'var(--bg-deep)', border:'1px solid var(--tertiary)',
             borderRadius:4, padding:28, width:'100%', maxWidth:520,
-            boxShadow:'0 0 40px #86EFAC22'
+            boxShadow:'0 0 40px var(--tertiary)22'
           }}>
             <div style={{ display:'flex', justifyContent:'space-between',
                           alignItems:'center', marginBottom:20 }}>
               <div>
                 <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
-                             color:'#86EFAC88', letterSpacing:3, margin:'0 0 4px' }}>
+                             color:'var(--tertiary)88', letterSpacing:3, margin:'0 0 4px' }}>
                   {t('gov_nge.evs')}
                 </p>
                 <h2 style={{ fontFamily:"'Exo 2'", fontSize:16, fontWeight:700,
-                              color:'#86EFAC', margin:0, letterSpacing:3 }}>
+                              color:'var(--tertiary)', margin:0, letterSpacing:3 }}>
                   {t('gov_nge.vc_title')}
                 </h2>
               </div>
               <button onClick={() => { setEligibilityScheme(null); setEligibilityResult(null) }}
-                style={{ background:'none', border:'1px solid #22C55E44',
-                         color:'#22C55E', fontSize:18, cursor:'pointer',
+                style={{ background:'none', border:'1px solid var(--primary-dim)',
+                         color:'var(--primary)', fontSize:18, cursor:'pointer',
                          width:32, height:32, borderRadius:2 }}>
                 ×
               </button>
@@ -653,14 +653,14 @@ export default function GovernmentSchemes() {
                 ].map(field => (
                   <div key={field.key} style={{ marginBottom:16 }}>
                     <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
-                                 color:'#22C55E88', letterSpacing:3, margin:'0 0 6px' }}>
+                                 color:'var(--primary-dim)', letterSpacing:3, margin:'0 0 6px' }}>
                       // {field.label}
                     </p>
                     {field.type === 'select' ? (
                       <select value={eligibilityForm[field.key]}
                         onChange={e => setEligibilityForm(p => ({...p, [field.key]:e.target.value}))}
-                        style={{ width:'100%', background:'#020D05',
-                                 border:'1px solid #22C55E66', borderRadius:2,
+                        style={{ width:'100%', background:'var(--bg)',
+                                 border:'1px solid var(--primary-dim)', borderRadius:2,
                                  color:'#E8E8E8', fontFamily:"'Share Tech Mono'",
                                  padding:'10px 12px', outline:'none' }}>
                         {field.options.map(o => <option key={o} value={o}>{o.toUpperCase()}</option>)}
@@ -670,8 +670,8 @@ export default function GovernmentSchemes() {
                         placeholder={field.placeholder}
                         value={eligibilityForm[field.key]}
                         onChange={e => setEligibilityForm(p => ({...p, [field.key]:e.target.value}))}
-                        style={{ width:'100%', background:'#020D05',
-                                 border:'1px solid #22C55E66', borderRadius:2,
+                        style={{ width:'100%', background:'var(--bg)',
+                                 border:'1px solid var(--primary-dim)', borderRadius:2,
                                  color:'#E8E8E8', fontFamily:"'Share Tech Mono'",
                                  padding:'10px 12px', outline:'none' }} />
                     )}
@@ -680,10 +680,10 @@ export default function GovernmentSchemes() {
 
                 <button onClick={checkEligibility}
                   style={{ width:'100%', padding:'12px',
-                           background:'#86EFAC22', border:'1px solid #86EFAC',
-                           color:'#86EFAC', fontFamily:"'Exo 2'",
+                           background:'var(--tertiary)22', border:'1px solid var(--tertiary)',
+                           color:'var(--tertiary)', fontFamily:"'Exo 2'",
                            fontSize:11, letterSpacing:3, cursor:'pointer',
-                           borderRadius:2, boxShadow:'0 0 15px #86EFAC22' }}>
+                           borderRadius:2, boxShadow:'0 0 15px var(--tertiary)22' }}>
                   {t('gov_nge.init_scan')}
                 </button>
               </>
@@ -706,7 +706,7 @@ export default function GovernmentSchemes() {
                     <div key={s.id} style={{
                       display:'flex', justifyContent:'space-between',
                       alignItems:'center', padding:'8px 12px',
-                      borderBottom:'1px solid #22C55E11'
+                      borderBottom:'1px solid var(--primary-glow)'
                     }}>
                       <span style={{ fontFamily:"'Share Tech Mono'", fontSize:11, color:'#E8E8E8' }}>
                         {s.icon} {s.name}
@@ -721,8 +721,8 @@ export default function GovernmentSchemes() {
 
                 <button onClick={() => { setEligibilityResult(null); setEligibilityScheme(null) }}
                   style={{ width:'100%', padding:'10px',
-                           background:'#22C55E22', border:'1px solid #22C55E',
-                           color:'#22C55E', fontFamily:"'Exo 2'",
+                           background:'var(--primary-glow)', border:'1px solid var(--primary)',
+                           color:'var(--primary)', fontFamily:"'Exo 2'",
                            fontSize:10, letterSpacing:3, cursor:'pointer', borderRadius:2 }}>
                   {t('gov_nge.close_term')}
                 </button>

@@ -27,11 +27,11 @@ const WELCOME_MESSAGES = {
 function TypingIndicator() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px',
-                  background: '#020D05', border: '1px solid #22C55E44', borderRadius: '4px',
+                  background: 'var(--bg)', border: '1px solid var(--primary-dim)', borderRadius: '4px',
                   width: 'fit-content', maxWidth: 80 }}>
       {[0,1,2].map(i => (
         <div key={i} style={{
-          width: 8, height: 8, borderRadius: '2px', background: '#22C55E',
+          width: 8, height: 8, borderRadius: '2px', background: 'var(--primary)',
           animation: 'pulse-nge 1.2s ease infinite',
           animationDelay: `${i * 0.2}s`
         }} />
@@ -65,15 +65,15 @@ function Message({ msg }) {
         <div style={{
           padding: '12px 16px',
           borderRadius: '2px',
-          background: isUser ? '#1A0500' : '#020D05',
-          border: `1px solid ${isUser ? '#22C55E' : '#00FF4144'}`,
-          color: isUser ? '#22C55E' : '#00FF41',
+          background: isUser ? '#1A0500' : 'var(--bg)',
+          border: `1px solid ${isUser ? 'var(--primary)' : '#00FF4144'}`,
+          color: isUser ? 'var(--primary)' : '#00FF41',
           fontFamily: "'Share Tech Mono', monospace",
           fontSize: 13,
           lineHeight: 1.6,
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
-          boxShadow: isUser ? '0 0 10px #22C55E22' : 'inset 0 0 10px #00FF4111'
+          boxShadow: isUser ? '0 0 10px var(--primary-glow)' : 'inset 0 0 10px #00FF4111'
         }}>
           {msg.content}
         </div>
@@ -92,7 +92,7 @@ function Message({ msg }) {
       {isUser && (
         <div style={{
           width: 32, height: 32, borderRadius: '2px',
-          background: '#22C55E22', border: '1px solid #22C55E',
+          background: 'var(--primary-glow)', border: '1px solid var(--primary)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 16, flexShrink: 0
         }}>👤</div>
@@ -180,13 +180,13 @@ export default function Chatbot() {
   return (
     <div className="hex-bg" style={{
       height: '100vh', display: 'flex', flexDirection: 'column',
-      background: '#020D05', position: 'relative'
+      background: 'var(--bg)', position: 'relative'
     }}>
 
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #0D2914, #040F07)',
-        borderBottom: '1px solid #22C55E',
+        background: 'linear-gradient(135deg, var(--bg-elevated), var(--bg-deep))',
+        borderBottom: '1px solid var(--primary)',
         padding: '14px 20px',
         display: 'flex', alignItems: 'center',
         justifyContent: 'space-between',
@@ -195,13 +195,13 @@ export default function Chatbot() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
             width: 44, height: 44, borderRadius: '2px',
-            background: '#22C55E22',
+            background: 'var(--primary-glow)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 22, border: '1px solid #22C55E',
-            boxShadow: '0 0 10px #22C55E44'
+            fontSize: 22, border: '1px solid var(--primary)',
+            boxShadow: '0 0 10px var(--primary-dim)'
           }}>🤖</div>
           <div>
-            <p style={{ color: '#22C55E', fontWeight: 900, fontSize: 18, margin: 0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 2, textShadow: '0 0 10px #22C55E88' }}>
+            <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: 18, margin: 0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 2, textShadow: '0 0 10px var(--primary-dim)' }}>
               {t('chat_nge.title')}
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
@@ -218,7 +218,7 @@ export default function Chatbot() {
         <div style={{ position: 'relative' }}>
           <button onClick={() => setShowLangMenu(!showLangMenu)}
             style={{
-              background: '#020D05', border: '1px solid #22C55E66',
+              background: 'var(--bg)', border: '1px solid var(--primary-dim)',
               borderRadius: 2, color: '#E8E8E8', padding: '8px 12px',
               cursor: 'pointer', fontSize: 12, fontFamily: "'Share Tech Mono', monospace",
               display: 'flex', alignItems: 'center', gap: 6
@@ -229,7 +229,7 @@ export default function Chatbot() {
           {showLangMenu && (
             <div style={{
               position: 'absolute', top: '110%', right: 0,
-              background: '#040F07', border: '1px solid #22C55E',
+              background: 'var(--bg-deep)', border: '1px solid var(--primary)',
               borderRadius: 2, overflow: 'hidden', zIndex: 100,
               minWidth: 140
             }}>
@@ -238,10 +238,10 @@ export default function Chatbot() {
                   onClick={() => { i18n.changeLanguage(lang.code); setShowLangMenu(false) }}
                   style={{
                     display: 'block', width: '100%', padding: '10px 16px',
-                    background: language === lang.code ? '#22C55E22' : 'transparent',
-                    border: 'none', color: language === lang.code ? '#22C55E' : '#666680',
+                    background: language === lang.code ? 'var(--primary-glow)' : 'transparent',
+                    border: 'none', color: language === lang.code ? 'var(--primary)' : '#666680',
                     cursor: 'pointer', textAlign: 'left', fontSize: 12, fontFamily: "'Share Tech Mono', monospace",
-                    borderLeft: language === lang.code ? '3px solid #22C55E' : '3px solid transparent'
+                    borderLeft: language === lang.code ? '3px solid var(--primary)' : '3px solid transparent'
                   }}>
                   {lang.label} — {lang.full}
                 </button>
@@ -277,8 +277,8 @@ export default function Chatbot() {
       {/* Input Bar Fixed Bottom */}
       <div style={{
         position: 'fixed', bottom: 0, left: 240, right: 0,
-        padding: '16px 24px', background: '#040F07',
-        borderTop: '1px solid #22C55E', zIndex: 10
+        padding: '16px 24px', background: 'var(--bg-deep)',
+        borderTop: '1px solid var(--primary)', zIndex: 10
       }}>
         {/* Quick Suggestion Chips */}
         {messages.length <= 1 && (
@@ -286,14 +286,14 @@ export default function Chatbot() {
             {QUICK_SUGGESTIONS.map((s, i) => (
               <button key={i} onClick={() => sendMessage(t('chat_nge.' + s.key))}
                 style={{
-                  padding: '6px 14px', borderRadius: 2, border: '1px solid #22C55E66',
-                  background: '#020D05', color: '#E8E8E8', fontSize: 11, cursor: 'pointer',
+                  padding: '6px 14px', borderRadius: 2, border: '1px solid var(--primary-dim)',
+                  background: 'var(--bg)', color: '#E8E8E8', fontSize: 11, cursor: 'pointer',
                   transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 6,
                   fontFamily: "'Share Tech Mono', monospace"
                 }}
-                onMouseEnter={e => { e.target.style.borderColor = '#22C55E'; e.target.style.background = '#22C55E22'; e.target.style.color = '#22C55E' }}
-                onMouseLeave={e => { e.target.style.borderColor = '#22C55E66'; e.target.style.background = '#020D05'; e.target.style.color = '#E8E8E8' }}>
-                <span style={{color: '#22C55E'}}>{t('chat_nge.query')}</span> {t('chat_nge.' + s.key)}
+                onMouseEnter={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.background = 'var(--primary-glow)'; e.target.style.color = 'var(--primary)' }}
+                onMouseLeave={e => { e.target.style.borderColor = 'var(--primary-dim)'; e.target.style.background = 'var(--bg)'; e.target.style.color = '#E8E8E8' }}>
+                <span style={{color: 'var(--primary)'}}>{t('chat_nge.query')}</span> {t('chat_nge.' + s.key)}
               </button>
             ))}
           </div>
@@ -311,23 +311,23 @@ export default function Chatbot() {
             disabled={loading}
             autoFocus
             style={{
-              flex: 1, background: '#020D05', border: '1px solid #22C55E66',
-              borderRadius: 2, color: '#22C55E', padding: '12px 16px',
+              flex: 1, background: 'var(--bg)', border: '1px solid var(--primary-dim)',
+              borderRadius: 2, color: 'var(--primary)', padding: '12px 16px',
               fontSize: 14, outline: 'none', pointerEvents: 'all', cursor: 'text',
-              caretColor: '#22C55E',
+              caretColor: 'var(--primary)',
               fontFamily: "'Share Tech Mono', monospace",
               textTransform: 'uppercase'
             }}
-            onFocus={e => { e.target.style.borderColor = '#22C55E'; e.target.style.boxShadow = '0 0 10px #22C55E33'; }}
-            onBlur={e => { e.target.style.borderColor = '#22C55E66'; e.target.style.boxShadow = 'none'; }}
+            onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 10px var(--primary-dim)'; }}
+            onBlur={e => { e.target.style.borderColor = 'var(--primary-dim)'; e.target.style.boxShadow = 'none'; }}
           />
           <button
             onClick={() => sendMessage()}
             disabled={!input.trim() || loading}
             style={{
-              height: 44, borderRadius: 2, border: '1px solid #22C55E',
-              background: input.trim() && !loading ? '#22C55E22' : '#040F07',
-              color: input.trim() && !loading ? '#22C55E' : '#666680',
+              height: 44, borderRadius: 2, border: '1px solid var(--primary)',
+              background: input.trim() && !loading ? 'var(--primary-glow)' : 'var(--bg-deep)',
+              color: input.trim() && !loading ? 'var(--primary)' : '#666680',
               fontSize: 12, cursor: input.trim() && !loading ? 'pointer' : 'not-allowed',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               transition: 'all 0.15s', pointerEvents: 'all', padding: '0 24px',

@@ -130,13 +130,13 @@ function WheatHero() {
 
   // Data nodes — also shift with mouse for 3D effect
   const dataNodes = [
-    { bx:8,  by:30, label:'93%',  sub:'ACCURACY',    color:'#4ADE80', depth:0.8 },
+    { bx:8,  by:30, label:'93%',  sub:'ACCURACY',    color:'var(--secondary)', depth:0.8 },
     { bx:22, by:18, label:'22',   sub:'CROP TYPES',  color:'#A3E635', depth:0.5 },
-    { bx:50, by:12, label:'38',   sub:'DISEASES',    color:'#22C55E', depth:1.0 },
-    { bx:75, by:20, label:'3',    sub:'LANGUAGES',   color:'#86EFAC', depth:0.4 },
+    { bx:50, by:12, label:'38',   sub:'DISEASES',    color:'var(--primary)', depth:1.0 },
+    { bx:75, by:20, label:'3',    sub:'LANGUAGES',   color:'var(--tertiary)', depth:0.4 },
     { bx:88, by:32, label:'500+', sub:'MANDIS',      color:'#FDE047', depth:0.7 },
-    { bx:35, by:55, label:'140M', sub:'FARMERS',     color:'#22C55E', depth:0.3 },
-    { bx:65, by:50, label:'85%',  sub:'DISEASE ACC', color:'#4ADE80', depth:0.6 },
+    { bx:35, by:55, label:'140M', sub:'FARMERS',     color:'var(--primary)', depth:0.3 },
+    { bx:65, by:50, label:'85%',  sub:'DISEASE ACC', color:'var(--secondary)', depth:0.6 },
   ].map(n => ({
     ...n,
     x: n.bx + (mx - 0.5) * 8 * n.depth,
@@ -159,20 +159,20 @@ function WheatHero() {
             <stop offset="100%" stopColor="#052e16" stopOpacity="1" />
           </linearGradient>
           <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#020D05" />
-            <stop offset="55%" stopColor="#071A0C" stopOpacity="0.5" />
+            <stop offset="0%" stopColor='var(--bg)' />
+            <stop offset="55%" stopColor='var(--bg-card)' stopOpacity="0.5" />
             <stop offset="100%" stopColor="#166534" stopOpacity="0.6" />
           </linearGradient>
           <linearGradient id="stalkGrad" x1="0" y1="1" x2="0" y2="0">
             <stop offset="0%"   stopColor="#052e16" />
             <stop offset="40%"  stopColor="#166534" />
-            <stop offset="80%"  stopColor="#22C55E" />
-            <stop offset="100%" stopColor="#4ADE80" />
+            <stop offset="80%"  stopColor='var(--primary)' />
+            <stop offset="100%" stopColor='var(--secondary)' />
           </linearGradient>
           <linearGradient id="stalkGrad2" x1="0" y1="1" x2="0" y2="0">
             <stop offset="0%"   stopColor="#052e16" />
             <stop offset="50%"  stopColor="#15803D" />
-            <stop offset="100%" stopColor="#16A34A" />
+            <stop offset="100%" stopColor="var(--primary)" />
           </linearGradient>
           <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="0.6" result="blur" />
@@ -187,13 +187,13 @@ function WheatHero() {
             <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
           <linearGradient id="scan" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#22C55E" stopOpacity="0" />
-            <stop offset="50%"  stopColor="#22C55E" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#22C55E" stopOpacity="0" />
+            <stop offset="0%"   stopColor='var(--primary)' stopOpacity="0" />
+            <stop offset="50%"  stopColor='var(--primary)' stopOpacity="0.15" />
+            <stop offset="100%" stopColor='var(--primary)' stopOpacity="0" />
           </linearGradient>
           <radialGradient id="mouseGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#22C55E" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#22C55E" stopOpacity="0"    />
+            <stop offset="0%"   stopColor='var(--primary)' stopOpacity="0.12" />
+            <stop offset="100%" stopColor='var(--primary)' stopOpacity="0"    />
           </radialGradient>
         </defs>
 
@@ -213,7 +213,7 @@ function WheatHero() {
         <ellipse cx="50" cy="92"
           rx={60 + mx * 10}
           ry={18 + Math.sin(time * 0.5) * 3}
-          fill="#22C55E"
+          fill='var(--primary)'
           opacity={0.05 + Math.sin(time * 0.4) * 0.02}
         />
 
@@ -237,7 +237,7 @@ function WheatHero() {
             <ellipse key={i}
               cx={tx} cy={88 - th / 2}
               rx={2} ry={th / 2}
-              fill="#071A0C" opacity="0.9" />
+              fill='var(--bg-card)' opacity="0.9" />
           )
         })}
 
@@ -249,7 +249,7 @@ function WheatHero() {
           <line key={i}
             x1="-5" y1={87.5 + i * 1.8}
             x2="105" y2={87.5 + i * 1.8}
-            stroke="#22C55E" strokeWidth="0.06" opacity="0.2" />
+            stroke='var(--primary)' strokeWidth="0.06" opacity="0.2" />
         ))}
 
         {/* Underground root network */}
@@ -259,10 +259,10 @@ function WheatHero() {
           return (
             <g key={i} opacity="0.2">
               <path d={`M${rx} 87 Q${rx+6} 93 ${rx+4} 100`}
-                fill="none" stroke="#22C55E" strokeWidth="0.25"
+                fill="none" stroke='var(--primary)' strokeWidth="0.25"
                 strokeDasharray="2.5 2" strokeDashoffset={-flow * 4.5} />
               <path d={`M${rx} 87 Q${rx-5} 94 ${rx-7} 100`}
-                fill="none" stroke="#16A34A" strokeWidth="0.18"
+                fill="none" stroke="var(--primary)" strokeWidth="0.18"
                 strokeDasharray="2 2.5" strokeDashoffset={-flow * 3.5} />
               <path d={`M${rx} 88 Q${rx+2} 95 ${rx} 100`}
                 fill="none" stroke="#15803D" strokeWidth="0.15"
@@ -334,7 +334,7 @@ function WheatHero() {
               return (
                 <ellipse key={gi} cx={gx} cy={gy}
                   rx={0.45} ry={0.9}
-                  fill={gi % 3 === 0 ? '#FDE047' : gi % 3 === 1 ? '#A3E635' : '#22C55E'}
+                  fill={gi % 3 === 0 ? '#FDE047' : gi % 3 === 1 ? '#A3E635' : 'var(--primary)'}
                   opacity={0.65 + Math.sin(time + i + gi) * 0.2}
                   transform={`rotate(${s.totalSway * 8 + gi * 51}, ${gx}, ${gy})`}
                 />
@@ -347,7 +347,7 @@ function WheatHero() {
                    ${s.ctrl2Y - 2.5}
                    ${s.ctrl2X + 7 * Math.cos(time * 0.8 + i) + (mx-0.5)*4}
                    ${s.ctrl2Y - 0.5}`}
-              fill="none" stroke="#22C55E"
+              fill="none" stroke='var(--primary)'
               strokeWidth="0.7" opacity="0.45"
             />
           </g>
@@ -359,7 +359,7 @@ function WheatHero() {
           const px = ((-5 + i * 7.2 + time * (4 + i % 3 * 2) + drift * (i % 4 * 0.5)) % 110 + 110) % 110 - 5
           const py = 10 + ((i * 11.3 + time * (2 + i % 3)) % 75)
           const ps = 0.12 + (i % 5) * 0.06
-          const colors = ['#A3E635', '#4ADE80', '#FDE047', '#22C55E', '#86EFAC']
+          const colors = ['#A3E635', 'var(--secondary)', '#FDE047', 'var(--primary)', 'var(--tertiary)']
           return (
             <circle key={i} cx={px} cy={py} r={ps}
               fill={colors[i % 5]}
@@ -386,7 +386,7 @@ function WheatHero() {
               <line key={`conn-${i}-${j}`}
                 x1={node.x} y1={node.y}
                 x2={other.x} y2={other.y}
-                stroke="#22C55E"
+                stroke='var(--primary)'
                 strokeWidth="0.15"
                 opacity={0.15 + Math.sin(time * 0.8 + i) * 0.1}
                 strokeDasharray="1.5 2.5"
@@ -440,7 +440,7 @@ function WheatHero() {
         <defs>
           <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
             <stop offset="0%"   stopColor="transparent" />
-            <stop offset="100%" stopColor="#020D05" stopOpacity="0.85" />
+            <stop offset="100%" stopColor='var(--bg)' stopOpacity="0.85" />
           </radialGradient>
         </defs>
         <rect width="100" height="100" fill="url(#vignette)" />
@@ -450,7 +450,7 @@ function WheatHero() {
           const sx = cx < 50 ? 1 : -1
           const sy = cy < 50 ? 1 : -1
           return (
-            <g key={i} stroke="#22C55E" strokeWidth="0.35" opacity="0.35">
+            <g key={i} stroke='var(--primary)' strokeWidth="0.35" opacity="0.35">
               <line x1={cx} y1={cy} x2={cx+sx*6} y2={cy} />
               <line x1={cx} y1={cy} x2={cx}        y2={cy+sy*6} />
             </g>
@@ -459,18 +459,18 @@ function WheatHero() {
 
         {/* Bottom HUD */}
         <rect x="0" y="97.5" width="100" height="0.2"
-          fill="#22C55E" opacity="0.2" />
-        <text x="2" y="99.5" fill="#22C55E"
+          fill='var(--primary)' opacity="0.2" />
+        <text x="2" y="99.5" fill='var(--primary)'
           fontSize="1.3" fontFamily="'Share Tech Mono'" opacity="0.3">
           // ECO INTELLIGENCE // AMRITKRISHI v2.0 // ALL SYSTEMS ACTIVE
         </text>
 
         {/* Live dot top right */}
         <circle cx="97" cy="3" r="0.7"
-          fill="#4ADE80"
+          fill='var(--secondary)'
           opacity={0.5 + Math.sin(time * 4) * 0.4}
         />
-        <text x="98.5" y="4" fill="#4ADE80"
+        <text x="98.5" y="4" fill='var(--secondary)'
           fontSize="1.6" fontFamily="'Share Tech Mono'" opacity="0.6">
           LIVE
         </text>
@@ -493,7 +493,7 @@ function FeatureCard({ icon, title, desc, stat, statLabel, color, path, index, n
       onClick={() => navigate(path)}
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
       style={{
-        background:    'linear-gradient(145deg, #071A0C, #0A2010)',
+        background:    'linear-gradient(145deg, var(--bg-card), #0A2010)',
         border:        `1px solid ${color}22`,
         borderTop:     `2px solid ${color}`,
         borderRadius:  16,
@@ -528,7 +528,7 @@ function FeatureCard({ icon, title, desc, stat, statLabel, color, path, index, n
         fontFamily:    "'Cabinet Grotesk', sans-serif",
         fontSize:      18,
         fontWeight:    800,
-        color:         '#D1FAE5',
+        color:         'var(--text-primary)',
         margin:        '0 0 8px',
         letterSpacing: 0.5
       }}>
@@ -538,7 +538,7 @@ function FeatureCard({ icon, title, desc, stat, statLabel, color, path, index, n
       <p style={{
         fontFamily:  "'Satoshi', sans-serif",
         fontSize:    14,
-        color:       'rgba(110,231,183,0.6)',
+        color:       'var(--text-second)',
         lineHeight:  1.7,
         margin:      '0 0 20px'
       }}>
@@ -613,7 +613,7 @@ function StatBlock({ value, suffix, prefix, label, sublabel, color, index }) {
         fontFamily:    "'Satoshi', sans-serif",
         fontSize:      14,
         fontWeight:    700,
-        color:         '#D1FAE5',
+        color:         'var(--text-primary)',
         marginBottom:  4,
         letterSpacing: 0.5
       }}>
@@ -642,8 +642,8 @@ function TestimonialCard({ quote, name, location, crop, index }) {
       animate={inView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.15 }}
       style={{
-        background:    'linear-gradient(145deg, #071A0C, #040F07)',
-        border:        '1px solid #1A4A25',
+        background:    'linear-gradient(145deg, var(--bg-card), var(--bg-deep))',
+        border:        '1px solid var(--border)',
         borderRadius:  16,
         padding:       28,
         position:      'relative',
@@ -677,7 +677,7 @@ function TestimonialCard({ quote, name, location, crop, index }) {
           <div style={{
             fontFamily: "'Cabinet Grotesk'",
             fontSize:   15, fontWeight: 700,
-            color:      '#4ADE80'
+            color:      'var(--secondary)'
           }}>
             {name}
           </div>
@@ -691,10 +691,10 @@ function TestimonialCard({ quote, name, location, crop, index }) {
         </div>
         <div style={{
           background:    'rgba(34,197,94,0.1)',
-          border:        '1px solid rgba(34,197,94,0.2)',
+          border:        '1px solid var(--primary-glow)',
           borderRadius:  8, padding:       '4px 10px',
           fontFamily:    "'Share Tech Mono'",
-          fontSize:      10, color:         '#4ADE80',
+          fontSize:      10, color:         'var(--secondary)',
           letterSpacing: 1
         }}>
           {crop}
@@ -722,19 +722,19 @@ export default function Dashboard() {
 
   const FEATURES = [
     {
-      icon:'🌾', color:'#22C55E', path:'/crop',
+      icon:'🌾', color:'var(--primary)', path:'/crop',
       title:'AI Crop Recommendation',
       desc:'Select your state and district. Our AI analyzes live soil and weather data to recommend the highest-yield crop with full farming guide.',
       stat:'93%', statLabel:'accuracy'
     },
     {
-      icon:'🔬', color:'#4ADE80', path:'/disease',
+      icon:'🔬', color:'var(--secondary)', path:'/disease',
       title:'Plant Disease Scanner',
       desc:'Upload a leaf photo. Our MobileNetV2 neural network identifies 38 disease classes across 12 crops and delivers instant treatment protocol.',
       stat:'38', statLabel:'diseases detected'
     },
     {
-      icon:'🌤️', color:'#86EFAC', path:'/weather',
+      icon:'🌤️', color:'var(--tertiary)', path:'/weather',
       title:'Weather Intelligence',
       desc:'Live weather for every Indian city with farming-specific alerts — drought warnings, frost risk, fungal conditions, and optimal sowing windows.',
       stat:'7-day', statLabel:'forecast'
@@ -760,9 +760,9 @@ export default function Dashboard() {
   ]
 
   const STATS = [
-    { value:'140', suffix:'M+', prefix:'',  label:'Indian Farmers',    sublabel:'TARGET USERS',      color:'#22C55E'  },
-    { value:'93',  suffix:'%',  prefix:'',  label:'Crop AI Accuracy',  sublabel:'RANDOM FOREST MODEL', color:'#4ADE80' },
-    { value:'85',  suffix:'%',  prefix:'',  label:'Disease Detection', sublabel:'MOBILENETV2 CNN',    color:'#86EFAC'  },
+    { value:'140', suffix:'M+', prefix:'',  label:'Indian Farmers',    sublabel:'TARGET USERS',      color:'var(--primary)'  },
+    { value:'93',  suffix:'%',  prefix:'',  label:'Crop AI Accuracy',  sublabel:'RANDOM FOREST MODEL', color:'var(--secondary)' },
+    { value:'85',  suffix:'%',  prefix:'',  label:'Disease Detection', sublabel:'MOBILENETV2 CNN',    color:'var(--tertiary)'  },
     { value:'500', suffix:'+',  prefix:'',  label:'Mandi Locations',   sublabel:'LIVE PRICE FEEDS',   color:'#FDE047'  },
   ]
 
@@ -788,7 +788,7 @@ export default function Dashboard() {
   ]
 
   return (
-    <div style={{ background: '#020D05', overflowX: 'hidden', fontFamily: "'Satoshi', sans-serif" }}>
+    <div style={{ background: 'var(--bg)', overflowX: 'hidden', fontFamily: "'Satoshi', sans-serif" }}>
 
       {/* ── HERO SECTION ─────────────────────────────────── */}
             <section style={{
@@ -814,19 +814,19 @@ export default function Dashboard() {
         {/* Vignette overlays */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 20%, #020D05 100%)',
+          background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 20%, var(--bg) 100%)',
           pointerEvents: 'none'
         }} />
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0,
           height: 100, zIndex: 1,
-          background: 'linear-gradient(180deg, #020D05 0%, transparent 100%)',
+          background: 'linear-gradient(180deg, var(--bg) 0%, transparent 100%)',
           pointerEvents: 'none'
         }} />
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0,
           height: 160, zIndex: 1,
-          background: 'linear-gradient(0deg, #020D05 0%, transparent 100%)',
+          background: 'linear-gradient(0deg, var(--bg) 0%, transparent 100%)',
           pointerEvents: 'none'
         }} />
 
@@ -843,22 +843,22 @@ export default function Dashboard() {
               alignItems:    'center',
               gap:           8,
               background:    'rgba(34,197,94,0.1)',
-              border:        '1px solid rgba(34,197,94,0.3)',
+              border:        '1px solid var(--border-hover)',
               borderRadius:  100,
               padding:       '6px 16px',
               marginBottom:  28
             }}>
             <span style={{
               width: 7, height: 7, borderRadius: '50%',
-              background: '#4ADE80',
-              boxShadow: '0 0 8px #4ADE80',
+              background: 'var(--secondary)',
+              boxShadow: '0 0 8px var(--secondary)',
               animation: 'pulse 2s ease infinite',
               display: 'block'
             }} />
             <span style={{
               fontFamily:    "'Share Tech Mono'",
               fontSize:      11,
-              color:         '#4ADE80',
+              color:         'var(--secondary)',
               letterSpacing: 2
             }}>
               ECO INTELLIGENCE SYSTEM // ACTIVE
@@ -880,16 +880,15 @@ export default function Dashboard() {
               maxWidth:      900
             }}>
             <span style={{
-              background:    'linear-gradient(135deg, #4ADE80 0%, #22C55E 40%, #A3E635 100%)',
+              background:    'linear-gradient(135deg, var(--secondary) 0%, var(--primary) 40%, #A3E635 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
-              filter: 'drop-shadow(0 0 30px rgba(74,222,128,0.3))'
             }}>
               AI Farming
             </span>
             <br />
-            <span style={{ color: '#D1FAE5' }}>
+            <span style={{ color: 'var(--text-primary)' }}>
               for Every Indian
             </span>
             <br />
@@ -918,7 +917,7 @@ export default function Dashboard() {
               {typedText}
               <span style={{
                 display: 'inline-block', width: 2, height: '1em',
-                background: '#4ADE80', marginLeft: 3,
+                background: 'var(--secondary)', marginLeft: 3,
                 animation: 'blink 0.8s step-end infinite',
                 verticalAlign: 'middle'
               }} />
@@ -938,14 +937,14 @@ export default function Dashboard() {
               whileTap={{ scale: 0.97 }}
               style={{
                 padding:       '16px 36px',
-                background:    'linear-gradient(135deg, #16A34A, #22C55E)',
+                background:    'linear-gradient(135deg, var(--primary), var(--primary))',
                 border:        'none',
                 borderRadius:  12,
-                color:         '#020D05',
+                color:         'var(--bg)',
                 fontFamily:    "'Cabinet Grotesk', sans-serif",
                 fontSize:      16, fontWeight: 800,
                 cursor:        'pointer',
-                boxShadow:     '0 0 30px rgba(34,197,94,0.4), 0 8px 32px rgba(0,0,0,0.4)',
+                boxShadow:     '0 0 30px var(--text-muted), 0 8px 32px rgba(0,0,0,0.4)',
                 letterSpacing: 0.5
               }}>
               🌱 Start Growing Smarter
@@ -953,14 +952,14 @@ export default function Dashboard() {
 
             <motion.button
               onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-              whileHover={{ scale: 1.03, borderColor: '#22C55E' }}
+              whileHover={{ scale: 1.03, borderColor: 'var(--primary)' }}
               whileTap={{ scale: 0.97 }}
               style={{
                 padding:       '16px 36px',
                 background:    'rgba(34,197,94,0.08)',
-                border:        '1px solid rgba(34,197,94,0.3)',
+                border:        '1px solid var(--border-hover)',
                 borderRadius:  12,
-                color:         '#4ADE80',
+                color:         'var(--secondary)',
                 fontFamily:    "'Cabinet Grotesk', sans-serif",
                 fontSize:      16, fontWeight: 700,
                 cursor:        'pointer',
@@ -1024,14 +1023,14 @@ export default function Dashboard() {
       {/* ── PROBLEM SECTION ──────────────────────────────── */}
       <section style={{
         padding:    '100px 40px',
-        background: 'linear-gradient(180deg, #020D05, #040F07)',
+        background: 'linear-gradient(180deg, var(--bg), var(--bg-deep))',
         position:   'relative'
       }}>
         {/* Decorative line */}
         <div style={{
           position:   'absolute', top: 0, left: '10%', right: '10%',
           height:     1,
-          background: 'linear-gradient(90deg, transparent, #22C55E33, transparent)'
+          background: 'linear-gradient(90deg, transparent, var(--primary-dim), transparent)'
         }} />
 
         <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
@@ -1042,7 +1041,7 @@ export default function Dashboard() {
       {/* ── STATS SECTION ────────────────────────────────── */}
       <section style={{
         padding:    '80px 40px',
-        background: '#040F07',
+        background: 'var(--bg-deep)',
         position:   'relative', overflow: 'hidden'
       }}>
         {/* Background hex pattern */}
@@ -1068,7 +1067,7 @@ export default function Dashboard() {
       {/* ── FEATURES SECTION ─────────────────────────────── */}
       <section id="features" style={{
         padding:    '100px 40px',
-        background: 'linear-gradient(180deg, #040F07, #020D05)',
+        background: 'linear-gradient(180deg, var(--bg-deep), var(--bg))',
         position:   'relative'
       }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -1095,7 +1094,7 @@ export default function Dashboard() {
       {/* ── HOW IT WORKS ─────────────────────────────────── */}
       <section style={{
         padding:    '100px 40px',
-        background: '#040F07',
+        background: 'var(--bg-deep)',
         position:   'relative'
       }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
@@ -1111,7 +1110,7 @@ export default function Dashboard() {
       {/* ── TESTIMONIALS ─────────────────────────────────── */}
       <section style={{
         padding:    '100px 40px',
-        background: 'linear-gradient(180deg, #040F07, #020D05)',
+        background: 'linear-gradient(180deg, var(--bg-deep), var(--bg))',
         position:   'relative'
       }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
@@ -1135,7 +1134,7 @@ export default function Dashboard() {
       {/* ── FINAL CTA ────────────────────────────────────── */}
       <section style={{
         padding:    '120px 40px',
-        background: '#020D05',
+        background: 'var(--bg)',
         position:   'relative',
         overflow:   'hidden'
       }}>
@@ -1156,8 +1155,8 @@ export default function Dashboard() {
       {/* ── FOOTER ───────────────────────────────────────── */}
       <footer style={{
         padding:      '32px 40px',
-        borderTop:    '1px solid #1A4A25',
-        background:   '#020D05',
+        borderTop:    '1px solid var(--border)',
+        background:   'var(--bg)',
         display:      'flex',
         justifyContent: 'space-between',
         alignItems:   'center',
@@ -1168,14 +1167,14 @@ export default function Dashboard() {
           <span style={{
             fontFamily:    "'Cabinet Grotesk'",
             fontSize:      14, fontWeight: 800,
-            color:         '#4ADE80'
+            color:         'var(--secondary)'
           }}>
             AMRITKRISHI
           </span>
           <span style={{
             fontFamily: "'Share Tech Mono'",
             fontSize:   10,
-            color:      'rgba(34,197,94,0.4)',
+            color:      'var(--primary-dim)',
             letterSpacing: 2
           }}>
             // ECO INTELLIGENCE v2.0
@@ -1184,7 +1183,7 @@ export default function Dashboard() {
         <p style={{
           fontFamily: "'Share Tech Mono'",
           fontSize:   10,
-          color:      'rgba(34,197,94,0.3)',
+          color:      'var(--border-hover)',
           letterSpacing: 1
         }}>
           EMPOWERING FARMERS WITH AI // 2026
@@ -1231,7 +1230,7 @@ function SectionHeader({ eyebrow, title, subtitle }) {
         fontFamily:    "'Cabinet Grotesk', sans-serif",
         fontSize:      'clamp(28px, 4vw, 48px)',
         fontWeight:    900,
-        color:         '#D1FAE5',
+        color:         'var(--text-primary)',
         lineHeight:    1.15,
         letterSpacing: -1,
         margin:        '0 0 16px'
@@ -1241,7 +1240,7 @@ function SectionHeader({ eyebrow, title, subtitle }) {
       <p style={{
         fontFamily: "'Satoshi', sans-serif",
         fontSize:   16,
-        color:      'rgba(110,231,183,0.6)',
+        color:      'var(--text-second)',
         lineHeight: 1.7,
         maxWidth:   560,
         margin:     '0 auto'
@@ -1279,10 +1278,10 @@ function ProblemSection() {
         animate={inView ? { opacity:1, y:0 } : {}}
         transition={{ delay:0.1 }}
         style={{ fontFamily:"'Cabinet Grotesk'", fontSize:'clamp(28px,4vw,44px)',
-                  fontWeight:900, color:'#D1FAE5', lineHeight:1.2,
+                  fontWeight:900, color:'var(--text-primary)', lineHeight:1.2,
                   letterSpacing:-1, margin:'0 0 48px' }}>
         Indian farmers lose billions every year
-        <span style={{ color:'#22C55E' }}> to problems AI can solve.</span>
+        <span style={{ color:'var(--primary)' }}> to problems AI can solve.</span>
       </motion.h2>
 
       <div style={{ display:'flex', flexDirection:'column', gap:16, textAlign:'left' }}>
@@ -1295,11 +1294,11 @@ function ProblemSection() {
                       padding:'20px 24px',
                       background:'rgba(34,197,94,0.04)',
                       border:'1px solid rgba(34,197,94,0.12)',
-                      borderLeft:'3px solid #22C55E',
+                      borderLeft:'3px solid var(--primary)',
                       borderRadius:12 }}>
             <span style={{ fontFamily:"'Cabinet Grotesk'", fontSize:36,
-                            fontWeight:900, color:'#22C55E',
-                            textShadow:'0 0 20px rgba(34,197,94,0.4)',
+                            fontWeight:900, color:'var(--primary)',
+                            textShadow:'0 0 20px var(--text-muted)',
                             flexShrink:0, minWidth:90 }}>
               {p.stat}
             </span>
@@ -1317,7 +1316,7 @@ function ProblemSection() {
         animate={inView ? { opacity:1 } : {}}
         transition={{ delay:0.7 }}
         style={{ fontFamily:"'Cabinet Grotesk'", fontSize:22,
-                  fontWeight:800, color:'#4ADE80',
+                  fontWeight:800, color:'var(--secondary)',
                   textShadow:'0 0 20px rgba(74,222,128,0.3)',
                   margin:'40px 0 0' }}>
         AmritKrishi solves all three. Free. In any language.
@@ -1336,13 +1335,13 @@ function HowItWorks() {
       num: '01', icon: '📍',
       title: 'Choose Your Location',
       desc:  'Select your state and district on our interactive India map. The system automatically loads your region\'s soil profile and live weather data.',
-      color: '#22C55E'
+      color: 'var(--primary)'
     },
     {
       num: '02', icon: '🧠',
       title: 'AI Analyzes Everything',
       desc:  'Our models process soil NPK levels, pH, temperature, humidity, and rainfall — cross-referencing against 109,000+ data points to find your best crop.',
-      color: '#4ADE80'
+      color: 'var(--secondary)'
     },
     {
       num: '03', icon: '🌾',
@@ -1359,7 +1358,7 @@ function HowItWorks() {
         position:   'absolute',
         top:        48, left: '16.5%', right: '16.5%',
         height:     1,
-        background: 'linear-gradient(90deg, #22C55E33, #4ADE8066, #A3E63533)',
+        background: 'linear-gradient(90deg, var(--primary-dim), var(--secondary)66, #A3E63533)',
         zIndex:     0
       }} />
 
@@ -1399,7 +1398,7 @@ function HowItWorks() {
             <h3 style={{
               fontFamily:    "'Cabinet Grotesk'",
               fontSize:      20, fontWeight: 800,
-              color:         '#D1FAE5',
+              color:         'var(--text-primary)',
               margin:        '0 0 12px', letterSpacing: 0.3
             }}>
               {step.title}
@@ -1408,7 +1407,7 @@ function HowItWorks() {
             <p style={{
               fontFamily: "'Satoshi'",
               fontSize:   14, lineHeight: 1.7,
-              color:      'rgba(110,231,183,0.6)',
+              color:      'var(--text-second)',
               margin:     0
             }}>
               {step.desc}
@@ -1451,20 +1450,20 @@ function FinalCTA({ navigate }) {
                       fontSize:'clamp(32px,5vw,64px)',
                       fontWeight:900, lineHeight:1.1,
                       letterSpacing:-1.5, margin:'0 0 20px' }}>
-          <span style={{ color:'#D1FAE5' }}>Your farm.</span>
+          <span style={{ color:'var(--text-primary)' }}>Your farm.</span>
           <br />
           <span style={{
-            background:'linear-gradient(135deg, #4ADE80, #22C55E, #A3E635)',
+            background:'linear-gradient(135deg, var(--secondary), var(--primary), #A3E635)',
             WebkitBackgroundClip:'text',
             WebkitTextFillColor:'transparent',
-            filter:'drop-shadow(0 0 20px rgba(74,222,128,0.3))'
+            backgroundClip: 'text',
           }}>
             Smarter than ever.
           </span>
         </h2>
 
         <p style={{ fontFamily:"'Satoshi'", fontSize:18,
-                     color:'rgba(110,231,183,0.6)', lineHeight:1.7,
+                     color:'var(--text-second)', lineHeight:1.7,
                      maxWidth:480, margin:'0 auto 40px' }}>
           Join thousands of Indian farmers already using AI to grow more, earn more, and waste less.
         </p>
@@ -1474,13 +1473,13 @@ function FinalCTA({ navigate }) {
           whileHover={{ scale:1.04 }}
           whileTap={{ scale:0.97 }}
           style={{ padding:'18px 48px', marginBottom:48,
-                   background:'linear-gradient(135deg, #15803D, #22C55E)',
+                   background:'linear-gradient(135deg, #15803D, var(--primary))',
                    border:'none', borderRadius:14,
-                   color:'#020D05',
+                   color:'var(--bg)',
                    fontFamily:"'Cabinet Grotesk'",
                    fontSize:18, fontWeight:900,
                    cursor:'pointer', letterSpacing:0.3,
-                   boxShadow:'0 0 40px rgba(34,197,94,0.4), 0 12px 40px rgba(0,0,0,0.5)' }}>
+                   boxShadow:'0 0 40px var(--text-muted), 0 12px 40px rgba(0,0,0,0.5)' }}>
           🌱 Start Free — No Signup Needed
         </motion.button>
 
@@ -1489,10 +1488,10 @@ function FinalCTA({ navigate }) {
           {QUICK.map((q, i) => (
             <motion.button key={i}
               onClick={() => navigate(q.path)}
-              whileHover={{ y:-3, borderColor:'#22C55E' }}
+              whileHover={{ y:-3, borderColor:'var(--primary)' }}
               style={{ padding:'10px 18px',
                        background:'rgba(34,197,94,0.06)',
-                       border:'1px solid rgba(34,197,94,0.2)',
+                       border:'1px solid var(--primary-glow)',
                        borderRadius:10, cursor:'pointer',
                        fontFamily:"'Satoshi'",
                        fontSize:13, fontWeight:600,

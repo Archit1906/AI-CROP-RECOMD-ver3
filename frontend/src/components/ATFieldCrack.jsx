@@ -29,12 +29,12 @@ export default function ATFieldCrack({ onShatterComplete }) {
     let phase = 'growing'
     let timer = 0
 
-    const color1 = '#4ADE80' // light green glow
-    const color2 = '#22C55E' // solid green vein
-    const color3 = '#16A34A' // dark green core
+    const color1 = 'var(--secondary)' // light green glow
+    const color2 = 'var(--primary)' // solid green vein
+    const color3 = 'var(--primary)' // dark green core
 
     // Fill screen with deep dark green initially
-    ctx.fillStyle = '#020D05'
+    ctx.fillStyle = 'var(--bg)'
     ctx.fillRect(0, 0, w, h)
 
     const animate = () => {
@@ -54,7 +54,7 @@ export default function ATFieldCrack({ onShatterComplete }) {
           
           // Flash effect on first frame
           if (timer === 1) {
-              ctx.fillStyle = '#4ADE80'
+              ctx.fillStyle = 'var(--secondary)'
               ctx.fillRect(0, 0, w, h)
           }
 
@@ -83,7 +83,7 @@ export default function ATFieldCrack({ onShatterComplete }) {
               ctx.stroke()
               
               // Bioluminescent Glow
-              ctx.shadowColor = '#4ADE80'
+              ctx.shadowColor = 'var(--secondary)'
               ctx.shadowBlur = Math.min(20, r.width * 3)
               ctx.stroke()
               ctx.shadowBlur = 0

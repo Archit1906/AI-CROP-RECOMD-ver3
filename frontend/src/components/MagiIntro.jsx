@@ -3,9 +3,9 @@ import * as THREE from 'three'
 import { gsap } from 'gsap'
 
 const ECO_SYSTEMS = [
-  { name: 'ECO-01', subtitle: 'SEEDLING', color: '#22C55E', status: 'CROP ANALYSIS SYSTEM' },
-  { name: 'ECO-02', subtitle: 'ROOTS',    color: '#86EFAC', status: 'THREAT DETECTION SYSTEM' },
-  { name: 'ECO-03', subtitle: 'CANOPY',   color: '#4ADE80', status: 'WEATHER INTEL SYSTEM'   },
+  { name: 'ECO-01', subtitle: 'SEEDLING', color: 'var(--primary)', status: 'CROP ANALYSIS SYSTEM' },
+  { name: 'ECO-02', subtitle: 'ROOTS',    color: 'var(--tertiary)', status: 'THREAT DETECTION SYSTEM' },
+  { name: 'ECO-03', subtitle: 'CANOPY',   color: 'var(--secondary)', status: 'WEATHER INTEL SYSTEM'   },
 ]
 
 const BOOT_LOGS = [
@@ -91,11 +91,11 @@ export default function MagiIntro({ onComplete }) {
     }
     const pGeo  = new THREE.BufferGeometry()
     pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    const pMat  = new THREE.PointsMaterial({ color: '#4ADE80', size: 0.04, transparent: true, opacity: 0.4 })
+    const pMat  = new THREE.PointsMaterial({ color: 'var(--secondary)', size: 0.04, transparent: true, opacity: 0.4 })
     const particles = new THREE.Points(pGeo, pMat)
     scene.add(particles)
 
-    const gridHelper = new THREE.GridHelper(20, 30, '#22C55E22', '#22C55E11')
+    const gridHelper = new THREE.GridHelper(20, 30, 'var(--primary-glow)', 'var(--primary-glow)')
     gridHelper.position.y = -2
     gridHelper.material.transparent = true
     gridHelper.material.opacity     = 0
@@ -182,7 +182,7 @@ export default function MagiIntro({ onComplete }) {
   return (
     <div ref={overlayRef} style={{
       position: 'fixed', inset: 0, zIndex: 9999,
-      background: '#020D05', overflow: 'hidden'
+      background: 'var(--bg)', overflow: 'hidden'
     }}>
       <canvas ref={canvasRef} style={{ position:'absolute', inset:0, width:'100%', height:'100%' }} />
 
@@ -203,7 +203,7 @@ export default function MagiIntro({ onComplete }) {
           }}>
             <div style={{
               width: 8, height: 8, borderRadius: '50%',
-              background: magiState[i] ? sys.color : '#1A4A25',
+              background: magiState[i] ? sys.color : 'var(--border)',
               boxShadow: magiState[i] ? `0 0 12px ${sys.color}` : 'none',
               margin: '0 auto 6px',
               animation: magiState[i] ? 'pulse 1.5s infinite' : 'none'
@@ -214,10 +214,10 @@ export default function MagiIntro({ onComplete }) {
             <p style={{ fontFamily:"'Share Tech Mono'", fontSize:8, color:'rgba(134,239,172,0.5)', letterSpacing:2, margin:'0 0 4px' }}>
               {sys.subtitle}
             </p>
-            <p style={{ fontFamily:"'Share Tech Mono'", fontSize:8, color: magiState[i] ? '#4ADE80' : '#1A4A25', letterSpacing:1, margin:0 }}>
+            <p style={{ fontFamily:"'Share Tech Mono'", fontSize:8, color: magiState[i] ? 'var(--secondary)' : 'var(--border)', letterSpacing:1, margin:0 }}>
               {magiState[i] ? '● GROWING' : '○ DORMANT'}
             </p>
-            <p style={{ fontFamily:"'Share Tech Mono'", fontSize:7, color:'rgba(34,197,94,0.4)', letterSpacing:1, margin:'4px 0 0' }}>
+            <p style={{ fontFamily:"'Share Tech Mono'", fontSize:7, color:'var(--primary-dim)', letterSpacing:1, margin:'4px 0 0' }}>
               {sys.status}
             </p>
           </div>
@@ -231,7 +231,7 @@ export default function MagiIntro({ onComplete }) {
         {logs.map((log, i) => (
           <p key={i} style={{
             fontFamily: "'Share Tech Mono'", fontSize: 11,
-            color: i === logs.length - 1 ? '#4ADE80' : 'rgba(34,197,94,0.4)',
+            color: i === logs.length - 1 ? 'var(--secondary)' : 'var(--primary-dim)',
             letterSpacing: 1, margin: '2px 0',
             animation: i === logs.length - 1 ? 'flicker 0.3s' : 'none'
           }}>
@@ -242,17 +242,17 @@ export default function MagiIntro({ onComplete }) {
 
       <div style={{ position: 'absolute', bottom: 140, left: '50%', transform: 'translateX(-50%)', width: '60%' }}>
         <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
-          <span style={{ fontFamily:"'Share Tech Mono'", fontSize:9, color:'rgba(34,197,94,0.4)', letterSpacing:2 }}>
+          <span style={{ fontFamily:"'Share Tech Mono'", fontSize:9, color:'var(--primary-dim)', letterSpacing:2 }}>
             // SEED GERMINATION PHASE
           </span>
-          <span style={{ fontFamily:"'Share Tech Mono'", fontSize:9, color:'#22C55E', letterSpacing:2 }}>
+          <span style={{ fontFamily:"'Share Tech Mono'", fontSize:9, color:'var(--primary)', letterSpacing:2 }}>
             {Math.round(progress)}%
           </span>
         </div>
         <div style={{ height:3, background:'rgba(34,197,94,0.1)', borderRadius:1 }}>
           <div style={{
             height:'100%', borderRadius:1, width:`${progress}%`,
-            background:'linear-gradient(90deg, rgba(34,197,94,0.4), #22C55E)',
+            background:'linear-gradient(90deg, var(--text-muted), var(--primary))',
             boxShadow:'0 0 8px rgba(34,197,94,0.5)', transition:'width 0.3s ease'
           }} />
         </div>
@@ -265,8 +265,8 @@ export default function MagiIntro({ onComplete }) {
         }}>
           <p className="logo-glitch-in" style={{
             fontFamily:"'Exo 2'", fontSize:32, fontWeight:900,
-            color:'#4ADE80', letterSpacing:12, margin:'0 0 4px',
-            textShadow:'0 0 30px rgba(34,197,94,0.5), 0 0 60px rgba(34,197,94,0.3)'
+            color:'var(--secondary)', letterSpacing:12, margin:'0 0 4px',
+            textShadow:'0 0 30px rgba(34,197,94,0.5), 0 0 60px var(--border-hover)'
           }}>
             AMRITKRISHI
           </p>
@@ -278,12 +278,12 @@ export default function MagiIntro({ onComplete }) {
 
       {showSkip && (
         <button onClick={handleComplete} style={{
-          position:'absolute', top:20, right:20, background:'transparent', border:'1px solid rgba(34,197,94,0.3)',
+          position:'absolute', top:20, right:20, background:'transparent', border:'1px solid var(--border-hover)',
           color:'rgba(34,197,94,0.6)', fontFamily:"'Share Tech Mono'", fontSize:10, letterSpacing:3, padding:'6px 14px',
           cursor:'pointer', borderRadius:2, transition:'all 0.2s'
         }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor='#22C55E'; e.currentTarget.style.color='#22C55E' }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(34,197,94,0.3)'; e.currentTarget.style.color='rgba(34,197,94,0.6)' }}>
+          onMouseEnter={e => { e.currentTarget.style.borderColor='var(--primary)'; e.currentTarget.style.color='var(--primary)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border-hover)'; e.currentTarget.style.color='rgba(34,197,94,0.6)' }}>
           SKIP ►
         </button>
       )}

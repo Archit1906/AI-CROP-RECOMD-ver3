@@ -33,12 +33,14 @@ const MONTHLY_COMPARISON = [
   { month:"Dec", rice:2400, tomato:800,  cotton:6500, onion:1200 },
 ]
 
-const COLORS = ["#00FF41", "#A3E635", "#22C55E", "#16A34A", "#86EFAC", "#E8E8E8"]
+const getColors = (t) => ["#00FF41", "#A3E635", t.primary, t.primary, t.tertiary, "#E8E8E8"]
 
 export default function MarketAnalytics() {
   const { t } = useTranslation()
+  const { currentTheme: themeVars } = useTheme()
   const navigate = useNavigate()
   const [selectedCrops, setSelectedCrops] = useState(["rice","tomato"])
+  const COLORS = getColors(themeVars)
 
   const toggleCrop = (crop) => {
     const key = crop.toLowerCase().split(" ")[0]
@@ -49,9 +51,9 @@ export default function MarketAnalytics() {
 
   const NgeTooltip = ({ active, payload, label }) => {
     if (active && payload?.length) return (
-      <div style={{ background:'#040F07', border:'1px solid #22C55E',
+      <div style={{ background:'var(--bg-deep)', border:'1px solid var(--primary)',
                     borderRadius:2, padding:'10px 14px', fontFamily: "'Share Tech Mono', monospace" }}>
-        <p style={{ color:'#22C55E88', fontSize:10, margin:'0 0 6px', letterSpacing: 2 }}>// T={label}</p>
+        <p style={{ color:'var(--primary-dim)', fontSize:10, margin:'0 0 6px', letterSpacing: 2 }}>// T={label}</p>
         {payload.map((p, i) => (
           <p key={i} style={{ color:p.color, fontWeight:700, fontSize:13, margin:'2px 0', textTransform: 'uppercase' }}>
             {p.name}: <span style={{ color: '#E8E8E8' }}>₹{p.value?.toLocaleString()}</span>
@@ -63,22 +65,22 @@ export default function MarketAnalytics() {
   }
 
   return (
-    <div className="hex-bg" style={{ padding:24, background:'#020D05', minHeight:'100vh', fontFamily: "'Inter', sans-serif" }}>
+    <div className="hex-bg" style={{ padding:24, background:'var(--bg)', minHeight:'100vh', fontFamily: "'Inter', sans-serif" }}>
 
       {/* Header */}
       <div style={{ display:'flex', alignItems:'center', gap:16, marginBottom:24 }}>
         <button onClick={() => navigate('/market')}
           className="nge-hover"
-          style={{ background:'#020D05', border:'1px solid #22C55E44',
-                   borderRadius:2, color:'#22C55E', padding:'10px 14px',
+          style={{ background:'var(--bg)', border:'1px solid var(--primary-dim)',
+                   borderRadius:2, color:'var(--primary)', padding:'10px 14px',
                    cursor:'pointer', fontSize:12, fontFamily: "'Share Tech Mono', monospace", letterSpacing: 2 }}>
           {t('mkt_nge.go_back')}
         </button>
         <div>
-          <p style={{ fontFamily:"'Share Tech Mono'", fontSize:10, color:'#22C55E88', letterSpacing:3, margin:'0 0 4px' }}>
+          <p style={{ fontFamily:"'Share Tech Mono'", fontSize:10, color:'var(--primary-dim)', letterSpacing:3, margin:'0 0 4px' }}>
             {t('mkt_nge.long_proj')}
           </p>
-          <h1 className="glitch-text" style={{ fontSize:28, fontWeight:900, color:'#22C55E', margin:0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 3, textTransform: 'uppercase', textShadow: '0 0 20px #22C55E66' }}>
+          <h1 className="glitch-text" style={{ fontSize:28, fontWeight:900, color:'var(--primary)', margin:0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 3, textTransform: 'uppercase', textShadow: '0 0 20px var(--primary-dim)' }}>
             {t('mkt_nge.adv_anal')}
           </h1>
           <p style={{ color:'#666680', fontSize:11, margin:'4px 0 0', fontFamily: "'Share Tech Mono', monospace", letterSpacing: 1 }}>
@@ -95,12 +97,12 @@ export default function MarketAnalytics() {
           return (
             <div key={i} className="nge-card" data-label={`// ${crop.crop.toUpperCase()}`}
               style={{
-                borderLeft: `4px solid ${isUp ? '#00FF41' : '#16A34A'}`,
-                padding: '20px', background: '#040F07'
+                borderLeft: `4px solid ${isUp ? '#00FF41' : 'var(--primary)'}`,
+                padding: '20px', background: 'var(--bg-deep)'
               }}>
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                 <div>
-                  <p style={{ color:'#22C55E', fontSize:13, margin:'0 0 4px',
+                  <p style={{ color:'var(--primary)', fontSize:13, margin:'0 0 4px',
                                textTransform:'uppercase', letterSpacing:2, fontFamily: "'Exo 2', sans-serif", fontWeight: 700 }}>
                     <span style={{filter: 'grayscale(1) sepia(1)'}}>{crop.emoji}</span> {crop.crop}
                   </p>
@@ -109,26 +111,26 @@ export default function MarketAnalytics() {
                   </p>
                 </div>
                 <div style={{ textAlign:'right' }}>
-                  <p style={{ color: isUp ? '#00FF41' : '#16A34A',
+                  <p style={{ color: isUp ? '#00FF41' : 'var(--primary)',
                                fontWeight:700, fontSize:16, margin:'0 0 4px', fontFamily: "'Exo 2', sans-serif" }}>
                     {isUp ? '▲' : '▼'} {Math.abs(changePercent)}%
                   </p>
                   <span style={{ fontSize:9, padding:'3px 8px', borderRadius:2, border: '1px solid',
                                  background: crop.volatility==='High' ? '#1A0500' :
                                              crop.volatility==='Medium' ? '#1A1A00' : '#0A1A0A',
-                                 color: crop.volatility==='High' ? '#16A34A' :
+                                 color: crop.volatility==='High' ? 'var(--primary)' :
                                         crop.volatility==='Medium' ? '#A3E635' : '#00FF41',
-                                 borderColor: crop.volatility==='High' ? '#16A34A' :
+                                 borderColor: crop.volatility==='High' ? 'var(--primary)' :
                                         crop.volatility==='Medium' ? '#A3E635' : '#00FF41',
                                  fontFamily: "'Share Tech Mono', monospace", letterSpacing: 1, textTransform: 'uppercase' }}>
                     {crop.volatility} {t('mkt_nge.volat')}
                   </span>
                 </div>
               </div>
-              <div style={{ marginTop:20, paddingTop: 16, borderTop: '1px solid #22C55E33', display:'flex', justifyContent:'space-between' }}>
+              <div style={{ marginTop:20, paddingTop: 16, borderTop: '1px solid var(--primary-dim)', display:'flex', justifyContent:'space-between' }}>
                 <div>
                   <p style={{ color:'#666680', fontSize:10, margin:'0 0 4px', fontFamily: "'Share Tech Mono', monospace", letterSpacing: 1 }}>{t('mkt_nge.pred_30d')}</p>
-                  <p style={{ color:'#86EFAC', fontWeight:700, fontSize:15, margin:0, fontFamily: "'Share Tech Mono', monospace" }}>
+                  <p style={{ color:'var(--tertiary)', fontWeight:700, fontSize:15, margin:0, fontFamily: "'Share Tech Mono', monospace" }}>
                     ₹{crop.predicted.toLocaleString()}
                   </p>
                 </div>
@@ -146,7 +148,7 @@ export default function MarketAnalytics() {
 
       {/* Crop Toggle Filter */}
       <div className="nge-card" data-label={t("mkt_nge.sel_mat")} style={{ padding:'20px 24px', marginBottom:24 }}>
-        <p style={{ color:'#22C55E88', fontSize:11, margin:'0 0 12px', fontFamily: "'Share Tech Mono', monospace", letterSpacing: 1 }}>
+        <p style={{ color:'var(--primary-dim)', fontSize:11, margin:'0 0 12px', fontFamily: "'Share Tech Mono', monospace", letterSpacing: 1 }}>
           {t('mkt_nge.sel_cross')}
         </p>
         <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
@@ -156,8 +158,8 @@ export default function MarketAnalytics() {
             return (
               <button key={i} onClick={() => toggleCrop(crop.crop)}
                 style={{ padding:'8px 16px', borderRadius:2, fontSize:11, fontWeight: 700,
-                         cursor:'pointer', border:`1px solid ${active ? COLORS[i] : '#22C55E44'}`,
-                         background: active ? `${COLORS[i]}11` : '#020D05',
+                         cursor:'pointer', border:`1px solid ${active ? COLORS[i] : 'var(--primary-dim)'}`,
+                         background: active ? `${COLORS[i]}11` : 'var(--bg)',
                          color: active ? COLORS[i] : '#666680',
                          transition:'all 0.15s', fontFamily: "'Share Tech Mono', monospace", letterSpacing: 1, textTransform: 'uppercase',
                          boxShadow: active ? `0 0 10px ${COLORS[i]}44` : 'none' }}>
@@ -170,7 +172,7 @@ export default function MarketAnalytics() {
 
       {/* Monthly Comparison Chart */}
       <div className="nge-card" data-label={t("mkt_nge.month_comp")} style={{ padding:24, marginBottom:24 }}>
-        <p style={{ color:'#22C55E', fontWeight:700, fontSize:16, margin:'0 0 4px', fontFamily: "'Exo 2', sans-serif", letterSpacing: 3 }}>
+        <p style={{ color:'var(--primary)', fontWeight:700, fontSize:16, margin:'0 0 4px', fontFamily: "'Exo 2', sans-serif", letterSpacing: 3 }}>
           {t('mkt_nge.hist_overlay')}
         </p>
         <p style={{ color:'#666680', fontSize:11, margin:'0 0 20px', fontFamily: "'Share Tech Mono', monospace" }}>
@@ -179,13 +181,13 @@ export default function MarketAnalytics() {
         <div style={{ height:320 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={MONTHLY_COMPARISON}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#22C55E33" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke={themeVars.primaryDim} vertical={false} />
               <XAxis dataKey="month" tick={{ fill:'#666680', fontSize:10, fontFamily: "'Share Tech Mono', monospace" }}
                      axisLine={false} tickLine={false} />
               <YAxis tick={{ fill:'#666680', fontSize:10, fontFamily: "'Share Tech Mono', monospace" }}
                      axisLine={false} tickLine={false}
                      tickFormatter={v => `₹${v}`} />
-              <Tooltip content={<NgeTooltip />} cursor={{ stroke: '#22C55E22', strokeWidth: 20 }} />
+              <Tooltip content={<NgeTooltip />} cursor={{ stroke: themeVars.primaryGlow, strokeWidth: 20 }} />
               <Legend wrapperStyle={{ color:'#E8E8E8', fontSize:11, fontFamily: "'Share Tech Mono', monospace", paddingTop: 10 }} />
               {selectedCrops.includes("rice") &&
                 <Line type="monotone" dataKey="rice" stroke={COLORS[0]}
@@ -212,15 +214,15 @@ export default function MarketAnalytics() {
 
       {/* Best Time to Sell Table */}
       <div className="nge-card" data-label={t("mkt_nge.temp_anal")} style={{ padding:24 }}>
-        <p style={{ color:'#22C55E', fontWeight:700, fontSize:16, margin:'0 0 20px', fontFamily: "'Exo 2', sans-serif", letterSpacing: 2 }}>
+        <p style={{ color:'var(--primary)', fontWeight:700, fontSize:16, margin:'0 0 20px', fontFamily: "'Exo 2', sans-serif", letterSpacing: 2 }}>
           {t('mkt_nge.sell_cyc')}
         </p>
         <div style={{ overflowX:'auto' }}>
           <table style={{ width:'100%', borderCollapse:'collapse' }}>
             <thead>
-              <tr style={{ borderBottom:'1px solid #22C55E66', background: '#22C55E11' }}>
+              <tr style={{ borderBottom:'1px solid var(--primary-dim)', background: 'var(--primary-glow)' }}>
                 {[t('mkt_nge.h_com'), t('mkt_nge.h_curr'), t('mkt_nge.h_last'), t('mkt_nge.h_delta'), t('mkt_nge.h_opt'), t('mkt_nge.h_proj')].map(h => (
-                  <th key={h} style={{ color:'#22C55E', fontSize:10, fontWeight:700,
+                  <th key={h} style={{ color:'var(--primary)', fontSize:10, fontWeight:700,
                                        textAlign:'left', padding:'12px 14px',
                                        textTransform:'uppercase', letterSpacing:2, fontFamily: "'Share Tech Mono', monospace" }}>
                     {h}
@@ -233,7 +235,7 @@ export default function MarketAnalytics() {
                 const change = (((crop.current-crop.lastMonth)/crop.lastMonth)*100).toFixed(1)
                 const isUp = parseFloat(change) > 0
                 return (
-                  <tr key={i} style={{ borderBottom:'1px solid #22C55E22', transition: 'all 0.15s' }} className="hover:bg-[#22C55E11]">
+                  <tr key={i} style={{ borderBottom:'1px solid var(--primary-glow)', transition: 'all 0.15s' }} className="hover:bg-[var(--primary-glow)]">
                     <td style={{ padding:'16px 14px', color:'#E8E8E8', fontWeight:700, fontFamily: "'Exo 2', sans-serif", fontSize: 13, textTransform: 'uppercase' }}>
                       {crop.crop}
                     </td>
@@ -244,7 +246,7 @@ export default function MarketAnalytics() {
                       ₹{crop.lastMonth.toLocaleString()}
                     </td>
                     <td style={{ padding:'16px 14px', fontFamily: "'Share Tech Mono', monospace", fontSize: 13,
-                                 color: isUp ? '#00FF41' : '#16A34A', fontWeight:700 }}>
+                                 color: isUp ? '#00FF41' : 'var(--primary)', fontWeight:700 }}>
                       {isUp ? '▲' : '▼'} {Math.abs(change)}%
                     </td>
                     <td style={{ padding:'16px 14px' }}>
@@ -253,7 +255,7 @@ export default function MarketAnalytics() {
                         {crop.bestMonth}
                       </span>
                     </td>
-                    <td style={{ padding:'16px 14px', color:'#86EFAC', fontWeight:700, fontFamily: "'Share Tech Mono', monospace", fontSize: 13 }}>
+                    <td style={{ padding:'16px 14px', color:'var(--tertiary)', fontWeight:700, fontFamily: "'Share Tech Mono', monospace", fontSize: 13 }}>
                       ₹{crop.predicted.toLocaleString()}
                     </td>
                   </tr>

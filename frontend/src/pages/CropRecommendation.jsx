@@ -193,7 +193,7 @@ export default function CropRecommendation() {
   const cropInfo = CROP_INFO[cropKey] || { emoji:'🌱', profit:'N/A', season:'N/A', water:'N/A', days:'N/A' }
 
   return (
-    <div style={{ padding:24, background:'#020D05', minHeight:'100vh' }}>
+    <div style={{ padding:24, background:'var(--bg)', minHeight:'100vh' }}>
 
       {/* Header */}
       <div style={{ display:'flex', justifyContent:'space-between',
@@ -201,12 +201,12 @@ export default function CropRecommendation() {
                     paddingBottom:0 }}>
         <div>
           <p style={{ fontFamily:"'Courier New'", fontSize:9,
-                       color:'#22C55E66', letterSpacing:4, margin:'0 0 6px' }}>
+                       color:'var(--primary-dim)', letterSpacing:4, margin:'0 0 6px' }}>
             {t('crop_nge.sys_label')}
           </p>
           <h1 style={{ fontFamily:"'Exo 2'", fontSize:22, fontWeight:900,
-                       color:'#22C55E', margin:0, letterSpacing:4,
-                       textShadow:'0 0 20px #22C55E66' }}>
+                       color:'var(--primary)', margin:0, letterSpacing:4,
+                       textShadow:'0 0 20px var(--primary-dim)' }}>
             {t('crop_nge.title')}
           </h1>
         </div>
@@ -225,16 +225,16 @@ export default function CropRecommendation() {
                 <div style={{
                   display:'flex', alignItems:'center', gap:6,
                   padding:'4px 12px', borderRadius:1,
-                  border:`1px solid ${isActive ? '#22C55E' : isDone ? '#22C55E44' : '#22C55E11'}`,
-                  background: isActive ? '#22C55E22' : 'transparent'
+                  border:`1px solid ${isActive ? 'var(--primary)' : isDone ? 'var(--primary-dim)' : 'var(--primary-glow)'}`,
+                  background: isActive ? 'var(--primary-glow)' : 'transparent'
                 }}>
                   <div style={{
                     width:6, height:6, borderRadius:'50%',
-                    background: isActive ? '#22C55E' : isDone ? '#00FF41' : '#333',
-                    boxShadow: isActive ? '0 0 6px #22C55E' : 'none'
+                    background: isActive ? 'var(--primary)' : isDone ? '#00FF41' : '#333',
+                    boxShadow: isActive ? '0 0 6px var(--primary)' : 'none'
                   }} />
                   <span style={{ fontFamily:"'Courier New'", fontSize:9,
-                                  color: isActive ? '#22C55E' : isDone ? '#00FF4188' : '#333',
+                                  color: isActive ? 'var(--primary)' : isDone ? '#00FF4188' : '#333',
                                   letterSpacing:2 }}>
                     {label}
                   </span>
@@ -243,7 +243,7 @@ export default function CropRecommendation() {
                   )}
                 </div>
                 {i < 2 && (
-                  <span style={{ color:'#22C55E22', fontSize:12 }}>▶</span>
+                  <span style={{ color:'var(--primary-glow)', fontSize:12 }}>▶</span>
                 )}
               </div>
             )
@@ -257,16 +257,16 @@ export default function CropRecommendation() {
                     gap:20, alignItems:'start' }}>
 
         {/* LEFT — Map (always visible) */}
-        <div style={{ background:'#040F07',
-                      border:'1px solid #22C55E33',
+        <div style={{ background:'var(--bg-deep)',
+                      border:'1px solid var(--primary-dim)',
                       borderRadius:4, padding:16 }}>
 
           <p style={{ fontFamily:"'Courier New'", fontSize:9,
-                       color:'#22C55E66', letterSpacing:3, margin:'0 0 4px' }}>
+                       color:'var(--primary-dim)', letterSpacing:3, margin:'0 0 4px' }}>
             {step === 'map' ? t('crop_nge.sel_state') : t('crop_nge.locked_state')}
           </p>
           {selectedState && (
-            <p style={{ fontFamily:"'Exo 2'", fontSize:11, color:'#22C55E',
+            <p style={{ fontFamily:"'Exo 2'", fontSize:11, color:'var(--primary)',
                          letterSpacing:3, margin:'0 0 12px' }}>
               ◉ {selectedState.toUpperCase()}
               {selectedDist && ` → ${selectedDist.toUpperCase()}`}
@@ -294,8 +294,8 @@ export default function CropRecommendation() {
             }} style={{
               width:'100%', marginTop:12, padding:'8px',
               background:'transparent',
-              border:'1px solid #22C55E22', borderRadius:1,
-              color:'#22C55E66', fontFamily:"'Courier New'",
+              border:'1px solid var(--primary-glow)', borderRadius:1,
+              color:'var(--primary-dim)', fontFamily:"'Courier New'",
               fontSize:9, letterSpacing:2, cursor:'pointer'
             }}>
               {t('crop_nge.reselect')}
@@ -306,7 +306,7 @@ export default function CropRecommendation() {
           {history.length > 0 && (
             <div style={{ marginTop:12 }}>
               <p style={{ fontFamily:"'Courier New'", fontSize:8,
-                           color:'#22C55E33', letterSpacing:3, margin:'0 0 6px' }}>
+                           color:'var(--primary-dim)', letterSpacing:3, margin:'0 0 6px' }}>
                 {t('crop_nge.history')}
               </p>
               {history.map((h, i) => (
@@ -317,14 +317,14 @@ export default function CropRecommendation() {
                     setResult(null)
                   }}
                   style={{ padding:'5px 8px', marginBottom:3,
-                           background:'#020D05',
-                           border:'1px solid #22C55E11', borderRadius:1,
+                           background:'var(--bg)',
+                           border:'1px solid var(--primary-glow)', borderRadius:1,
                            cursor:'pointer', transition:'all 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor='#22C55E33'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor='#22C55E11'}>
+                  onMouseEnter={e => e.currentTarget.style.borderColor='var(--primary-dim)'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor='var(--primary-glow)'}>
                   <div style={{ display:'flex', justifyContent:'space-between' }}>
                     <span style={{ fontFamily:"'Courier New'", fontSize:9,
-                                    color:'#22C55E' }}>
+                                    color:'var(--primary)' }}>
                       {h.state} → {h.district}
                     </span>
                     <span style={{ fontFamily:"'Courier New'", fontSize:8,
@@ -355,27 +355,27 @@ export default function CropRecommendation() {
                   exit={{ opacity:0, x:-20 }}
                   transition={{ duration:0.3 }}>
 
-                  <div style={{ background:'#040F07',
-                                border:'1px solid #22C55E33',
+                  <div style={{ background:'var(--bg-deep)',
+                                border:'1px solid var(--primary-dim)',
                                 borderRadius:4, padding:20 }}>
 
                     <p style={{ fontFamily:"'Courier New'", fontSize:9,
-                                 color:'#22C55E66', letterSpacing:3, margin:'0 0 4px' }}>
+                                 color:'var(--primary-dim)', letterSpacing:3, margin:'0 0 4px' }}>
                       {t('crop_nge.sel_dist')}
                     </p>
                     <p style={{ fontFamily:"'Exo 2'", fontSize:14,
-                                 color:'#22C55E', margin:'0 0 16px',
+                                 color:'var(--primary)', margin:'0 0 16px',
                                  letterSpacing:3 }}>
                       {selectedState?.toUpperCase()}
                     </p>
 
                     {error && (
                       <div style={{ background:'#2D0A0A',
-                                    border:'1px solid #16A34A44',
+                                    border:'1px solid var(--primary)44',
                                     borderRadius:2, padding:'8px 12px',
                                     marginBottom:12 }}>
                         <p style={{ fontFamily:"'Courier New'", fontSize:9,
-                                     color:'#16A34A', margin:0 }}>
+                                     color:'var(--primary)', margin:0 }}>
                           ⚠ {error}
                         </p>
                       </div>
@@ -383,10 +383,10 @@ export default function CropRecommendation() {
 
                     {/* Search */}
                     <div style={{ display:'flex', alignItems:'center', gap:8,
-                                  background:'#020D05',
-                                  border:'1px solid #22C55E44', borderRadius:2,
+                                  background:'var(--bg)',
+                                  border:'1px solid var(--primary-dim)', borderRadius:2,
                                   padding:'8px 12px', marginBottom:14 }}>
-                      <span style={{ color:'#22C55E66', fontSize:14 }}>⌕</span>
+                      <span style={{ color:'var(--primary-dim)', fontSize:14 }}>⌕</span>
                       <input
                         value={distSearch}
                         onChange={e => setDistSearch(e.target.value)}
@@ -400,7 +400,7 @@ export default function CropRecommendation() {
                       {distSearch && (
                         <button onClick={() => setDistSearch('')}
                           style={{ background:'none', border:'none',
-                                   color:'#22C55E', cursor:'pointer',
+                                   color:'var(--primary)', cursor:'pointer',
                                    fontSize:16 }}>×</button>
                       )}
                     </div>
@@ -421,10 +421,10 @@ export default function CropRecommendation() {
                       {districts.map((district, i) => {
                         const zone     = DISTRICT_ZONES[district] || 'default'
                         const zoneColor = {
-                          coastal:'#86EFAC', hill:'#10B981',
+                          coastal:'var(--tertiary)', hill:'#10B981',
                           arid:'#A3E635', plain:'#00FF41',
-                          default:'#22C55E66'
-                        }[zone] || '#22C55E66'
+                          default:'var(--primary-dim)'
+                        }[zone] || 'var(--primary-dim)'
 
                         return (
                           <motion.button
@@ -435,23 +435,23 @@ export default function CropRecommendation() {
                             onClick={() => handleDistrictSelect(district)}
                             style={{
                               background: district === selectedDist
-                                ? '#22C55E22' : '#020D05',
+                                ? 'var(--primary-glow)' : 'var(--bg)',
                               border:`1px solid ${district === selectedDist
-                                ? '#22C55E' : '#22C55E22'}`,
+                                ? 'var(--primary)' : 'var(--primary-glow)'}`,
                               borderRadius:2, padding:'10px 6px',
                               cursor:'pointer', textAlign:'center',
                               transition:'all 0.15s',
                               position:'relative', overflow:'hidden'
                             }}
                             onMouseEnter={e => {
-                              e.currentTarget.style.borderColor = '#22C55E66'
-                              e.currentTarget.style.background  = '#22C55E11'
+                              e.currentTarget.style.borderColor = 'var(--primary-dim)'
+                              e.currentTarget.style.background  = 'var(--primary-glow)'
                             }}
                             onMouseLeave={e => {
                               e.currentTarget.style.borderColor =
-                                district === selectedDist ? '#22C55E' : '#22C55E22'
+                                district === selectedDist ? 'var(--primary)' : 'var(--primary-glow)'
                               e.currentTarget.style.background  =
-                                district === selectedDist ? '#22C55E22' : '#020D05'
+                                district === selectedDist ? 'var(--primary-glow)' : 'var(--bg)'
                             }}>
 
                             {/* Zone indicator dot */}
@@ -485,10 +485,10 @@ export default function CropRecommendation() {
 
                     {/* Zone legend */}
                     <div style={{ marginTop:12, paddingTop:12,
-                                  borderTop:'1px solid #22C55E11',
+                                  borderTop:'1px solid var(--primary-glow)',
                                   display:'flex', gap:12, flexWrap:'wrap' }}>
                       {[
-                        { zone:'coastal', color:'#86EFAC', label:'Coastal' },
+                        { zone:'coastal', color:'var(--tertiary)', label:'Coastal' },
                         { zone:'hill',    color:'#10B981', label:'Hill'    },
                         { zone:'arid',    color:'#A3E635', label:'Arid'    },
                         { zone:'plain',   color:'#00FF41', label:'Plain'   },
@@ -518,28 +518,28 @@ export default function CropRecommendation() {
                   initial={{ opacity:0 }}
                   animate={{ opacity:1 }}
                   exit={{ opacity:0 }}
-                  style={{ background:'#040F07',
-                           border:'1px solid #22C55E33',
+                  style={{ background:'var(--bg-deep)',
+                           border:'1px solid var(--primary-dim)',
                            borderRadius:4, padding:32,
                            textAlign:'center' }}>
 
                   <p style={{ fontFamily:"'Courier New'", fontSize:9,
-                               color:'#22C55E66', letterSpacing:3, margin:'0 0 20px' }}>
+                               color:'var(--primary-dim)', letterSpacing:3, margin:'0 0 20px' }}>
                     {t('crop_nge.anal_text')} {selectedState?.toUpperCase()} → {selectedDist?.toUpperCase()}
                   </p>
 
                   {/* Spinner */}
                   <div style={{ display:'flex', justifyContent:'center', marginBottom:24 }}>
                     <div style={{ width:48, height:48,
-                                   border:'2px solid #22C55E22',
-                                   borderTop:'2px solid #22C55E',
+                                   border:'2px solid var(--primary-glow)',
+                                   borderTop:'2px solid var(--primary)',
                                    borderRadius:'50%',
                                    animation:'spin 0.8s linear infinite' }} />
                   </div>
 
                   {/* Current phase */}
                   <p style={{ fontFamily:"'Courier New'", fontSize:11,
-                               color:'#22C55E', letterSpacing:1,
+                               color:'var(--primary)', letterSpacing:1,
                                margin:'0 0 20px',
                                animation:'flicker 0.4s infinite' }}>
                     {t('crop_nge.load' + (loadPhase + 1))}
@@ -551,22 +551,22 @@ export default function CropRecommendation() {
                       <div key={i} style={{ display:'flex', alignItems:'center', gap:10 }}>
                         <span style={{ fontFamily:"'Courier New'", fontSize:9,
                                         color: i < loadPhase  ? '#00FF41' :
-                                               i === loadPhase ? '#22C55E' : '#333',
+                                               i === loadPhase ? 'var(--primary)' : '#333',
                                         minWidth:12 }}>
                           {i < loadPhase ? '✓' : i === loadPhase ? '▶' : '○'}
                         </span>
                         <div style={{ flex:1, height:2,
-                                       background:'#22C55E11', borderRadius:1 }}>
+                                       background:'var(--primary-glow)', borderRadius:1 }}>
                           <motion.div
                             initial={{ width:0 }}
                             animate={{ width: i < loadPhase ? '100%' :
                                               i === loadPhase ? '60%' : '0%' }}
                             transition={{ duration:0.4 }}
                             style={{ height:'100%', borderRadius:1,
-                                      background: i < loadPhase ? '#00FF4166' : '#22C55E' }} />
+                                      background: i < loadPhase ? '#00FF4166' : 'var(--primary)' }} />
                         </div>
                         <span style={{ fontFamily:"'Courier New'", fontSize:8,
-                                        color: i === loadPhase ? '#22C55E' : '#333',
+                                        color: i === loadPhase ? 'var(--primary)' : '#333',
                                         letterSpacing:1, minWidth:180,
                                         textAlign:'left' }}>
                           {t('crop_nge.load' + (i + 1))?.replace('// ','')}
@@ -590,18 +590,18 @@ export default function CropRecommendation() {
                                 gap:10, marginBottom:14 }}>
 
                     {/* Weather */}
-                    <div style={{ background:'#040F07',
-                                  border:'1px solid #86EFAC22',
-                                  borderTop:'2px solid #86EFAC',
+                    <div style={{ background:'var(--bg-deep)',
+                                  border:'1px solid var(--tertiary)22',
+                                  borderTop:'2px solid var(--tertiary)',
                                   borderRadius:2, padding:12 }}>
                       <p style={{ fontFamily:"'Courier New'", fontSize:8,
-                                   color:'#86EFAC66', letterSpacing:3,
+                                   color:'var(--tertiary)66', letterSpacing:3,
                                    margin:'0 0 8px' }}>
                         // {t('crop_nge.weather')} // {selectedDist?.toUpperCase()}
                       </p>
                       {weather && [
-                        { l:t('crop_nge.temp'),     v:`${weather.temperature}°C`, c:'#22C55E' },
-                        { l:t('crop_nge.hum'), v:`${weather.humidity}%`,     c:'#86EFAC' },
+                        { l:t('crop_nge.temp'),     v:`${weather.temperature}°C`, c:'var(--primary)' },
+                        { l:t('crop_nge.hum'), v:`${weather.humidity}%`,     c:'var(--tertiary)' },
                         { l:t('crop_nge.rain'), v:`${weather.rainfall}mm`,    c:'#3B82F6' },
                       ].map(item => (
                         <div key={item.l} style={{ marginBottom:6 }}>
@@ -620,18 +620,18 @@ export default function CropRecommendation() {
                     </div>
 
                     {/* Soil */}
-                    <div style={{ background:'#040F07',
-                                  border:'1px solid #22C55E22',
-                                  borderTop:'2px solid #22C55E',
+                    <div style={{ background:'var(--bg-deep)',
+                                  border:'1px solid var(--primary-glow)',
+                                  borderTop:'2px solid var(--primary)',
                                   borderRadius:2, padding:12 }}>
                       <p style={{ fontFamily:"'Courier New'", fontSize:8,
-                                   color:'#22C55E66', letterSpacing:3,
+                                   color:'var(--primary-dim)', letterSpacing:3,
                                    margin:'0 0 8px' }}>
                         // {t('crop_nge.soil')} // {soil?.zone?.toUpperCase()} {t('crop_nge.zone').toUpperCase()}
                       </p>
                       {soil && [
-                        { l:'N', v:`${soil.N}`,  c:'#22C55E' },
-                        { l:'P', v:`${soil.P}`,  c:'#86EFAC' },
+                        { l:'N', v:`${soil.N}`,  c:'var(--primary)' },
+                        { l:'P', v:`${soil.P}`,  c:'var(--tertiary)' },
                         { l:'K', v:`${soil.K}`,  c:'#A3E635' },
                         { l:'pH',v:`${soil.ph}`, c:'#10B981' },
                       ].map(item => (
@@ -652,7 +652,7 @@ export default function CropRecommendation() {
                     </div>
 
                     {/* Location */}
-                    <div style={{ background:'#040F07',
+                    <div style={{ background:'var(--bg-deep)',
                                   border:'1px solid #10B98122',
                                   borderTop:'2px solid #10B981',
                                   borderRadius:2, padding:12 }}>
@@ -662,7 +662,7 @@ export default function CropRecommendation() {
                         // {t('crop_nge.loc')}
                       </p>
                       <p style={{ fontFamily:"'Exo 2'", fontSize:11,
-                                   color:'#22C55E', margin:'0 0 2px',
+                                   color:'var(--primary)', margin:'0 0 2px',
                                    letterSpacing:2 }}>
                         {selectedState?.toUpperCase()}
                       </p>
@@ -674,20 +674,20 @@ export default function CropRecommendation() {
                       <div style={{ padding:'4px 8px',
                                     background:`${(() => {
                                       const z = soil?.zone || 'default'
-                                      return {coastal:'#86EFAC',hill:'#10B981',
-                                              arid:'#A3E635',plain:'#00FF41'}[z] || '#22C55E'
+                                      return {coastal:'var(--tertiary)',hill:'#10B981',
+                                              arid:'#A3E635',plain:'#00FF41'}[z] || 'var(--primary)'
                                     })()}11`,
                                     border:`1px solid ${(() => {
                                       const z = soil?.zone || 'default'
-                                      return {coastal:'#86EFAC',hill:'#10B981',
-                                              arid:'#A3E635',plain:'#00FF41'}[z] || '#22C55E'
+                                      return {coastal:'var(--tertiary)',hill:'#10B981',
+                                              arid:'#A3E635',plain:'#00FF41'}[z] || 'var(--primary)'
                                     })()}33`,
                                     borderRadius:1 }}>
                         <p style={{ fontFamily:"'Courier New'", fontSize:8,
                                      color: (() => {
                                        const z = soil?.zone || 'default'
-                                       return {coastal:'#86EFAC',hill:'#10B981',
-                                               arid:'#A3E635',plain:'#00FF41'}[z] || '#22C55E'
+                                       return {coastal:'var(--tertiary)',hill:'#10B981',
+                                               arid:'#A3E635',plain:'#00FF41'}[z] || 'var(--primary)'
                                      })(),
                                      margin:0, letterSpacing:2 }}>
                           {(soil?.zone || 'CENTRAL').toUpperCase()} {t('crop_nge.zone').toUpperCase()}
@@ -697,26 +697,26 @@ export default function CropRecommendation() {
                   </div>
 
                   {/* Main recommendation card */}
-                  <div style={{ background:'#040F07',
-                                border:'1px solid #22C55E',
+                  <div style={{ background:'var(--bg-deep)',
+                                border:'1px solid var(--primary)',
                                 borderRadius:4, padding:20,
-                                boxShadow:'0 0 30px #22C55E22',
+                                boxShadow:'0 0 30px var(--primary-glow)',
                                 marginBottom:12 }}>
 
                     <div style={{ display:'flex', justifyContent:'space-between',
                                   alignItems:'flex-start', marginBottom:16 }}>
                       <div>
                         <p style={{ fontFamily:"'Courier New'", fontSize:9,
-                                     color:'#22C55E66', letterSpacing:3,
+                                     color:'var(--primary-dim)', letterSpacing:3,
                                      margin:'0 0 8px' }}>
                           {t('crop_nge.magi_rec')} {selectedDist?.toUpperCase()}
                         </p>
                         <div style={{ display:'flex', alignItems:'center', gap:14 }}>
                           <span style={{ fontSize:44 }}>{cropInfo.emoji}</span>
                           <p style={{ fontFamily:"'Exo 2'", fontSize:26,
-                                       fontWeight:900, color:'#22C55E',
+                                       fontWeight:900, color:'var(--primary)',
                                        margin:0, letterSpacing:3,
-                                       textShadow:'0 0 20px #22C55E88' }}>
+                                       textShadow:'0 0 20px var(--primary-dim)' }}>
                             {result.recommended_crop?.toUpperCase()}
                           </p>
                         </div>
@@ -737,7 +737,7 @@ export default function CropRecommendation() {
                     </div>
 
                     {/* Confidence bar */}
-                    <div style={{ height:6, background:'#22C55E11',
+                    <div style={{ height:6, background:'var(--primary-glow)',
                                    borderRadius:1, overflow:'hidden',
                                    marginBottom:16 }}>
                       <motion.div
@@ -745,7 +745,7 @@ export default function CropRecommendation() {
                         animate={{ width: result.confidence }}
                         transition={{ duration:1.2, ease:'easeOut' }}
                         style={{ height:'100%', borderRadius:1,
-                                  background:'linear-gradient(90deg,#22C55E66,#00FF41)',
+                                  background:'linear-gradient(90deg,var(--primary-dim),#00FF41)',
                                   boxShadow:'0 0 8px #00FF4166' }} />
                     </div>
 
@@ -755,11 +755,11 @@ export default function CropRecommendation() {
                                   gap:8 }}>
                       {[
                         { l:t('crop_nge.avg_prof'), v:cropInfo.profit,  c:'#A3E635' },
-                        { l:t('crop_nge.water'),      v:cropInfo.water,   c:'#86EFAC' },
-                        { l:t('crop_nge.season'),     v:cropInfo.season,  c:'#22C55E' },
+                        { l:t('crop_nge.water'),      v:cropInfo.water,   c:'var(--tertiary)' },
+                        { l:t('crop_nge.season'),     v:cropInfo.season,  c:'var(--primary)' },
                         { l:t('crop_nge.duration'),   v:cropInfo.days,    c:'#10B981' },
                       ].map(item => (
-                        <div key={item.l} style={{ background:'#020D05',
+                        <div key={item.l} style={{ background:'var(--bg)',
                                                     border:`1px solid ${item.c}22`,
                                                     borderRadius:2, padding:'10px 8px',
                                                     textAlign:'center' }}>
@@ -780,12 +780,12 @@ export default function CropRecommendation() {
 
                   {/* Top 3 alternatives */}
                   {result.top3?.length > 1 && (
-                    <div style={{ background:'#040F07',
-                                  border:'1px solid #22C55E22',
+                    <div style={{ background:'var(--bg-deep)',
+                                  border:'1px solid var(--primary-glow)',
                                   borderRadius:4, padding:16,
                                   marginBottom:12 }}>
                       <p style={{ fontFamily:"'Courier New'", fontSize:8,
-                                   color:'#22C55E44', letterSpacing:3,
+                                   color:'var(--primary-dim)', letterSpacing:3,
                                    margin:'0 0 10px' }}>
                         {t('crop_nge.alt_rec')}
                       </p>
@@ -796,8 +796,8 @@ export default function CropRecommendation() {
                           <div key={i} style={{
                             display:'flex', alignItems:'center', gap:10,
                             padding:'8px 10px', marginBottom:6,
-                            background:'#020D05', borderRadius:2,
-                            border:'1px solid #22C55E11'
+                            background:'var(--bg)', borderRadius:2,
+                            border:'1px solid var(--primary-glow)'
                           }}>
                             <span style={{ fontSize:18 }}>{altInfo.emoji}</span>
                             <span style={{ fontFamily:"'Exo 2'", fontSize:11,
@@ -805,13 +805,13 @@ export default function CropRecommendation() {
                               {alt.crop?.toUpperCase()}
                             </span>
                             <div style={{ width:80, height:3,
-                                           background:'#22C55E11', borderRadius:1 }}>
+                                           background:'var(--primary-glow)', borderRadius:1 }}>
                               <div style={{ height:'100%', borderRadius:1,
-                                             background:'#22C55E44',
+                                             background:'var(--primary-dim)',
                                              width:`${alt.confidence}%` }} />
                             </div>
                             <span style={{ fontFamily:"'Courier New'", fontSize:9,
-                                            color:'#22C55E66', minWidth:36,
+                                            color:'var(--primary-dim)', minWidth:36,
                                             textAlign:'right' }}>
                               {alt.confidence}%
                             </span>
@@ -831,8 +831,8 @@ export default function CropRecommendation() {
                       setSoil(null)
                     }} style={{
                       padding:'10px', background:'transparent',
-                      border:'1px solid #22C55E33', borderRadius:2,
-                      color:'#22C55E66', fontFamily:"'Courier New'",
+                      border:'1px solid var(--primary-dim)', borderRadius:2,
+                      color:'var(--primary-dim)', fontFamily:"'Courier New'",
                       fontSize:9, letterSpacing:2, cursor:'pointer'
                     }}>
                       ← CHANGE DISTRICT
@@ -846,8 +846,8 @@ export default function CropRecommendation() {
                       setSoil(null)
                     }} style={{
                       padding:'10px', background:'transparent',
-                      border:'1px solid #22C55E33', borderRadius:2,
-                      color:'#22C55E66', fontFamily:"'Courier New'",
+                      border:'1px solid var(--primary-dim)', borderRadius:2,
+                      color:'var(--primary-dim)', fontFamily:"'Courier New'",
                       fontSize:9, letterSpacing:2, cursor:'pointer'
                     }}>
                       ← CHANGE STATE

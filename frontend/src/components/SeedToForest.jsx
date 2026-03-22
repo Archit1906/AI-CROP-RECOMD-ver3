@@ -288,7 +288,7 @@ export default function SeedToForest({ onComplete }) {
           <h1 style={{
             fontFamily: "'Cabinet Grotesk',sans-serif",
             fontSize: 64, fontWeight: 900, letterSpacing: -1,
-            background: 'linear-gradient(135deg,#4ADE80,#22C55E,#A3E635)',
+            background: 'linear-gradient(135deg,var(--secondary),var(--primary),#A3E635)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             margin: '0 0 10px',
@@ -313,7 +313,7 @@ export default function SeedToForest({ onComplete }) {
       }}>
         <div style={{
           height: '100%',
-          background: 'linear-gradient(90deg,#22C55E,#4ADE80)',
+          background: 'linear-gradient(90deg,var(--primary),var(--secondary))',
           boxShadow: '0 0 8px rgba(74,222,128,0.6)',
           transition: 'width 0.5s ease',
           width: phase === 'falling'  ? '15%' :
@@ -326,7 +326,7 @@ export default function SeedToForest({ onComplete }) {
       <button onClick={onComplete} style={{
         position: 'absolute', top: 20, right: 20, zIndex: 4,
         background: 'rgba(34,197,94,0.08)',
-        border: '1px solid rgba(34,197,94,0.3)',
+        border: '1px solid var(--border-hover)',
         borderRadius: 8, color: 'rgba(74,222,128,0.7)',
         fontFamily: "'Share Tech Mono'",
         fontSize: 10, letterSpacing: 3,

@@ -7,6 +7,7 @@ import {
   Tooltip, ResponsiveContainer, ReferenceLine
 } from 'recharts'
 import api from '../api/axios'
+import { useTheme } from '../contexts/ThemeContext'
 
 const STATES = ["Tamil Nadu", "Maharashtra", "Punjab", "Karnataka", "Andhra Pradesh"]
 
@@ -18,6 +19,7 @@ const DISTRICTS = {
 
 export default function MarketPrices() {
   const { t } = useTranslation()
+  const { currentTheme: themeVars } = useTheme()
   const navigate = useNavigate()
   const [state, setState] = useState("Tamil Nadu")
   const [district, setDistrict] = useState("All Districts")
@@ -60,10 +62,10 @@ export default function MarketPrices() {
     if (active && payload?.length) {
       return (
         <div style={{
-          background: '#040F07', border: '1px solid #22C55E',
+          background: 'var(--bg-deep)', border: '1px solid var(--primary)',
           borderRadius: 2, padding: '10px 14px', fontFamily: "'Share Tech Mono', monospace"
         }}>
-          <p style={{ color: '#22C55E88', fontSize: 10, margin: '0 0 4px', letterSpacing: 2 }}>// T={label}</p>
+          <p style={{ color: 'var(--primary-dim)', fontSize: 10, margin: '0 0 4px', letterSpacing: 2 }}>// T={label}</p>
           <p style={{ color: '#00FF41', fontWeight: 700, fontSize: 16, margin: 0, letterSpacing: 1 }}>
             ₹{payload[0]?.value?.toLocaleString()}
           </p>
@@ -76,22 +78,22 @@ export default function MarketPrices() {
   if (loading) return (
     <div className="hex-bg" style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      height: '100vh', background: '#020D05', color: '#22C55E', fontSize: 16, fontFamily: "'Share Tech Mono', monospace"
+      height: '100vh', background: 'var(--bg)', color: 'var(--primary)', fontSize: 16, fontFamily: "'Share Tech Mono', monospace"
     }}>
       <div className="flicker" style={{ letterSpacing: 3 }}>{t('mkt_nge.conn')}</div>
     </div>
   )
 
   if (error) return (
-    <div className="hex-bg" style={{ minHeight: '100vh', padding: 32, background: '#020D05' }}>
-      <div style={{ padding: 20, background: '#1A0500', border: '1px solid #16A34A', borderRadius: 2, color: '#16A34A', fontFamily: "'Share Tech Mono', monospace" }}>
+    <div className="hex-bg" style={{ minHeight: '100vh', padding: 32, background: 'var(--bg)' }}>
+      <div style={{ padding: 20, background: '#1A0500', border: '1px solid var(--primary)', borderRadius: 2, color: 'var(--primary)', fontFamily: "'Share Tech Mono', monospace" }}>
         {error}
       </div>
     </div>
   )
 
   return (
-    <div className="hex-bg" style={{ padding: 24, background: '#020D05', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
+    <div className="hex-bg" style={{ padding: 24, background: 'var(--bg)', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
 
       {/* Header */}
       <div style={{
@@ -99,10 +101,10 @@ export default function MarketPrices() {
         alignItems: 'flex-start', marginBottom: 24, flexWrap: 'wrap', gap: 12
       }}>
         <div>
-          <p style={{ fontFamily: "'Share Tech Mono'", fontSize: 10, color: '#22C55E88', letterSpacing: 3, margin: '0 0 4px' }}>
+          <p style={{ fontFamily: "'Share Tech Mono'", fontSize: 10, color: 'var(--primary-dim)', letterSpacing: 3, margin: '0 0 4px' }}>
             {t('mkt_nge.data_lbl')}
           </p>
-          <h1 className="glitch-text" style={{ fontSize: 28, fontWeight: 900, color: '#22C55E', margin: 0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 3, textTransform: 'uppercase', textShadow: '0 0 20px #22C55E66' }}>
+          <h1 className="glitch-text" style={{ fontSize: 28, fontWeight: 900, color: 'var(--primary)', margin: 0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 3, textTransform: 'uppercase', textShadow: '0 0 20px var(--primary-dim)' }}>
             {t('mkt_nge.title')}
           </h1>
           <p style={{ color: '#666680', fontSize: 11, margin: '4px 0 0', fontFamily: "'Share Tech Mono', monospace", letterSpacing: 1 }}>
@@ -114,22 +116,22 @@ export default function MarketPrices() {
         <div style={{ display: 'flex', gap: 12 }}>
           <select value={state} onChange={e => { setState(e.target.value); setDistrict("All Districts") }}
             style={{
-              background: '#020D05', border: '1px solid #22C55E66', borderRadius: 2,
+              background: 'var(--bg)', border: '1px solid var(--primary-dim)', borderRadius: 2,
               color: '#E8E8E8', padding: '8px 12px', fontSize: 12, fontFamily: "'Share Tech Mono', monospace", outline: 'none', cursor: 'pointer'
             }}
-            onFocus={e => { e.target.style.borderColor = '#22C55E'; e.target.style.boxShadow = '0 0 10px #22C55E33'; }}
-            onBlur={e => { e.target.style.borderColor = '#22C55E66'; e.target.style.boxShadow = 'none'; }}
+            onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 10px var(--primary-dim)'; }}
+            onBlur={e => { e.target.style.borderColor = 'var(--primary-dim)'; e.target.style.boxShadow = 'none'; }}
           >
             {STATES.map(s => <option key={s} value={s}>{s.toUpperCase()}</option>)}
           </select>
 
           <select value={district} onChange={e => setDistrict(e.target.value)}
             style={{
-              background: '#020D05', border: '1px solid #22C55E66', borderRadius: 2,
+              background: 'var(--bg)', border: '1px solid var(--primary-dim)', borderRadius: 2,
               color: '#E8E8E8', padding: '8px 12px', fontSize: 12, fontFamily: "'Share Tech Mono', monospace", outline: 'none', cursor: 'pointer'
             }}
-            onFocus={e => { e.target.style.borderColor = '#22C55E'; e.target.style.boxShadow = '0 0 10px #22C55E33'; }}
-            onBlur={e => { e.target.style.borderColor = '#22C55E66'; e.target.style.boxShadow = 'none'; }}
+            onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 10px var(--primary-dim)'; }}
+            onBlur={e => { e.target.style.borderColor = 'var(--primary-dim)'; e.target.style.boxShadow = 'none'; }}
           >
             {(DISTRICTS[state] || ["All Districts"]).map(d => <option key={d} value={d}>{d.toUpperCase()}</option>)}
           </select>
@@ -139,7 +141,7 @@ export default function MarketPrices() {
       {/* Best Time to Sell Banner */}
       {data?.best_sell && (
         <div style={{
-          background: 'linear-gradient(135deg, #0D2914, #040F07)',
+          background: 'linear-gradient(135deg, var(--bg-elevated), var(--bg-deep))',
           border: '1px solid #A3E635', borderLeft: '4px solid #A3E635', borderRadius: 2,
           padding: '16px 20px', marginBottom: 24, paddingLeft: '16px',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
@@ -170,8 +172,8 @@ export default function MarketPrices() {
 
         {/* Crop List */}
         <div className="nge-card" data-label={t("mkt_nge.mandi_com")} style={{ overflow: 'hidden', padding: 0 }}>
-          <div style={{ padding: '16px', background: '#040F07' }}>
-            <p style={{ color: '#22C55E', fontWeight: 700, margin: 0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 2 }}>{t('mkt_nge.curr_price')}</p>
+          <div style={{ padding: '16px', background: 'var(--bg-deep)' }}>
+            <p style={{ color: 'var(--primary)', fontWeight: 700, margin: 0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 2 }}>{t('mkt_nge.curr_price')}</p>
             <p style={{ color: '#666680', fontSize: 11, margin: '4px 0 0', fontFamily: "'Share Tech Mono', monospace" }}>
               {t('mkt_nge.sel_com')}
             </p>
@@ -184,14 +186,14 @@ export default function MarketPrices() {
                 style={{
                   padding: '16px',
                   cursor: 'pointer',
-                  borderBottom: '1px solid #22C55E22',
-                  background: selectedCrop?.crop === crop.crop ? '#22C55E22' : 'transparent',
-                  borderLeft: selectedCrop?.crop === crop.crop ? '4px solid #22C55E' : '4px solid transparent',
+                  borderBottom: '1px solid var(--primary-glow)',
+                  background: selectedCrop?.crop === crop.crop ? 'var(--primary-glow)' : 'transparent',
+                  borderLeft: selectedCrop?.crop === crop.crop ? '4px solid var(--primary)' : '4px solid transparent',
                   transition: 'all 0.15s',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                 }}>
                 <div>
-                  <p style={{ color: selectedCrop?.crop === crop.crop ? '#22C55E' : '#E8E8E8', fontWeight: 700, margin: 0, fontSize: 15, fontFamily: "'Exo 2', sans-serif", letterSpacing: 1, textTransform: 'uppercase' }}>
+                  <p style={{ color: selectedCrop?.crop === crop.crop ? 'var(--primary)' : '#E8E8E8', fontWeight: 700, margin: 0, fontSize: 15, fontFamily: "'Exo 2', sans-serif", letterSpacing: 1, textTransform: 'uppercase' }}>
                     <span style={{ filter: 'grayscale(1) sepia(1)' }}>{crop.emoji}</span> {crop.crop}
                   </p>
                   <p style={{ color: '#666680', fontSize: 11, margin: '2px 0 0', fontFamily: "'Share Tech Mono', monospace" }}>
@@ -199,12 +201,12 @@ export default function MarketPrices() {
                   </p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ color: selectedCrop?.crop === crop.crop ? '#22C55E' : '#E8E8E8', fontWeight: 700, margin: 0, fontSize: 16, fontFamily: "'Exo 2', sans-serif" }}>
+                  <p style={{ color: selectedCrop?.crop === crop.crop ? 'var(--primary)' : '#E8E8E8', fontWeight: 700, margin: 0, fontSize: 16, fontFamily: "'Exo 2', sans-serif" }}>
                     ₹{crop.price.toLocaleString()}
                   </p>
                   <p style={{
                     margin: '4px 0 0', fontSize: 11, fontWeight: 700, fontFamily: "'Share Tech Mono', monospace", letterSpacing: 1,
-                    color: crop.change > 0 ? '#00FF41' : crop.change < 0 ? '#16A34A' : '#666680'
+                    color: crop.change > 0 ? '#00FF41' : crop.change < 0 ? 'var(--primary)' : '#666680'
                   }}>
                     {crop.change > 0 ? '▲' : crop.change < 0 ? '▼' : '►'} {Math.abs(crop.change)}%
                   </p>
@@ -225,13 +227,13 @@ export default function MarketPrices() {
                 alignItems: 'flex-start', marginBottom: 24, flexDirection: 'column', gap: 16
               }}>
                 <div>
-                  <p style={{ color: '#22C55E', fontWeight: 700, fontSize: 16, margin: 0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 2, textTransform: 'uppercase' }}>
+                  <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: 16, margin: 0, fontFamily: "'Exo 2', sans-serif", letterSpacing: 2, textTransform: 'uppercase' }}>
                     {t('mkt_nge.price_vec')} {selectedCrop.crop}
                   </p>
-                  <p style={{ color: '#86EFAC', fontSize: 12, margin: '6px 0 0', fontFamily: "'Share Tech Mono', monospace" }}>
+                  <p style={{ color: 'var(--tertiary)', fontSize: 12, margin: '6px 0 0', fontFamily: "'Share Tech Mono', monospace" }}>
                     ₹{selectedCrop.price.toLocaleString()} / {selectedCrop.unit.toUpperCase()} •
                     <span style={{
-                      color: selectedCrop.change > 0 ? '#00FF41' : '#16A34A',
+                      color: selectedCrop.change > 0 ? '#00FF41' : 'var(--primary)',
                       marginLeft: 6
                     }}>
                       {selectedCrop.change > 0 ? '▲' : '▼'} {Math.abs(selectedCrop.change)}% {t('mkt_nge.delta')}
@@ -250,9 +252,9 @@ export default function MarketPrices() {
                       style={{
                         padding: '6px 16px', borderRadius: 2, fontSize: 11,
                         fontWeight: 700, cursor: 'pointer', fontFamily: "'Share Tech Mono', monospace",
-                        background: timeRange === btn.key ? '#22C55E' : '#040F07',
-                        color: timeRange === btn.key ? '#020D05' : '#666680',
-                        border: `1px solid ${timeRange === btn.key ? '#22C55E' : '#22C55E44'}`,
+                        background: timeRange === btn.key ? 'var(--primary)' : 'var(--bg-deep)',
+                        color: timeRange === btn.key ? 'var(--bg)' : '#666680',
+                        border: `1px solid ${timeRange === btn.key ? 'var(--primary)' : 'var(--primary-dim)'}`,
                         transition: 'all 0.15s'
                       }}>
                       {btn.label}
@@ -265,16 +267,16 @@ export default function MarketPrices() {
               <div style={{ height: 280 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#22C55E33" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={themeVars.primaryDim} vertical={false} />
                     <XAxis dataKey="month" tick={{ fill: '#666680', fontSize: 10, fontFamily: "'Share Tech Mono', monospace" }}
                       axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: '#666680', fontSize: 10, fontFamily: "'Share Tech Mono', monospace" }}
                       axisLine={false} tickLine={false}
                       tickFormatter={v => `₹${v}`} />
-                    <Tooltip content={<NgeTooltip />} cursor={{ stroke: '#22C55E22', strokeWidth: 20 }} />
+                    <Tooltip content={<NgeTooltip />} cursor={{ stroke: themeVars.primaryGlow, strokeWidth: 20 }} />
                     <Line type="monotone" dataKey="price" stroke="#00FF41"
-                      strokeWidth={2} dot={{ fill: '#020D05', stroke: '#00FF41', r: 4, strokeWidth: 2 }}
-                      activeDot={{ r: 6, fill: '#00FF41', stroke: '#040F07', strokeWidth: 2 }} />
+                      strokeWidth={2} dot={{ fill: 'var(--bg)', stroke: '#00FF41', r: 4, strokeWidth: 2 }}
+                      activeDot={{ r: 6, fill: '#00FF41', stroke: 'var(--bg-deep)', strokeWidth: 2 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -282,14 +284,14 @@ export default function MarketPrices() {
               {/* Prediction Banner */}
               <div style={{
                 marginTop: 24, padding: '16px 20px',
-                background: '#040F07', borderRadius: 2, border: '1px solid #86EFAC44', borderLeft: '4px solid #86EFAC',
+                background: 'var(--bg-deep)', borderRadius: 2, border: '1px solid var(--tertiary)44', borderLeft: '4px solid var(--tertiary)',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center'
               }}>
                 <div>
-                  <p style={{ color: '#86EFAC88', fontSize: 10, margin: 0, fontFamily: "'Share Tech Mono', monospace", letterSpacing: 2 }}>
+                  <p style={{ color: 'var(--tertiary)88', fontSize: 10, margin: 0, fontFamily: "'Share Tech Mono', monospace", letterSpacing: 2 }}>
                     {t('mkt_nge.proj_msg')}
                   </p>
-                  <p style={{ color: '#86EFAC', fontWeight: 700, fontSize: 20, margin: '6px 0 0', fontFamily: "'Exo 2', sans-serif" }}>
+                  <p style={{ color: 'var(--tertiary)', fontWeight: 700, fontSize: 20, margin: '6px 0 0', fontFamily: "'Exo 2', sans-serif" }}>
                     ₹{Math.round(selectedCrop.price * 1.05).toLocaleString()}
                   </p>
                 </div>
@@ -305,7 +307,7 @@ export default function MarketPrices() {
           ) : (
             <div style={{
               height: 300, display: 'flex', alignItems: 'center', textAlign: 'center',
-              justifyContent: 'center', color: '#22C55E88', fontFamily: "'Share Tech Mono', monospace", fontSize: 12, letterSpacing: 1
+              justifyContent: 'center', color: 'var(--primary-dim)', fontFamily: "'Share Tech Mono', monospace", fontSize: 12, letterSpacing: 1
             }}>
               {t('mkt_nge.no_sel').split('\n').map((line, i) => <span key={i}>{line}<br /></span>)}
             </div>

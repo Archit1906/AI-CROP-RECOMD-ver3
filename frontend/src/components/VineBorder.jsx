@@ -11,7 +11,7 @@ export default function VineBorder({ width = '100%' }) {
         <path
           d="M0 10 Q 25 2 50 10 T 100 10"
           fill="none"
-          stroke="#22C55E"
+          stroke='var(--primary)'
           strokeWidth="1"
           strokeDasharray="1000"
           strokeDashoffset="1000"
@@ -23,7 +23,7 @@ export default function VineBorder({ width = '100%' }) {
         <path
           d={`M0 10 Q${parseInt(width)*0.25} 2 ${parseInt(width)*0.5} 10 Q${parseInt(width)*0.75} 18 ${parseInt(width)} 10`}
           fill="none"
-          stroke="#22C55E"
+          stroke='var(--primary)'
           strokeWidth="1"
           strokeDasharray="1000"
           strokeDashoffset="1000"
@@ -38,7 +38,7 @@ export default function VineBorder({ width = '100%' }) {
           cx={`${pos * 100}%`}
           cy="10"
           r="3"
-          fill="#22C55E"
+          fill='var(--primary)'
           opacity="0.6"
           style={{ animation: `sprout 0.5s ${0.5 + i * 0.3}s ease-out both` }}
         />

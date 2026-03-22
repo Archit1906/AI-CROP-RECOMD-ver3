@@ -5,7 +5,7 @@ import { useTheme } from '../contexts/ThemeContext';
 
 const Sidebar = () => {
   const { t, i18n } = useTranslation();
-  const { isDarkMode, toggleDarkMode } = useTheme();
+  const { theme, toggleTheme, currentTheme } = useTheme();
 
   const navItems = [
     { path: '/', icon: '🌿', label: t('nav.dashboard') },
@@ -24,7 +24,7 @@ const Sidebar = () => {
       background: 'rgba(4, 15, 7, 0.95)',
       backdropFilter: 'blur(10px)',
       WebkitBackdropFilter: 'blur(10px)',
-      borderRight: '1px solid #1A4A25',
+      borderRight: '1px solid var(--border)',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
@@ -40,17 +40,17 @@ const Sidebar = () => {
       <div style={{ position: 'relative', zIndex: 10 }}>
         <div style={{
           padding: '24px 16px 20px',
-          borderBottom: '1px solid #1A4A25',
+          borderBottom: '1px solid var(--border)',
           background: 'linear-gradient(180deg, rgba(7, 26, 12, 0.8) 0%, transparent 100%)'
         }}>
           {/* Eco-style logo */}
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:12 }}>
             <div style={{
               width: 38, height: 38,
-              background: 'linear-gradient(135deg, #4ADE80 0%, #22C55E 100%)',
+              background: 'linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%)',
               borderRadius: '8px 24px 8px 24px', // Leaf shape
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 0 15px rgba(34,197,94,0.4)'
+              boxShadow: '0 0 15px var(--text-muted)'
             }}>
               <span style={{ fontSize:18 }}>🌿</span>
             </div>
@@ -58,7 +58,7 @@ const Sidebar = () => {
               <p style={{
                 fontFamily: "'Exo 2', sans-serif",
                 fontSize: 15, fontWeight: 900,
-                color: '#4ADE80', margin: 0,
+                color: 'var(--secondary)', margin: 0,
                 letterSpacing: 2,
                 textShadow: '0 0 10px rgba(74,222,128,0.5)'
               }}>
@@ -76,14 +76,14 @@ const Sidebar = () => {
 
           {/* System status bar */}
           <div style={{
-            background: '#071A0C', border: '1px solid #1A4A25',
+            background: 'var(--bg-card)', border: '1px solid var(--border)',
             borderRadius: 4, padding: '6px 10px',
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             boxShadow: 'inset 0 0 10px rgba(34,197,94,0.05)'
           }}>
             <span style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
-                           color:'#4ADE80', letterSpacing:1, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ display:'block', width:6, height:6, borderRadius:'50%', background:'#4ADE80', animation:'pulseEco 2s infinite' }} />
+                           color:'var(--secondary)', letterSpacing:1, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ display:'block', width:6, height:6, borderRadius:'50%', background:'var(--secondary)', animation:'pulseEco 2s infinite' }} />
               BIOME ONLINE
             </span>
             <span style={{ fontFamily:"'Share Tech Mono'", fontSize:9, color:'#6EE7B7', opacity:0.6 }}>
@@ -110,8 +110,8 @@ const Sidebar = () => {
                 fontSize: 13, fontWeight: 600, letterSpacing: 1,
                 transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 background: isActive ? 'linear-gradient(90deg, rgba(34,197,94,0.15) 0%, transparent 100%)' : 'transparent',
-                color: isActive ? '#4ADE80' : '#A7F3D0',
-                borderLeft: isActive ? '3px solid #4ADE80' : '3px solid transparent',
+                color: isActive ? 'var(--secondary)' : '#A7F3D0',
+                borderLeft: isActive ? '3px solid var(--secondary)' : '3px solid transparent',
               })}>
               {({ isActive }) => (
                 <>
@@ -122,7 +122,7 @@ const Sidebar = () => {
                   {/* Active indicator */}
                   {isActive && (
                     <span style={{ marginLeft:'auto', fontFamily:"'Share Tech Mono'",
-                                   fontSize:10, color:'#4ADE80', animation: 'pulseEco 1.5s infinite' }}>
+                                   fontSize:10, color:'var(--secondary)', animation: 'pulseEco 1.5s infinite' }}>
                       ●
                     </span>
                   )}
@@ -136,28 +136,89 @@ const Sidebar = () => {
       {/* Bottom section */}
       <div style={{ padding:'0 16px', position: 'relative', zIndex: 10 }}>
         {/* Divider */}
-        <div style={{ borderTop:'1px solid #1A4A25', marginBottom:16 }} />
+        <div style={{ borderTop:'1px solid var(--border)', marginBottom:16 }} />
 
-        {/* Dark mode toggle */}
-        <button onClick={toggleDarkMode}
-          style={{
-            width:'100%', padding:'10px 12px', marginBottom:12,
-            background: 'rgba(7,26,12,0.6)', border:'1px solid #1A4A25',
-            borderRadius:4, color:'#A7F3D0', cursor:'pointer',
-            fontFamily:"'Share Tech Mono'", fontSize:10,
-            letterSpacing:2, textAlign:'left',
-            display:'flex', justifyContent:'space-between',
-            alignItems: 'center', transition: 'all 0.2s'
-          }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor='#22C55E'; e.currentTarget.style.background='rgba(7,26,12,0.9)' }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor='#1A4A25'; e.currentTarget.style.background='rgba(7,26,12,0.6)' }}
-        >
-          <span>// ENVIRONMENT</span>
-          <span style={{ color:'#4ADE80', fontWeight: 700 }}>{isDarkMode ? 'MOONLIGHT' : 'SUNLIGHT'}</span>
-        </button>
+        {/* ── THEME TOGGLE ──────────────────────── */}
+        <div style={{
+          padding:      '12px',
+          borderTop:    '1px solid var(--border)',
+          marginTop:    'auto'
+        }}>
+          <p style={{
+            fontFamily:  "'Share Tech Mono'",
+            fontSize:    8, letterSpacing: 3,
+            color:       'var(--text-muted)',
+            margin:      '0 0 8px'
+          }}>
+            // ENVIRONMENT
+          </p>
+
+          <div style={{ display:'flex', gap:6 }}>
+            {/* SUNLIGHT button */}
+            <button
+              onClick={() => toggleTheme('sunlight')}
+              style={{
+                flex:        1, padding: '8px 4px',
+                background:  theme === 'sunlight'
+                  ? 'rgba(245,158,11,0.2)' : 'transparent',
+                border:      `1px solid ${theme === 'sunlight'
+                  ? '#F59E0B' : 'rgba(245,158,11,0.2)'}`,
+                borderRadius:6, cursor: 'pointer',
+                transition:  'all 0.2s',
+                display:     'flex', alignItems: 'center',
+                justifyContent: 'center', gap: 4
+              }}>
+              <span style={{ fontSize: 12 }}>☀️</span>
+              <span style={{
+                fontFamily:  "'Share Tech Mono'",
+                fontSize:    8, letterSpacing: 1,
+                color:       theme === 'sunlight'
+                  ? '#F59E0B' : 'rgba(245,158,11,0.4)'
+              }}>
+                SUNLIGHT
+              </span>
+            </button>
+
+            {/* MOONLIGHT button */}
+            <button
+              onClick={() => toggleTheme('moonlight')}
+              style={{
+                flex:        1, padding: '8px 4px',
+                background:  theme === 'moonlight'
+                  ? 'rgba(59,130,246,0.2)' : 'transparent',
+                border:      `1px solid ${theme === 'moonlight'
+                  ? '#3B82F6' : 'rgba(59,130,246,0.2)'}`,
+                borderRadius:6, cursor: 'pointer',
+                transition:  'all 0.2s',
+                display:     'flex', alignItems: 'center',
+                justifyContent: 'center', gap: 4
+              }}>
+              <span style={{ fontSize: 12 }}>🌙</span>
+              <span style={{
+                fontFamily:  "'Share Tech Mono'",
+                fontSize:    8, letterSpacing: 1,
+                color:       theme === 'moonlight'
+                  ? '#3B82F6' : 'rgba(59,130,246,0.4)'
+              }}>
+                MOONLIGHT
+              </span>
+            </button>
+          </div>
+
+          {/* Active theme indicator */}
+          <p style={{
+            fontFamily:  "'Share Tech Mono'",
+            fontSize:    7, letterSpacing: 2,
+            color:       'var(--text-muted)',
+            textAlign:   'center',
+            margin:      '6px 0 0'
+          }}>
+            ● {theme.toUpperCase()} ACTIVE
+          </p>
+        </div>
 
         {/* Language selector */}
-        <div style={{ background:'rgba(7,26,12,0.6)', border:'1px solid #1A4A25',
+        <div style={{ background:'rgba(7,26,12,0.6)', border:'1px solid var(--border)',
                       borderRadius:4, padding:'10px 12px' }}>
           <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9, color:'rgba(74,222,128,0.7)',
                       margin:'0 0 10px', letterSpacing:2 }}>
@@ -173,9 +234,9 @@ const Sidebar = () => {
                 onClick={() => { i18n.changeLanguage(lang.code); localStorage.setItem('lang', lang.code) }}
                 style={{
                   flex:1, padding:'6px 2px', border:'1px solid',
-                  borderColor: i18n.language===lang.code ? '#22C55E' : '#1A4A25',
+                  borderColor: i18n.language===lang.code ? 'var(--primary)' : 'var(--border)',
                   background: i18n.language===lang.code ? 'rgba(34,197,94,0.15)' : 'transparent',
-                  color: i18n.language===lang.code ? '#4ADE80' : '#6EE7B7',
+                  color: i18n.language===lang.code ? 'var(--secondary)' : '#6EE7B7',
                   fontFamily:"'Inter', sans-serif", fontSize:11, fontWeight: i18n.language===lang.code ? 600 : 400,
                   cursor:'pointer', borderRadius:3,
                   transition:'all 0.2s'
@@ -195,19 +256,19 @@ const Sidebar = () => {
           style={{
             width:'100%', padding:'8px',
             background:'transparent',
-            border:'1px dashed rgba(34,197,94,0.3)',
+            border:'1px dashed var(--border-hover)',
             color:'rgba(74,222,128,0.6)', fontFamily:"'Share Tech Mono'",
             fontSize:9, letterSpacing:2, cursor:'pointer',
             borderRadius:4, marginTop:12, transition: 'all 0.2s'
           }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(34,197,94,0.6)'; e.currentTarget.style.color='#4ADE80' }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(34,197,94,0.3)'; e.currentTarget.style.color='rgba(74,222,128,0.6)' }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(34,197,94,0.6)'; e.currentTarget.style.color='var(--secondary)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border-hover)'; e.currentTarget.style.color='rgba(74,222,128,0.6)' }}
         >
           // REPLAY GERMINATION
         </button>
 
         {/* Eco footer stamp */}
-        <p style={{ fontFamily:"'Share Tech Mono'", fontSize:8, color:'rgba(34,197,94,0.4)',
+        <p style={{ fontFamily:"'Share Tech Mono'", fontSize:8, color:'var(--primary-dim)',
                     textAlign:'center', margin:'16px 0 0', letterSpacing:3 }}>
           AMRITKRISHI BIOME // ACTIVE
         </p>

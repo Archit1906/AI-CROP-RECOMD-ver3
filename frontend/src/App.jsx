@@ -9,7 +9,6 @@ import MarketPrices from './pages/MarketPrices';
 import MarketAnalytics from './pages/MarketAnalytics';
 import Chatbot from './pages/Chatbot';
 import GovernmentSchemes from './pages/GovernmentSchemes';
-import { ThemeProvider } from './contexts/ThemeContext';
 import { useState } from 'react';
 import VineIntro from './components/VineIntro';
 import EcoBg from './components/EcoBg';
@@ -25,7 +24,7 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider>
+    <>
       <EcoBg />
       {!introComplete && (
         <VineIntro onComplete={handleIntroComplete} />
@@ -55,6 +54,6 @@ export default function App() {
           </div>
         </BrowserRouter>
       </div>
-    </ThemeProvider>
+    </>
   );
 }

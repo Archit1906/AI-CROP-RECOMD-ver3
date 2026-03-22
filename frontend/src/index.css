@@ -6,11 +6,45 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Default values — moonlight theme */
+:root {
+  --bg:            #010B14;
+  --bg-deep:       #000A12;
+  --bg-card:       #071828;
+  --bg-elevated:   #0C2236;
+  --bg-hover:      #102840;
+  --border:        #1A3A5C;
+  --border-hover:  #2A5A8C;
+  --border-accent: #3B82F6;
+  --primary:       #3B82F6;
+  --primary-dim:   rgba(59,130,246,0.4);
+  --primary-glow:  rgba(59,130,246,0.2);
+  --secondary:     #60A5FA;
+  --tertiary:      #93C5FD;
+  --text-primary:  #E0F2FE;
+  --text-second:   rgba(147,197,253,0.7);
+  --text-muted:    rgba(59,130,246,0.4);
+  --success:       #22C55E;
+  --danger:        #EF4444;
+  --warning:       #FBBF24;
+  --logo-grad:     linear-gradient(135deg,#60A5FA,#3B82F6,#93C5FD);
+  --btn-bg:        linear-gradient(135deg,#1D4ED8,#3B82F6);
+  --scanline:      rgba(59,130,246,0.06);
+}
+
 body {
-  background: #020D05;
+  background: var(--bg);
   font-family: 'Exo 2', sans-serif;
-  color: #86EFAC;
+  color:      var(--text-primary);
   overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* Smooth transition for all elements */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
 
 /* Organic noise texture overlay */
@@ -42,12 +76,11 @@ body::after {
 
 /* Custom scrollbar — vine style */
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #020D05; }
+::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #22C55E, #16A34A);
+  background: var(--primary);
   border-radius: 2px;
 }
-::-webkit-scrollbar-thumb:hover { background: #4ADE80; }
 
 /* ── ANIMATIONS ─────────────────────────────────────── */
 
@@ -119,18 +152,18 @@ body::after {
 
 /* ── ECO CARD BASE ──────────────────────────────────── */
 .eco-card {
-  background:    #071A0C;
-  border:        1px solid #1A4A25;
+  background:    var(--bg-card) !important;
+  border:        1px solid var(--border) !important;
   border-radius: 12px;
   position:      relative;
   overflow:      hidden;
-  transition:    all 0.25s ease;
+  transition:    background 0.4s ease, border-color 0.4s ease !important;
 }
 
 .eco-card:hover {
-  border-color:  #22C55E;
-  box-shadow:    0 0 20px rgba(34,197,94,0.15),
-                 inset 0 0 20px rgba(34,197,94,0.03);
+  border-color:  var(--primary) !important;
+  box-shadow:    0 0 20px var(--primary-glow),
+                 inset 0 0 20px var(--primary-glow) !important;
 }
 
 /* Organic corner decoration */
@@ -147,7 +180,7 @@ body::after {
 .eco-label {
   font-family:    'Share Tech Mono', monospace;
   font-size:      9px;
-  color:          rgba(34,197,94,0.5);
+  color:          var(--text-muted) !important;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -156,7 +189,8 @@ body::after {
 .eco-heading {
   font-family: 'Exo 2', sans-serif;
   font-weight: 800;
-  color:       #4ADE80;
+  color:       var(--primary) !important;
+  text-shadow: 0 0 20px var(--primary-glow) !important;
   letter-spacing: 2px;
   text-transform: uppercase;
   animation: bioGlow 4s ease infinite;
@@ -183,10 +217,10 @@ body::after {
 
 /* ── BIOLUMINESCENT BUTTON ──────────────────────────── */
 .bio-button {
-  background:    rgba(34,197,94,0.1);
-  border:        1px solid #22C55E;
+  background:    var(--primary-glow) !important;
+  border:        1px solid var(--primary) !important;
   border-radius: 8px;
-  color:         #4ADE80;
+  color:         var(--primary) !important;
   font-family:   'Exo 2', sans-serif;
   font-weight:   700;
   letter-spacing: 2px;
@@ -197,9 +231,7 @@ body::after {
   overflow:      hidden;
 }
 .bio-button:hover {
-  background:  rgba(34,197,94,0.2);
-  box-shadow:  0 0 20px rgba(34,197,94,0.3),
-               0 0 40px rgba(34,197,94,0.1);
+  box-shadow:  0 0 20px var(--primary-glow) !important;
   transform:   translateY(-1px);
 }
 .bio-button::before {
@@ -220,15 +252,15 @@ body::after {
 
 /* ── INPUT FIELD ────────────────────────────────────── */
 input, select, textarea {
-  background:    #040F07 !important;
-  border:        1px solid #1A4A25 !important;
+  background:    var(--bg-deep) !important;
+  border:        1px solid var(--border) !important;
   border-radius: 8px !important;
-  color:         #86EFAC !important;
+  color:         var(--text-primary) !important;
   font-family:   'Share Tech Mono', monospace !important;
 }
 input:focus, select:focus {
-  border-color:  #22C55E !important;
-  box-shadow:    0 0 12px rgba(34,197,94,0.2) !important;
+  border-color:  var(--primary) !important;
+  box-shadow:    0 0 12px var(--primary-glow) !important;
   outline:       none !important;
 }
 
@@ -238,15 +270,15 @@ input[type="range"] { accent-color: #22C55E; }
 /* ── PROGRESS BARS ──────────────────────────────────── */
 .eco-bar {
   height:        6px;
-  background:    rgba(34,197,94,0.1);
+  background:    var(--primary-glow);
   border-radius: 3px;
   overflow:      hidden;
 }
 .eco-bar-fill {
   height:        100%;
   border-radius: 3px;
-  background:    linear-gradient(90deg, #16A34A, #22C55E, #4ADE80);
-  box-shadow:    0 0 8px rgba(34,197,94,0.4);
+  background:    linear-gradient(90deg, var(--secondary), var(--primary), var(--tertiary));
+  box-shadow:    0 0 8px var(--primary-glow);
   transition:    width 0.8s ease;
 }
 

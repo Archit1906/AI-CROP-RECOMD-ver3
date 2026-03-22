@@ -236,7 +236,7 @@ export default function IndiaMap({
   }
 
   const getStroke = (name) => {
-    if (name === selectedState)        return '#22C55E'
+    if (name === selectedState)        return 'var(--primary)'
     if (name === hoveredState)         return 'rgba(34,197,94,0.8)'
     if (activeStates.includes(name))   return 'rgba(34,197,94,0.35)'
     return 'rgba(34,197,94,0.22)'
@@ -255,7 +255,7 @@ export default function IndiaMap({
                   flexDirection:'column', gap:12 }}>
       <div style={{
         width:32, height:32,
-        border:'2px solid #1A4A25', borderTop:'2px solid #22C55E',
+        border:'2px solid var(--border)', borderTop:'2px solid var(--primary)',
         borderRadius:'50%', animation:'spin 0.8s linear infinite'
       }} />
       <p style={{ fontFamily:"'Share Tech Mono'", color:'rgba(34,197,94,0.5)',
@@ -276,8 +276,8 @@ export default function IndiaMap({
         {error}
       </p>
       <button onClick={() => window.location.reload()}
-        style={{ background:'rgba(34,197,94,0.1)', border:'1px solid #22C55E',
-                  borderRadius:8, color:'#4ADE80', padding:'8px 16px',
+        style={{ background:'rgba(34,197,94,0.1)', border:'1px solid var(--primary)',
+                  borderRadius:8, color:'var(--secondary)', padding:'8px 16px',
                   fontFamily:"'Share Tech Mono'", fontSize:9,
                   letterSpacing:2, cursor:'pointer' }}>
         ↺ RETRY
@@ -304,7 +304,7 @@ export default function IndiaMap({
         </defs>
 
         {/* Background */}
-        <rect width={W} height={H} fill="#040F07" rx="10"/>
+        <rect width={W} height={H} fill='var(--bg-deep)' rx="10"/>
         <rect width={W} height={H} fill="url(#hexBg)" rx="10"/>
 
         {/* State paths — render non-selected first, selected on top */}
@@ -323,7 +323,7 @@ export default function IndiaMap({
                 {isSelected && (
                   <path d={d}
                     fill="rgba(34,197,94,0.12)"
-                    stroke="#4ADE80"
+                    stroke='var(--secondary)'
                     strokeWidth="4"
                     filter="url(#selGlow)"
                     opacity="0.4"
@@ -348,7 +348,7 @@ export default function IndiaMap({
                 {isSelected && (
                   <path d={d}
                     fill="none"
-                    stroke="#22C55E"
+                    stroke='var(--primary)'
                     strokeWidth="2"
                     opacity="0.35"
                     style={{ animation:'pulse 2s ease infinite' }}
@@ -392,17 +392,17 @@ export default function IndiaMap({
           left:         tooltip.x,
           top:          tooltip.y,
           transform:    'translateX(-50%)',
-          background:   '#071A0C',
-          border:       '1px solid #22C55E',
+          background:   'var(--bg-card)',
+          border:       '1px solid var(--primary)',
           borderRadius: 8,
           padding:      '5px 14px',
           pointerEvents:'none',
           zIndex:       20,
           whiteSpace:   'nowrap',
-          boxShadow:    '0 0 12px rgba(34,197,94,0.2)'
+          boxShadow:    '0 0 12px var(--primary-glow)'
         }}>
           <p style={{ fontFamily:"'Share Tech Mono'", fontSize:11,
-                       color:'#4ADE80', letterSpacing:2, margin:0 }}>
+                       color:'var(--secondary)', letterSpacing:2, margin:0 }}>
             {tooltip.name.toUpperCase()}
           </p>
         </div>

@@ -84,7 +84,7 @@ export default function EvaLaunch({ onComplete }) {
       ]
       const geo = new THREE.BufferGeometry().setFromPoints(points)
       const mat = new THREE.LineBasicMaterial({
-        color: i % 4 === 0 ? '#22C55E' : '#16A34A33',
+        color: i % 4 === 0 ? 'var(--primary)' : 'var(--primary)33',
         transparent: true,
         opacity: i % 4 === 0 ? 0.9 : 0.3
       })
@@ -109,7 +109,7 @@ export default function EvaLaunch({ onComplete }) {
       }
       const geo = new THREE.BufferGeometry().setFromPoints(ringPts)
       const mat = new THREE.LineBasicMaterial({
-        color: isMajor ? '#4ADE80' : '#22C55E44',
+        color: isMajor ? 'var(--secondary)' : 'var(--primary-dim)',
         transparent: true,
         opacity: isMajor ? 1.0 : 0.4
       })
@@ -122,7 +122,7 @@ export default function EvaLaunch({ onComplete }) {
       TUNNEL_RADIUS - 0.5, TUNNEL_RADIUS - 0.5, 600, 32, 1, true
     )
     const cylMat = new THREE.MeshBasicMaterial({
-      color: '#22C55E', transparent: true, opacity: 0.03, side: THREE.BackSide
+      color: 'var(--primary)', transparent: true, opacity: 0.03, side: THREE.BackSide
     })
     scene.add(new THREE.Mesh(cylGeo, cylMat))
 
@@ -166,11 +166,11 @@ export default function EvaLaunch({ onComplete }) {
       return { ring, mat }
     }
 
-    const shock1 = makeShockRing(0.1, '#4ADE80')
-    const shock2 = makeShockRing(0.1, '#22C55E')
+    const shock1 = makeShockRing(0.1, 'var(--secondary)')
+    const shock2 = makeShockRing(0.1, 'var(--primary)')
     const shock3 = makeShockRing(0.1, '#FFFFFF')
 
-    const bottomLight = new THREE.PointLight('#4ADE80', 0, 40)
+    const bottomLight = new THREE.PointLight('var(--secondary)', 0, 40)
     bottomLight.position.set(0, 1, 0)
     scene.add(bottomLight)
 
@@ -289,8 +289,8 @@ export default function EvaLaunch({ onComplete }) {
         gsap.to(shock.ring.scale, { x: scale, z: scale, duration: 1.2, delay, ease: 'power2.out' })
         gsap.to(shock.mat, { opacity: 0, duration: 1.0, delay: delay + 0.1 })
       }
-      expandShock(shock1, 0,    80, '#4ADE80')
-      expandShock(shock2, 0.08, 60, '#22C55E')
+      expandShock(shock1, 0,    80, 'var(--secondary)')
+      expandShock(shock2, 0.08, 60, 'var(--primary)')
       expandShock(shock3, 0.04, 40, '#FFFFFF')
 
       setLogLines(p => [...p, '> SURFACE BREACHED // PHOTOSYNTHESIS ONLINE'])
@@ -342,7 +342,7 @@ export default function EvaLaunch({ onComplete }) {
   return (
     <div ref={overlayRef} style={{
       position:'fixed', inset:0, zIndex:9999,
-      background:'#020D05', overflow:'hidden'
+      background:'var(--bg)', overflow:'hidden'
     }}>
       <canvas ref={canvasRef} style={{ position:'absolute', inset:0, width:'100%', height:'100%' }} />
 
@@ -355,7 +355,7 @@ export default function EvaLaunch({ onComplete }) {
 
         {redBorder && (
           <div style={{
-            position:'absolute', inset:0, border:'4px solid #4ADE80',
+            position:'absolute', inset:0, border:'4px solid var(--secondary)',
             boxShadow:'inset 0 0 40px rgba(74,222,128,0.3), 0 0 40px rgba(74,222,128,0.3)',
             pointerEvents:'none', animation:'borderFlash 0.1s infinite'
           }} />
@@ -368,14 +368,14 @@ export default function EvaLaunch({ onComplete }) {
             </p>
             <div style={{
               fontFamily:"'Share Tech Mono'", fontSize:120, fontWeight:900,
-              color: countdown <= 1 ? '#4ADE80' : countdown <= 2 ? '#86EFAC' : '#22C55E',
+              color: countdown <= 1 ? 'var(--secondary)' : countdown <= 2 ? 'var(--tertiary)' : 'var(--primary)',
               lineHeight:1, margin:'0 0 8px',
-              textShadow:`0 0 40px ${countdown <= 1 ? '#4ADE80' : '#22C55E'}`,
+              textShadow:`0 0 40px ${countdown <= 1 ? 'var(--secondary)' : 'var(--primary)'}`,
               animation:'countPulse 0.9s ease infinite'
             }}>
               {countdown}
             </div>
-            <p style={{ fontFamily:"'Share Tech Mono'", fontSize:11, color:'rgba(34,197,94,0.4)', letterSpacing:6, margin:0 }}>
+            <p style={{ fontFamily:"'Share Tech Mono'", fontSize:11, color:'var(--primary-dim)', letterSpacing:6, margin:0 }}>
               {countdown === 3 && 'STANDBY'}
               {countdown === 2 && 'CHARGING'}
               {countdown === 1 && 'SPROUT IMMINENT'}
@@ -385,12 +385,12 @@ export default function EvaLaunch({ onComplete }) {
 
         {!showCount && (
           <div style={{ position:'absolute', top:24, left:24 }}>
-            <p style={{ fontFamily:"'Share Tech Mono'", fontSize:8, color:'rgba(34,197,94,0.4)', letterSpacing:4, margin:'0 0 4px' }}>
+            <p style={{ fontFamily:"'Share Tech Mono'", fontSize:8, color:'var(--primary-dim)', letterSpacing:4, margin:'0 0 4px' }}>
               // BIOME LAUNCH CONTROL
             </p>
             <p style={{
               fontFamily:"'Share Tech Mono'", fontSize:14, fontWeight:700,
-              color:'#22C55E', letterSpacing:3, margin:0, textShadow:'0 0 10px rgba(34,197,94,0.5)',
+              color:'var(--primary)', letterSpacing:3, margin:0, textShadow:'0 0 10px rgba(34,197,94,0.5)',
               animation: phase === 'rush' ? 'glitchText 0.15s infinite' : 'none'
             }}>
               {phase === 'launch' && '▶ ROOTS EXPANDING'}
@@ -405,7 +405,7 @@ export default function EvaLaunch({ onComplete }) {
           {logLines.map((line, i) => (
             <p key={i} style={{
               fontFamily:"'Share Tech Mono'", fontSize:10,
-              color: i === logLines.length - 1 ? '#4ADE80' : 'rgba(34,197,94,0.5)',
+              color: i === logLines.length - 1 ? 'var(--secondary)' : 'rgba(34,197,94,0.5)',
               letterSpacing:1, margin:'2px 0', fontWeight: i === logLines.length - 1 ? 700 : 400
             }}>
               {line}
@@ -418,25 +418,25 @@ export default function EvaLaunch({ onComplete }) {
             <div style={{ position:'relative', display:'inline-block' }}>
               <p style={{
                 position:'absolute', top:0, left:0, fontFamily:"'Exo 2'", fontSize:'clamp(28px,5vw,60px)',
-                fontWeight:900, color:'#4ADE80', letterSpacing:12, margin:0, transform:'translateX(-4px)',
+                fontWeight:900, color:'var(--secondary)', letterSpacing:12, margin:0, transform:'translateX(-4px)',
                 opacity:0.5, pointerEvents:'none', whiteSpace:'nowrap'
               }}>{logoText}</p>
               <p style={{
                 position:'absolute', top:0, left:0, fontFamily:"'Exo 2'", fontSize:'clamp(28px,5vw,60px)',
-                fontWeight:900, color:'#86EFAC', letterSpacing:12, margin:0, transform:'translateX(4px)',
+                fontWeight:900, color:'var(--tertiary)', letterSpacing:12, margin:0, transform:'translateX(4px)',
                 opacity:0.5, pointerEvents:'none', whiteSpace:'nowrap'
               }}>{logoText}</p>
               <p style={{
-                fontFamily:"'Exo 2'", fontSize:'clamp(28px,5vw,60px)', fontWeight:900, color:'#22C55E',
-                letterSpacing:12, margin:0, textShadow:'0 0 40px #22C55E, 0 0 80px rgba(34,197,94,0.5)',
+                fontFamily:"'Exo 2'", fontSize:'clamp(28px,5vw,60px)', fontWeight:900, color:'var(--primary)',
+                letterSpacing:12, margin:0, textShadow:'0 0 40px var(--primary), 0 0 80px rgba(34,197,94,0.5)',
                 position:'relative', zIndex:1, whiteSpace:'nowrap'
               }}>
                 {logoText}
-                {logoText.length < FULL_LOGO.length && <span style={{ animation:'blink 0.4s infinite', color:'#22C55E' }}>█</span>}
+                {logoText.length < FULL_LOGO.length && <span style={{ animation:'blink 0.4s infinite', color:'var(--primary)' }}>█</span>}
               </p>
             </div>
 
-            <div style={{ width:'80%', height:1, margin:'12px auto', background:'linear-gradient(90deg, transparent, #22C55E, transparent)', animation:'lineExpand 0.6s ease forwards' }} />
+            <div style={{ width:'80%', height:1, margin:'12px auto', background:'linear-gradient(90deg, transparent, var(--primary), transparent)', animation:'lineExpand 0.6s ease forwards' }} />
 
             {showSub && (
               <>
@@ -445,9 +445,9 @@ export default function EvaLaunch({ onComplete }) {
                 </p>
                 <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:8, maxWidth:600, margin:'0 auto', animation:'fadeUp 0.5s ease 0.1s both' }}>
                   {[
-                    { icon:'🌾', label:'CROP AI',     color:'#22C55E' },
-                    { icon:'🔬', label:'BIODETECT',   color:'#4ADE80' },
-                    { icon:'🌤️', label:'WEATHER',     color:'#86EFAC' },
+                    { icon:'🌾', label:'CROP AI',     color:'var(--primary)' },
+                    { icon:'🔬', label:'BIODETECT',   color:'var(--secondary)' },
+                    { icon:'🌤️', label:'WEATHER',     color:'var(--tertiary)' },
                     { icon:'📊', label:'MARKET',      color:'#A3E635' },
                   ].map(f => (
                     <div key={f.label} style={{ border:`1px solid ${f.color}33`, background:`${f.color}11`, borderRadius:2, padding:'8px 4px', textAlign:'center' }}>
@@ -465,17 +465,17 @@ export default function EvaLaunch({ onComplete }) {
         )}
 
         <div style={{ position:'absolute', bottom:0, left:0, right:0, height:3, background:'rgba(34,197,94,0.1)' }}>
-          <div style={{ height:'100%', background:'#22C55E', boxShadow:'0 0 8px #22C55E', animation:'progressFill 9.5s linear forwards' }} />
+          <div style={{ height:'100%', background:'var(--primary)', boxShadow:'0 0 8px var(--primary)', animation:'progressFill 9.5s linear forwards' }} />
         </div>
 
         {showSkip && (
           <button onClick={handleComplete} style={{
-            position:'absolute', top:20, right:20, background:'transparent', border:'1px solid rgba(34,197,94,0.3)',
+            position:'absolute', top:20, right:20, background:'transparent', border:'1px solid var(--border-hover)',
             color:'rgba(34,197,94,0.6)', fontFamily:"'Share Tech Mono'", fontSize:10, letterSpacing:3, padding:'6px 14px',
             cursor:'pointer', borderRadius:2, transition:'all 0.2s'
           }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor='#22C55E'; e.currentTarget.style.color='#22C55E' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(34,197,94,0.3)'; e.currentTarget.style.color='rgba(34,197,94,0.6)' }}>
+            onMouseEnter={e => { e.currentTarget.style.borderColor='var(--primary)'; e.currentTarget.style.color='var(--primary)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border-hover)'; e.currentTarget.style.color='rgba(34,197,94,0.6)' }}>
             SKIP ►
           </button>
         )}
@@ -490,7 +490,7 @@ export default function EvaLaunch({ onComplete }) {
           {Array.from({length:20}).map((_, i) => (
             <div key={i} style={{
               position:'absolute', top:'50%', left:'50%', width: 4 + Math.random() * 6, height: 4 + Math.random() * 6,
-              background:'#4ADE80', borderRadius:'50%', boxShadow:'0 0 12px #4ADE80',
+              background:'var(--secondary)', borderRadius:'50%', boxShadow:'0 0 12px var(--secondary)',
               animation:`burst${i} 1s ease-out forwards`,
             }} />
           ))}
@@ -508,11 +508,11 @@ export default function EvaLaunch({ onComplete }) {
       <style>{`
         @keyframes countPulse { 0%,100%{ transform:scale(1) } 50% { transform:scale(1.05) } }
         @keyframes glitchText {
-          0%  { transform:translateX(3px);  color:#22C55E }
-          25% { transform:translateX(-3px); color:#4ADE80 }
-          50% { transform:translateX(2px);  color:#22C55E }
-          75% { transform:translateX(-2px); color:#86EFAC }
-          100%{ transform:translateX(0);    color:#22C55E }
+          0%  { transform:translateX(3px);  color:var(--primary) }
+          25% { transform:translateX(-3px); color:var(--secondary) }
+          50% { transform:translateX(2px);  color:var(--primary) }
+          75% { transform:translateX(-2px); color:var(--tertiary) }
+          100%{ transform:translateX(0);    color:var(--primary) }
         }
         @keyframes borderFlash { 0%,100%{ opacity:1 } 50% { opacity:0.5 } }
         @keyframes blink { 0%,100%{ opacity:1 } 50% { opacity:0 } }

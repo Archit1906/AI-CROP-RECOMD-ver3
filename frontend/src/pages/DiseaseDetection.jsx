@@ -7,7 +7,7 @@ const DISEASE_DATA = {
   "Tomato___Early_blight": {
     displayName: "Tomato Early Blight",
     threat: "HIGH",
-    threatColor: "#16A34A",
+    threatColor: "var(--primary)",
     cause: "Alternaria solani fungus",
     symptoms: "Dark brown spots with concentric rings on older leaves. Yellow halo around spots.",
     cure: "Remove infected leaves immediately. Apply copper-based fungicide.",
@@ -18,7 +18,7 @@ const DISEASE_DATA = {
   "Tomato___Late_blight": {
     displayName: "Tomato Late Blight",
     threat: "CRITICAL",
-    threatColor: "#16A34A",
+    threatColor: "var(--primary)",
     cause: "Phytophthora infestans",
     symptoms: "Water-soaked lesions on leaves turning brown-black. White mold under leaves.",
     cure: "Apply Metalaxyl + Mancozeb immediately. Remove all infected plants.",
@@ -51,7 +51,7 @@ const DISEASE_DATA = {
   "Apple___Black_rot": {
     displayName: "Apple Black Rot",
     threat: "HIGH",
-    threatColor: "#16A34A",
+    threatColor: "var(--primary)",
     cause: "Botryosphaeria obtusa fungus",
     symptoms: "Brown rotting lesions on fruit. Purple-bordered leaf spots.",
     cure: "Prune infected branches. Apply copper fungicide.",
@@ -84,7 +84,7 @@ const DISEASE_DATA = {
   "Potato___Early_blight": {
     displayName: "Potato Early Blight",
     threat: "HIGH",
-    threatColor: "#16A34A",
+    threatColor: "var(--primary)",
     cause: "Alternaria solani fungus",
     symptoms: "Dark brown circular spots with target-board appearance on leaves.",
     cure: "Apply preventive fungicide. Remove infected foliage.",
@@ -95,7 +95,7 @@ const DISEASE_DATA = {
   "Potato___Late_blight": {
     displayName: "Potato Late Blight",
     threat: "CRITICAL",
-    threatColor: "#16A34A",
+    threatColor: "var(--primary)",
     cause: "Phytophthora infestans",
     symptoms: "Water-soaked lesions rapidly turning brown-black. Entire field can be destroyed.",
     cure: "Apply systemic fungicide immediately. Destroy infected plants.",
@@ -117,7 +117,7 @@ const DISEASE_DATA = {
   "Rice___Brown_spot": {
     displayName: "Rice Brown Spot",
     threat: "HIGH",
-    threatColor: "#16A34A",
+    threatColor: "var(--primary)",
     cause: "Cochliobolus miyabeanus fungus",
     symptoms: "Oval brown spots with yellow halo on leaves. Can cause seedling blight.",
     cure: "Apply fungicide at booting stage.",
@@ -274,18 +274,18 @@ export default function DiseaseDetection() {
   const isHealthy = info?.threat === "NONE"
 
   return (
-    <div style={{ padding:24, background:'#020D05', minHeight:'100vh' }}>
+    <div style={{ padding:24, background:'var(--bg)', minHeight:'100vh' }}>
 
       {/* Header */}
       <div style={{ marginBottom:24, paddingBottom:16,
-                    borderBottom:'1px solid #22C55E33' }}>
+                    borderBottom:'1px solid var(--primary-dim)' }}>
         <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
-                    color:'#22C55E66', letterSpacing:4, margin:'0 0 6px' }}>
+                    color:'var(--primary-dim)', letterSpacing:4, margin:'0 0 6px' }}>
           {t('dis_nge.sys_label')}
         </p>
         <h1 style={{ fontFamily:"'Exo 2'", fontSize:26, fontWeight:900,
-                     color:'#16A34A', margin:'0 0 6px', letterSpacing:4,
-                     textShadow:'0 0 20px #16A34A66' }}>
+                     color:'var(--primary)', margin:'0 0 6px', letterSpacing:4,
+                     textShadow:'0 0 20px var(--primary)66' }}>
           {t('dis_nge.title')}
         </h1>
         <p style={{ fontFamily:"'Share Tech Mono'", fontSize:10,
@@ -298,9 +298,9 @@ export default function DiseaseDetection() {
       {history.length > 0 && (
         <button onClick={() => setShowHistory(!showHistory)}
           style={{ marginBottom:16, padding:'8px 16px',
-                   background: showHistory ? '#22C55E22' : 'transparent',
-                   border:'1px solid #22C55E44', borderRadius:2,
-                   color:'#22C55E', fontFamily:"'Share Tech Mono'",
+                   background: showHistory ? 'var(--primary-glow)' : 'transparent',
+                   border:'1px solid var(--primary-dim)', borderRadius:2,
+                   color:'var(--primary)', fontFamily:"'Share Tech Mono'",
                    fontSize:10, letterSpacing:2, cursor:'pointer' }}>
           {showHistory ? t('dis_nge.hide_hist') : t('dis_nge.show_hist')} {t('dis_nge.scan_hist')} ({history.length})
         </button>
@@ -314,21 +314,21 @@ export default function DiseaseDetection() {
             return (
               <div key={entry.id}
                 onClick={() => loadFromHistory(entry)}
-                style={{ flex:1, background:'#040F07',
-                         border:`1px solid ${hInfo?.threatColor || '#22C55E'}44`,
+                style={{ flex:1, background:'var(--bg-deep)',
+                         border:`1px solid ${hInfo?.threatColor || 'var(--primary)'}44`,
                          borderRadius:2, padding:'12px', cursor:'pointer',
                          transition:'all 0.15s' }}
-                onMouseEnter={e => e.currentTarget.style.borderColor=hInfo?.threatColor||'#22C55E'}
-                onMouseLeave={e => e.currentTarget.style.borderColor=`${hInfo?.threatColor||'#22C55E'}44`}>
+                onMouseEnter={e => e.currentTarget.style.borderColor=hInfo?.threatColor||'var(--primary)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor=`${hInfo?.threatColor||'var(--primary)'}44`}>
                 <div style={{ display:'flex', gap:10, alignItems:'center' }}>
                   {entry.image && (
                     <img src={entry.image} alt=""
                       style={{ width:40, height:40, objectFit:'cover',
-                               borderRadius:2, border:'1px solid #22C55E33' }} />
+                               borderRadius:2, border:'1px solid var(--primary-dim)' }} />
                   )}
                   <div>
                     <p style={{ fontFamily:"'Exo 2'", fontSize:10,
-                                 color: hInfo?.threatColor || '#22C55E',
+                                 color: hInfo?.threatColor || 'var(--primary)',
                                  margin:'0 0 2px', letterSpacing:1 }}>
                       {hInfo?.displayName || entry.disease}
                     </p>
@@ -348,10 +348,10 @@ export default function DiseaseDetection() {
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
 
         {/* LEFT — Upload panel */}
-        <div style={{ background:'#040F07', border:'1px solid #22C55E33',
+        <div style={{ background:'var(--bg-deep)', border:'1px solid var(--primary-dim)',
                       borderRadius:2, padding:'20px' }}>
           <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
-                      color:'#22C55E66', letterSpacing:3, margin:'0 0 14px' }}>
+                      color:'var(--primary-dim)', letterSpacing:3, margin:'0 0 14px' }}>
             {t('dis_nge.vis_input')}
           </p>
 
@@ -362,12 +362,12 @@ export default function DiseaseDetection() {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             style={{
-              border:`2px dashed ${dragOver ? '#16A34A' : image ? '#16A34A66' : '#22C55E33'}`,
+              border:`2px dashed ${dragOver ? 'var(--primary)' : image ? 'var(--primary)66' : 'var(--primary-dim)'}`,
               borderRadius:2, padding:'16px',
               minHeight:220, cursor:'pointer',
               display:'flex', flexDirection:'column',
               alignItems:'center', justifyContent:'center',
-              background: dragOver ? '#22C55E11' : 'transparent',
+              background: dragOver ? 'var(--primary-glow)' : 'transparent',
               transition:'all 0.2s', marginBottom:14,
               position:'relative', overflow:'hidden'
             }}>
@@ -381,22 +381,22 @@ export default function DiseaseDetection() {
                 {loading && (
                   <div style={{
                     position:'absolute', inset:0,
-                    background:'linear-gradient(180deg, transparent 45%, #22C55E33 50%, transparent 55%)',
+                    background:'linear-gradient(180deg, transparent 45%, var(--primary-dim) 50%, transparent 55%)',
                     animation:'scan-line 1.5s linear infinite',
                     pointerEvents:'none'
                   }} />
                 )}
                 <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
-                             color:'#22C55E66', margin:'8px 0 0', letterSpacing:2 }}>
+                             color:'var(--primary-dim)', margin:'8px 0 0', letterSpacing:2 }}>
                   {t('dis_nge.target_acq')}
                 </p>
               </>
             ) : (
               <>
                 <div style={{ fontSize:36, marginBottom:12, opacity:0.4,
-                               color:'#16A34A' }}>⬆</div>
+                               color:'var(--primary)' }}>⬆</div>
                 <p style={{ fontFamily:"'Exo 2'", fontSize:12,
-                             color:'#22C55E66', margin:'0 0 6px', letterSpacing:2 }}>
+                             color:'var(--primary-dim)', margin:'0 0 6px', letterSpacing:2 }}>
                   {t('dis_nge.drop_data')}
                 </p>
                 <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
@@ -421,16 +421,16 @@ export default function DiseaseDetection() {
             <button onClick={() => cameraInputRef.current?.click()}
               style={{ flex:1, padding:'10px 8px',
                        background:'transparent',
-                       border:'1px solid #22C55E44', borderRadius:2,
-                       color:'#22C55E88', fontFamily:"'Share Tech Mono'",
+                       border:'1px solid var(--primary-dim)', borderRadius:2,
+                       color:'var(--primary-dim)', fontFamily:"'Share Tech Mono'",
                        fontSize:10, letterSpacing:2, cursor:'pointer' }}>
               {t('dis_nge.capture')}
             </button>
             <button onClick={() => fileInputRef.current?.click()}
               style={{ flex:1, padding:'10px 8px',
                        background:'transparent',
-                       border:'1px solid #22C55E44', borderRadius:2,
-                       color:'#22C55E88', fontFamily:"'Share Tech Mono'",
+                       border:'1px solid var(--primary-dim)', borderRadius:2,
+                       color:'var(--primary-dim)', fontFamily:"'Share Tech Mono'",
                        fontSize:10, letterSpacing:2, cursor:'pointer' }}>
               {t('dis_nge.browse')}
             </button>
@@ -438,19 +438,19 @@ export default function DiseaseDetection() {
 
           {/* Scan animation phases */}
           {loading && (
-            <div style={{ background:'#020D05', border:'1px solid #22C55E33',
+            <div style={{ background:'var(--bg)', border:'1px solid var(--primary-dim)',
                           borderRadius:2, padding:'10px 14px', marginBottom:12 }}>
               {PHASES.map((phase, i) => (
                 <div key={i} style={{ display:'flex', alignItems:'center',
                                        gap:8, padding:'3px 0' }}>
                   <span style={{ fontSize:10,
                                   color: i < scanPhase ? '#00FF41' :
-                                         i === scanPhase ? '#22C55E' : '#333' }}>
+                                         i === scanPhase ? 'var(--primary)' : '#333' }}>
                     {i < scanPhase ? '✓' : i === scanPhase ? '►' : '○'}
                   </span>
                   <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
                                color: i < scanPhase ? '#00FF4166' :
-                                      i === scanPhase ? '#22C55E' : '#333',
+                                      i === scanPhase ? 'var(--primary)' : '#333',
                                margin:0, letterSpacing:1 }}>
                     {phase}
                   </p>
@@ -464,28 +464,28 @@ export default function DiseaseDetection() {
             disabled={loading || (!image && !imageFile)}
             style={{
               width:'100%', padding:'14px',
-              background: loading ? '#22C55E11' :
-                          (!image && !imageFile) ? '#020D05' : '#22C55E22',
-              border:`1px solid ${loading ? '#22C55E66' : (!image && !imageFile) ? '#22C55E22' : '#16A34A'}`,
-              color: loading ? '#22C55E88' :
-                     (!image && !imageFile) ? '#22C55E33' : '#16A34A',
+              background: loading ? 'var(--primary-glow)' :
+                          (!image && !imageFile) ? 'var(--bg)' : 'var(--primary-glow)',
+              border:`1px solid ${loading ? 'var(--primary-dim)' : (!image && !imageFile) ? 'var(--primary-glow)' : 'var(--primary)'}`,
+              color: loading ? 'var(--primary-dim)' :
+                     (!image && !imageFile) ? 'var(--primary-dim)' : 'var(--primary)',
               fontFamily:"'Exo 2'", fontSize:12, fontWeight:700,
               letterSpacing:4, cursor: (!image && !imageFile) ? 'not-allowed' : 'pointer',
               borderRadius:2, transition:'all 0.2s',
-              boxShadow: (!loading && image) ? '0 0 20px #16A34A33' : 'none'
+              boxShadow: (!loading && image) ? '0 0 20px var(--primary)33' : 'none'
             }}
-            onMouseEnter={e => { if(image && !loading) e.currentTarget.style.background='#22C55E44' }}
-            onMouseLeave={e => { if(image && !loading) e.currentTarget.style.background='#22C55E22' }}>
+            onMouseEnter={e => { if(image && !loading) e.currentTarget.style.background='var(--primary-dim)' }}
+            onMouseLeave={e => { if(image && !loading) e.currentTarget.style.background='var(--primary-glow)' }}>
             {loading ? `⚙ ${PHASES[scanPhase]?.replace('// ','')}` : t('dis_nge.init_scan')}
           </button>
         </div>
 
         {/* RIGHT — Result panel — FIX: shows results */}
-        <div style={{ background:'#040F07', border:`1px solid ${result ? (info?.threatColor||'#16A34A')+'44' : '#22C55E22'}`,
+        <div style={{ background:'var(--bg-deep)', border:`1px solid ${result ? (info?.threatColor||'var(--primary)')+'44' : 'var(--primary-glow)'}`,
                       borderRadius:2, padding:'20px',
                       transition:'border-color 0.3s' }}>
           <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
-                      color:'#22C55E66', letterSpacing:3, margin:'0 0 14px' }}>
+                      color:'var(--primary-dim)', letterSpacing:3, margin:'0 0 14px' }}>
             {result ? t('dis_nge.threat_comp') : t('dis_nge.await_data')}
           </p>
 
@@ -507,13 +507,13 @@ export default function DiseaseDetection() {
                           alignItems:'center', justifyContent:'center',
                           height:300, gap:16 }}>
               <div style={{ width:80, height:80,
-                             border:'2px solid #22C55E33',
-                             borderTop:'2px solid #16A34A',
+                             border:'2px solid var(--primary-dim)',
+                             borderTop:'2px solid var(--primary)',
                              borderRadius:'50%',
                              animation:'spin 1s linear infinite' }} />
               <p style={{ fontFamily:"'Exo 2'", fontSize:12,
-                           color:'#16A34A', letterSpacing:3,
-                           textShadow:'0 0 10px #16A34A66' }}>
+                           color:'var(--primary)', letterSpacing:3,
+                           textShadow:'0 0 10px var(--primary)66' }}>
                 {t('dis_nge.scanning')}
               </p>
             </div>
@@ -523,7 +523,7 @@ export default function DiseaseDetection() {
             <div>
               {/* Threat status banner */}
               <div style={{
-                background: isHealthy ? '#00FF4111' : '#22C55E11',
+                background: isHealthy ? '#00FF4111' : 'var(--primary-glow)',
                 border:`1px solid ${info.threatColor}`,
                 borderRadius:2, padding:'12px 16px', marginBottom:16,
                 display:'flex', justifyContent:'space-between', alignItems:'center'
@@ -557,7 +557,7 @@ export default function DiseaseDetection() {
               </div>
 
               {/* Confidence bar */}
-              <div style={{ background:'#020D05', border:'1px solid #22C55E33',
+              <div style={{ background:'var(--bg)', border:'1px solid var(--primary-dim)',
                             borderRadius:2, padding:'12px 16px', marginBottom:12 }}>
                 <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
                   <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
@@ -570,7 +570,7 @@ export default function DiseaseDetection() {
                     {result.confidence}%
                   </p>
                 </div>
-                <div style={{ height:8, background:'#22C55E11',
+                <div style={{ height:8, background:'var(--primary-glow)',
                                borderRadius:1, overflow:'hidden' }}>
                   <div style={{
                     height:'100%', borderRadius:1,
@@ -593,10 +593,10 @@ export default function DiseaseDetection() {
                       return (
                         <div key={i} style={{ display:'flex', alignItems:'center',
                                                gap:8, marginBottom:4 }}>
-                          <div style={{ height:4, flex:1, background:'#22C55E11', borderRadius:1 }}>
+                          <div style={{ height:4, flex:1, background:'var(--primary-glow)', borderRadius:1 }}>
                             <div style={{ height:'100%', borderRadius:1,
                                            width:`${alt.confidence}%`,
-                                           background:'#22C55E44' }} />
+                                           background:'var(--primary-dim)' }} />
                           </div>
                           <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
                                        color:'#444', margin:0, minWidth:140 }}>
@@ -611,7 +611,7 @@ export default function DiseaseDetection() {
 
               {/* Spread risk */}
               {!isHealthy && (
-                <div style={{ background:'#020D05', border:'1px solid #22C55E33',
+                <div style={{ background:'var(--bg)', border:'1px solid var(--primary-dim)',
                               borderRadius:2, padding:'12px 16px', marginBottom:12 }}>
                   <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
                     <p style={{ fontFamily:"'Share Tech Mono'", fontSize:9,
@@ -619,17 +619,17 @@ export default function DiseaseDetection() {
                       {t('dis_nge.spread_risk')}
                     </p>
                     <p style={{ fontFamily:"'Exo 2'", fontSize:12, fontWeight:700,
-                                 color: info.spreadRisk > 80 ? '#16A34A' :
+                                 color: info.spreadRisk > 80 ? 'var(--primary)' :
                                         info.spreadRisk > 50 ? '#A3E635' : '#00FF41',
                                  margin:0 }}>
                       {info.spreadRisk}%
                     </p>
                   </div>
-                  <div style={{ height:6, background:'#22C55E11', borderRadius:1 }}>
+                  <div style={{ height:6, background:'var(--primary-glow)', borderRadius:1 }}>
                     <div style={{
                       height:'100%', borderRadius:1,
                       width:`${info.spreadRisk}%`,
-                      background: info.spreadRisk > 80 ? '#16A34A' :
+                      background: info.spreadRisk > 80 ? 'var(--primary)' :
                                   info.spreadRisk > 50 ? '#A3E635' : '#00FF41',
                       transition:'width 1s ease'
                     }} />
@@ -639,14 +639,14 @@ export default function DiseaseDetection() {
 
               {/* Cure & Treatment panel */}
               {[
-                { label:t('dis_nge.lbl_path'), value:info.cause,       color:'#22C55E' },
+                { label:t('dis_nge.lbl_path'), value:info.cause,       color:'var(--primary)' },
                 { label:t('dis_nge.lbl_symp'), value:info.symptoms,    color:'#A3E635' },
-                { label:t('dis_nge.lbl_cure'), value:info.cure, color:'#86EFAC' },
+                { label:t('dis_nge.lbl_cure'), value:info.cure, color:'var(--tertiary)' },
                 { label:t('dis_nge.lbl_pest'), value:info.pesticide, color:'#10B981' },
                 { label:t('dis_nge.lbl_prev'), value:info.prevention, color:'#00FF41' },
               ].map(item => (
                 <div key={item.label}
-                  style={{ background:'#020D05',
+                  style={{ background:'var(--bg)',
                            borderLeft:`3px solid ${item.color}44`,
                            padding:'10px 14px', marginBottom:8, borderRadius:'0 2px 2px 0' }}>
                   <p style={{ fontFamily:"'Share Tech Mono'", fontSize:8,
@@ -663,8 +663,8 @@ export default function DiseaseDetection() {
               {/* Reset button */}
               <button onClick={() => { setResult(null); setImage(null); setImageFile(null) }}
                 style={{ width:'100%', padding:'10px', marginTop:8,
-                         background:'transparent', border:'1px solid #22C55E44',
-                         color:'#22C55E66', fontFamily:"'Share Tech Mono'",
+                         background:'transparent', border:'1px solid var(--primary-dim)',
+                         color:'var(--primary-dim)', fontFamily:"'Share Tech Mono'",
                          fontSize:10, letterSpacing:3, cursor:'pointer', borderRadius:2 }}>
                 {t('dis_nge.clear_rescan')}
               </button>
