@@ -1,357 +1,375 @@
 import { useEffect, useState, useRef } from 'react'
 
 export default function VineIntro({ onComplete }) {
-  const [phase,       setPhase]       = useState('vine')
+  const canvasRef = useRef(null)
+  const [phase, setPhase] = useState('vine')
   const [lettersDone, setLettersDone] = useState(0)
   const [showTagline, setShowTagline] = useState(false)
-  const [showSkip,    setShowSkip]    = useState(false)
-  const [fadeOut,     setFadeOut]     = useState(false)
+  const [showSkip, setShowSkip] = useState(false)
+  const [fadeOut, setFadeOut] = useState(false)
+  const [showLogo, setShowLogo] = useState(false)
   const doneRef = useRef(false)
 
-  const LETTERS   = 'AMRITKRISHI'.split('')
-  const TAGLINE   = 'ECO INTELLIGENCE SYSTEM // v2.0'
+  const LETTERS = 'AMRITKRISHI'.split('')
 
   const finish = () => {
     if (doneRef.current) return
     doneRef.current = true
     setFadeOut(true)
-    setTimeout(onComplete, 700)
+    setTimeout(onComplete, 800)
   }
 
+  // ── CANVAS PARTICLE SYSTEM ───────────────────────────────────
   useEffect(() => {
-    // Show skip after 1s
-    const t0 = setTimeout(() => setShowSkip(true), 1000)
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    let W = canvas.width = window.innerWidth
+    let H = canvas.height = window.innerHeight
+    let frame
 
-    // Phase: vine draws (0 → 2.2s)
-    // Phase: leaves pop   (CSS handles via delay)
-    // Phase: letters appear one by one starting at 2.4s
-    const t1 = setTimeout(() => setPhase('letters'), 2200)
+    // Particles
+    const particles = Array.from({ length: 120 }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: -(Math.random() * 0.6 + 0.1),
+      size: 0.5 + Math.random() * 2,
+      alpha: 0.1 + Math.random() * 0.4,
+      color: Math.random() > 0.6 ? '#4ADE80' :
+        Math.random() > 0.3 ? '#A3E635' : '#FDE047',
+      life: Math.random()
+    }))
 
-    // Stagger letters
-    LETTERS.forEach((_, i) => {
-      setTimeout(() => {
-        setLettersDone(i + 1)
-      }, 2400 + i * 160)
-    })
+    // Fireflies — larger glowing dots
+    const fireflies = Array.from({ length: 18 }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: 1.5 + Math.random() * 2.5,
+      alpha: 0,
+      targetAlpha: 0.4 + Math.random() * 0.6,
+      phase: Math.random() * Math.PI * 2
+    }))
 
-    // Tagline after all letters
-    const t2 = setTimeout(() => {
-      setPhase('tagline')
-      setShowTagline(true)
-    }, 2400 + LETTERS.length * 160 + 200)
+    const loop = () => {
+      frame = requestAnimationFrame(loop)
+      ctx.clearRect(0, 0, W, H)
 
-    // Auto finish
-    const t3 = setTimeout(() => finish(),
-      2400 + LETTERS.length * 160 + 2000)
+      // Rising particles
+      particles.forEach(p => {
+        p.x += p.vx + Math.sin(p.life * 3) * 0.2
+        p.y += p.vy
+        p.life += 0.005
+        if (p.y < -10) {
+          p.y = H + 10
+          p.x = Math.random() * W
+          p.life = 0
+          p.alpha = 0.1 + Math.random() * 0.4
+        }
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+        ctx.fillStyle = p.color
+        ctx.globalAlpha = p.alpha * (1 - p.life * 0.3)
+        ctx.fill()
+      })
 
-    return () => [t0,t1,t2,t3].forEach(clearTimeout)
+      // Fireflies with glow
+      const t = Date.now() / 1000
+      fireflies.forEach((f, i) => {
+        f.x += f.vx + Math.sin(t * 0.5 + i) * 0.1
+        f.y += f.vy + Math.cos(t * 0.4 + i) * 0.1
+        f.alpha = f.targetAlpha * (0.5 + Math.sin(t * 2 + f.phase) * 0.5)
+        if (f.x < 0 || f.x > W) f.vx *= -1
+        if (f.y < 0 || f.y > H) f.vy *= -1
+
+        // Glow
+        const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 4)
+        grad.addColorStop(0, `rgba(74,222,128,${f.alpha})`)
+        grad.addColorStop(0.4, `rgba(34,197,94,${f.alpha * 0.4})`)
+        grad.addColorStop(1, 'rgba(34,197,94,0)')
+        ctx.beginPath()
+        ctx.arc(f.x, f.y, f.r * 4, 0, Math.PI * 2)
+        ctx.fillStyle = grad
+        ctx.globalAlpha = 1
+        ctx.fill()
+
+        ctx.beginPath()
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2)
+        ctx.fillStyle = '#86EFAC'
+        ctx.globalAlpha = f.alpha
+        ctx.fill()
+      })
+
+      ctx.globalAlpha = 1
+    }
+    loop()
+
+    const onResize = () => {
+      W = canvas.width = window.innerWidth
+      H = canvas.height = window.innerHeight
+    }
+    window.addEventListener('resize', onResize)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('resize', onResize)
+    }
   }, [])
 
-  // Vine SVG path — winds across full screen
-  const VINE_PATH = `
-    M -20 300
-    C 80 280, 120 200, 200 220
-    C 280 240, 300 160, 380 150
-    C 460 140, 480 200, 560 180
-    C 640 160, 660 100, 740 120
-    C 820 140, 840 200, 920 180
-    C 1000 160, 1020 120, 1100 140
-    C 1180 160, 1200 200, 1280 190
-    C 1360 180, 1400 140, 1480 160
-    C 1540 175, 1560 200, 1600 200
-  `
+  // ── TIMELINE ─────────────────────────────────────────────────
+  useEffect(() => {
+    const timers = []
+    const T = (fn, ms) => { const t = setTimeout(fn, ms); timers.push(t); return t }
 
-  // Leaf positions along the vine path
-  const LEAVES = [
-    { x: 195, y: 218, rot: -40,  size: 1.0, delay: 0.4  },
-    { x: 375, y: 148, rot:  20,  size: 1.2, delay: 0.7  },
-    { x: 555, y: 178, rot: -30,  size: 0.9, delay: 1.0  },
-    { x: 735, y: 118, rot:  45,  size: 1.1, delay: 1.2  },
-    { x: 915, y: 178, rot: -20,  size: 1.0, delay: 1.4  },
-    { x: 1095,y: 138, rot:  35,  size: 0.85,delay: 1.6  },
-    { x: 1275,y: 188, rot: -45,  size: 1.1, delay: 1.8  },
-    { x: 250, y: 235, rot:  60,  size: 0.8, delay: 0.55 },
-    { x: 460, y: 195, rot: -55,  size: 0.9, delay: 0.85 },
-    { x: 660, y: 155, rot:  30,  size: 0.75,delay: 1.1  },
-    { x: 840, y: 195, rot: -40,  size: 1.0, delay: 1.35 },
-    { x: 1020,y: 155, rot:  50,  size: 0.9, delay: 1.55 },
-    { x: 1200,y: 185, rot: -30,  size: 1.0, delay: 1.75 },
-    { x: 1400,y: 158, rot:  25,  size: 0.85,delay: 1.95 },
+    T(() => setShowSkip(true), 800)
+    T(() => setShowLogo(true), 2000)
+    T(() => setPhase('letters'), 2200)
+
+    LETTERS.forEach((_, i) => {
+      T(() => setLettersDone(i + 1), 2400 + i * 140)
+    })
+
+    const afterLetters = 2400 + LETTERS.length * 140
+    T(() => setShowTagline(true), afterLetters + 300)
+    T(() => finish(), afterLetters + 2200)
+
+    return () => timers.forEach(clearTimeout)
+  }, [])
+
+  // Letter color cycle
+  const letterColors = [
+    '#4ADE80', '#22C55E', '#A3E635',
+    '#86EFAC', '#4ADE80', '#FDE047',
+    '#A3E635', '#4ADE80', '#22C55E',
+    '#86EFAC', '#4ADE80'
   ]
-
-  // Flower positions — one per letter approx
-  const FLOWERS = LETTERS.map((_, i) => ({
-    x:     120 + i * 115,
-    delay: 2.4 + i * 0.16
-  }))
-
-  // Leaf SVG shape
-  const leafPath = (x, y, rot, size) => {
-    const s = size * 14
-    return (
-      <g key={`${x}-${y}`}
-        transform={`translate(${x},${y}) rotate(${rot})`}
-        style={{
-          transformOrigin: `${x}px ${y}px`,
-          animation: `leafPop 0.4s ease-out both`,
-          animationDelay: `${LEAVES.find(l=>l.x===x&&l.y===y)?.delay||0}s`
-        }}>
-        {/* Leaf body */}
-        <path
-          d={`M0,0 C${s*0.6},-${s} ${s*1.2},-${s*0.3} ${s*1.4},0
-              C${s*1.2},${s*0.3} ${s*0.6},${s} 0,0`}
-          fill="#16A34A"
-          stroke="#22C55E"
-          strokeWidth="0.8"
-          opacity="0.9"
-        />
-        {/* Leaf vein */}
-        <line
-          x1="0" y1="0" x2={s*1.4} y2="0"
-          stroke="#4ADE80" strokeWidth="0.5" opacity="0.6"
-        />
-      </g>
-    )
-  }
-
-  // Flower SVG
-  const flower = (x, delay, i) => (
-    <g key={i}
-      transform={`translate(${x}, 88)`}
-      style={{
-        animation: `flowerBloom 0.5s ease-out both`,
-        animationDelay: `${delay + 0.1}s`
-      }}>
-      {/* Petals */}
-      {Array.from({length:6},(_,pi)=>{
-        const angle = (pi/6)*Math.PI*2
-        return (
-          <ellipse key={pi}
-            cx={Math.cos(angle)*7}
-            cy={Math.sin(angle)*7}
-            rx="4" ry="2.5"
-            fill={pi%2===0?'#4ADE80':'#A3E635'}
-            opacity="0.85"
-            transform={`rotate(${(pi/6)*360},${Math.cos(angle)*7},${Math.sin(angle)*7})`}
-          />
-        )
-      })}
-      {/* Center */}
-      <circle cx="0" cy="0" r="3.5" fill="#FDE047" opacity="0.9"/>
-      <circle cx="0" cy="0" r="1.5" fill="#F59E0B"/>
-    </g>
-  )
 
   return (
     <div style={{
-      position:   'fixed', inset: 0,
-      zIndex:     9999,
-      background: '#010804',
-      display:    'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow:   'hidden',
-      opacity:    fadeOut ? 0 : 1,
-      transition: 'opacity 0.7s ease'
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: '#010804', overflow: 'hidden',
+      opacity: fadeOut ? 0 : 1,
+      transition: 'opacity 0.8s ease'
     }}>
 
-      {/* ── SCANLINES ──────────────────────────────────── */}
+      {/* Particle canvas */}
+      <canvas ref={canvasRef} style={{
+        position: 'absolute', inset: 0,
+        width: '100vw', height: '100vh',
+        zIndex: 0
+      }} />
+
+      {/* Scanlines */}
       <div style={{
-        position:      'absolute', inset: 0,
-        background:    'repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px)',
+        position: 'absolute', inset: 0,
+        background: 'repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 4px)',
         pointerEvents: 'none', zIndex: 1
       }} />
 
-      {/* ── BACKGROUND GLOW ────────────────────────────── */}
+      {/* Big radial glow center */}
       <div style={{
-        position:     'absolute',
-        top: '50%', left: '50%',
-        transform:    'translate(-50%,-50%)',
-        width:        '70vw', height: '60vh',
-        background:   'radial-gradient(ellipse,rgba(34,197,94,0.06),transparent 70%)',
-        pointerEvents:'none'
+        position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%,-50%)',
+        width: '80vw', height: '80vh',
+        background: 'radial-gradient(ellipse,rgba(34,197,94,0.07) 0%,rgba(34,197,94,0.03) 40%,transparent 70%)',
+        pointerEvents: 'none', zIndex: 1,
+        animation: 'glowPulse 4s ease infinite'
       }} />
 
-      {/* ── VINE SVG ────────────────────────────────────── */}
-      <svg
-        viewBox="0 0 1600 400"
-        style={{
-          position:   'absolute',
-          top: '50%', left: 0,
-          transform:  'translateY(-60%)',
-          width:      '100vw',
-          height:     'auto',
-          overflow:   'visible'
-        }}
-        preserveAspectRatio="none"
-      >
-        <defs>
-          {/* Vine gradient */}
-          <linearGradient id="vineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stopColor="#052e16" />
-            <stop offset="30%"  stopColor="#16A34A" />
-            <stop offset="70%"  stopColor="#22C55E" />
-            <stop offset="100%" stopColor="#4ADE80" />
-          </linearGradient>
-
-          {/* Glow filter */}
-          <filter id="vineGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-
-          {/* Leaf filter */}
-          <filter id="leafGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="2" result="blur"/>
-            <feMerge>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* Vine glow layer */}
-        <path
-          d={VINE_PATH}
-          fill="none"
-          stroke="#22C55E"
-          strokeWidth="6"
-          strokeLinecap="round"
-          filter="url(#vineGlow)"
-          opacity="0.4"
+      {/* ── VINE SVG ──────────────────────────────────────── */}
+      {showLogo && (
+        <svg viewBox="0 0 1600 500"
+          preserveAspectRatio="xMidYMid meet"
           style={{
-            strokeDasharray:  3000,
-            strokeDashoffset: 3000,
-            animation: 'vineDraw 2.2s cubic-bezier(0.4,0,0.2,1) forwards'
-          }}
-        />
+            position: 'absolute',
+            top: '50%', left: 0,
+            transform: 'translateY(-75%)',
+            width: '100vw', height: 'auto',
+            zIndex: 2, overflow: 'visible'
+          }}>
+          <defs>
+            <linearGradient id="vg" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#052e16" />
+              <stop offset="20%" stopColor="#166534" />
+              <stop offset="50%" stopColor="#22C55E" />
+              <stop offset="80%" stopColor="#4ADE80" />
+              <stop offset="100%" stopColor="#86EFAC" />
+            </linearGradient>
+            <filter id="vglow">
+              <feGaussianBlur stdDeviation="4" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="lglow">
+              <feGaussianBlur stdDeviation="3" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
 
-        {/* Main vine */}
-        <path
-          d={VINE_PATH}
-          fill="none"
-          stroke="url(#vineGrad)"
-          strokeWidth="3"
-          strokeLinecap="round"
-          style={{
-            strokeDasharray:  3000,
-            strokeDashoffset: 3000,
-            animation: 'vineDraw 2.2s cubic-bezier(0.4,0,0.2,1) forwards'
-          }}
-        />
-
-        {/* Leaves */}
-        <g filter="url(#leafGlow)">
-          {LEAVES.map(({ x, y, rot, size, delay }) =>
-            leafPath(x, y, rot, size)
-          )}
-        </g>
-
-        {/* Small branch offshoots */}
-        {[
-          { x1:200,y1:220, x2:185,y2:200, delay:0.5  },
-          { x1:380,y1:150, x2:395,y2:130, delay:0.8  },
-          { x1:560,y1:180, x2:545,y2:160, delay:1.05 },
-          { x1:740,y1:120, x2:755,y2:100, delay:1.25 },
-          { x1:920,y1:180, x2:905,y2:162, delay:1.45 },
-          { x1:1100,y1:140,x2:1115,y2:120,delay:1.62 },
-          { x1:1280,y1:190,x2:1265,y2:170,delay:1.82 },
-        ].map((b,i)=>(
-          <line key={i}
-            x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2}
-            stroke="#22C55E" strokeWidth="1.5"
-            strokeLinecap="round" opacity="0.7"
+          {/* Thick glow shadow */}
+          <path
+            d="M-20,280 C100,230 180,160 320,180 C460,200 520,130 680,120 C840,110 880,170 1040,155 C1200,140 1260,100 1420,130 C1520,148 1580,180 1620,175"
+            fill="none" stroke="#22C55E" strokeWidth="14"
+            strokeLinecap="round" opacity="0.12"
+            filter="url(#vglow)"
             style={{
-              strokeDasharray:  30,
-              strokeDashoffset: 30,
-              animation: `branchDraw 0.3s ease-out ${b.delay}s forwards`
+              strokeDasharray: 3200,
+              strokeDashoffset: 3200,
+              animation: 'vd 2s cubic-bezier(0.4,0,0.2,1) forwards'
             }}
           />
-        ))}
-      </svg>
+          {/* Main vine */}
+          <path
+            d="M-20,280 C100,230 180,160 320,180 C460,200 520,130 680,120 C840,110 880,170 1040,155 C1200,140 1260,100 1420,130 C1520,148 1580,180 1620,175"
+            fill="none" stroke="url(#vg)" strokeWidth="3.5"
+            strokeLinecap="round"
+            filter="url(#vglow)"
+            style={{
+              strokeDasharray: 3200,
+              strokeDashoffset: 3200,
+              animation: 'vd 2s cubic-bezier(0.4,0,0.2,1) forwards'
+            }}
+          />
 
-      {/* ── LOGO TEXT ───────────────────────────────────── */}
+          {/* Leaves — bigger and more dramatic */}
+          {[
+            { x: 318, y: 180, r: -50, s: 1.3, d: 0.5 },
+            { x: 318, y: 180, r: 130, s: 1.0, d: 0.55 },
+            { x: 678, y: 120, r: -40, s: 1.5, d: 0.85 },
+            { x: 678, y: 120, r: 140, s: 1.1, d: 0.9 },
+            { x: 1038, y: 155, r: -55, s: 1.3, d: 1.2 },
+            { x: 1038, y: 155, r: 125, s: 1.0, d: 1.25 },
+            { x: 1418, y: 130, r: -45, s: 1.2, d: 1.6 },
+            { x: 1418, y: 130, r: 135, s: 0.9, d: 1.65 },
+            { x: 500, y: 160, r: -30, s: 0.9, d: 0.7 },
+            { x: 860, y: 138, r: 155, s: 0.8, d: 1.05 },
+            { x: 1230, y: 120, r: -35, s: 1.0, d: 1.45 },
+          ].map(({ x, y, r, s, d }, i) => {
+            const L = s * 18
+            return (
+              <g key={i} transform={`translate(${x},${y}) rotate(${r})`}
+                filter="url(#lglow)"
+                style={{
+                  animation: `lp 0.5s cubic-bezier(0.34,1.56,0.64,1) ${d}s both`
+                }}>
+                <path
+                  d={`M0,0 C${L * 0.7},-${L * 1.1} ${L * 1.4},-${L * 0.4} ${L * 1.6},0 C${L * 1.4},${L * 0.4} ${L * 0.7},${L * 1.1} 0,0`}
+                  fill="#16A34A" stroke="#4ADE80" strokeWidth="0.8" opacity="0.95"
+                />
+                <line x1="0" y1="0" x2={L * 1.6} y2="0"
+                  stroke="#86EFAC" strokeWidth="0.6" opacity="0.7" />
+                <line x1={L * 0.5} y1={-L * 0.6} x2={L * 1.1} y2="0"
+                  stroke="#86EFAC" strokeWidth="0.4" opacity="0.4" />
+                <line x1={L * 0.5} y1={L * 0.6} x2={L * 1.1} y2="0"
+                  stroke="#86EFAC" strokeWidth="0.4" opacity="0.4" />
+              </g>
+            )
+          })}
+
+          {/* Branch tendrils */}
+          {[
+            { x: 320, y: 180, dx: 20, dy: -35, d: 0.6 },
+            { x: 680, y: 120, dx: -25, dy: -40, d: 0.95 },
+            { x: 1040, y: 155, dx: 22, dy: -38, d: 1.3 },
+            { x: 1420, y: 130, dx: -18, dy: -35, d: 1.7 },
+          ].map(({ x, y, dx, dy, d }, i) => (
+            <path key={i}
+              d={`M${x},${y} Q${x + dx * 0.5},${y + dy * 1.2} ${x + dx},${y + dy}`}
+              fill="none" stroke="#22C55E" strokeWidth="1.5"
+              strokeLinecap="round" opacity="0.6"
+              style={{
+                strokeDasharray: 60,
+                strokeDashoffset: 60,
+                animation: `bd 0.4s ease-out ${d}s forwards`
+              }}
+            />
+          ))}
+        </svg>
+      )}
+
+      {/* ── LOGO ────────────────────────────────────────── */}
       <div style={{
-        position:   'relative', zIndex: 2,
-        textAlign:  'center',
-        marginTop:  '8vh'
+        position: 'relative', zIndex: 3,
+        textAlign: 'center',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        height: '100vh'
       }}>
 
-        {/* Letters row */}
+        {/* Pre-logo icon */}
+        {showLogo && (
+          <div style={{
+            fontSize: 48, marginBottom: 8,
+            animation: 'iconDrop 0.6s cubic-bezier(0.34,1.56,0.64,1) 2.0s both'
+          }}>
+            🌿
+          </div>
+        )}
+
+        {/* Letters */}
         <div style={{
-          display:    'flex',
-          justifyContent: 'center',
-          alignItems: 'flex-end',
-          gap:        '2px',
-          position:   'relative',
-          marginBottom: 8
+          display: 'flex', justifyContent: 'center',
+          alignItems: 'center', gap: 0,
+          position: 'relative'
         }}>
           {LETTERS.map((letter, i) => (
             <div key={i} style={{ position: 'relative', textAlign: 'center' }}>
 
-              {/* Flower above letter */}
+              {/* Flower */}
               {lettersDone > i && (
-                <svg
-                  width="32" height="32"
-                  viewBox="-16 -16 32 32"
-                  style={{
-                    display: 'block',
-                    margin: '0 auto 2px',
-                    animation: 'flowerBloom 0.5s ease-out both',
-                    animationDelay: `${(i * 0.16) + 0.1}s`
-                  }}>
-                  {Array.from({length:6},(_,pi)=>{
-                    const angle = (pi/6)*Math.PI*2
-                    return (
-                      <ellipse key={pi}
-                        cx={Math.cos(angle)*8}
-                        cy={Math.sin(angle)*8}
-                        rx="4.5" ry="2.5"
-                        fill={pi%2===0?'#4ADE80':'#A3E635'}
-                        opacity="0.9"
-                      />
-                    )
-                  })}
-                  <circle cx="0" cy="0" r="4" fill="#FDE047"/>
-                  <circle cx="0" cy="0" r="2" fill="#F59E0B"/>
-                </svg>
+                <div style={{
+                  position: 'absolute',
+                  top: -44, left: '50%',
+                  transform: 'translateX(-50%)',
+                  animation: 'flowerIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both'
+                }}>
+                  <svg width="28" height="28" viewBox="-14 -14 28 28">
+                    {Array.from({ length: 6 }, (_, pi) => {
+                      const a = (pi / 6) * Math.PI * 2
+                      return <ellipse key={pi}
+                        cx={Math.cos(a) * 7} cy={Math.sin(a) * 7}
+                        rx="4" ry="2.2"
+                        fill={pi % 2 === 0 ? '#4ADE80' : '#A3E635'} opacity="0.9" />
+                    })}
+                    <circle cx="0" cy="0" r="3.5" fill="#FDE047" />
+                    <circle cx="0" cy="0" r="1.8" fill="#F59E0B" />
+                  </svg>
+                </div>
               )}
 
               {/* Letter */}
               <span style={{
-                fontFamily:    "'Cabinet Grotesk', sans-serif",
-                fontSize:      'clamp(48px, 8vw, 96px)',
-                fontWeight:    900,
-                letterSpacing: '-1px',
-                display:       'inline-block',
-                color:         '#4ADE80',
-                textShadow:    lettersDone > i
-                  ? '0 0 20px rgba(74,222,128,0.8), 0 0 40px rgba(34,197,94,0.4)'
+                fontFamily: "'Cabinet Grotesk',sans-serif",
+                fontSize: 'clamp(56px,9vw,108px)',
+                fontWeight: 900,
+                display: 'inline-block',
+                color: lettersDone > i ? letterColors[i] : 'transparent',
+                textShadow: lettersDone > i
+                  ? `0 0 30px ${letterColors[i]}cc, 0 0 60px ${letterColors[i]}66, 0 0 90px ${letterColors[i]}33`
                   : 'none',
-                opacity:       lettersDone > i ? 1 : 0,
-                transform:     lettersDone > i
-                  ? 'translateY(0) scale(1)'
-                  : 'translateY(20px) scale(0.8)',
-                transition:    'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
-                WebkitTextFillColor: lettersDone > i ? undefined : 'transparent',
+                opacity: lettersDone > i ? 1 : 0,
+                transform: lettersDone > i
+                  ? 'translateY(0) scale(1) rotateX(0deg)'
+                  : 'translateY(40px) scale(0.5) rotateX(90deg)',
+                transition: `all 0.4s cubic-bezier(0.34,1.56,0.64,1) ${i * 0.04}s`,
+                letterSpacing: '-1px',
+                lineHeight: 1,
+                padding: '0 2px',
+                WebkitTextFillColor: lettersDone > i ? letterColors[i] : 'transparent'
               }}>
                 {letter}
               </span>
 
-              {/* Letter underline — vine segment */}
+              {/* Letter glow floor */}
               {lettersDone > i && (
                 <div style={{
-                  position:   'absolute',
-                  bottom:     -4,
-                  left:       '10%', right: '10%',
-                  height:     2,
-                  background: 'linear-gradient(90deg,transparent,#22C55E,transparent)',
+                  position: 'absolute',
+                  bottom: -8, left: '0%', right: '0%',
+                  height: 2,
+                  background: `linear-gradient(90deg,transparent,${letterColors[i]},transparent)`,
                   borderRadius: 1,
-                  animation:  'underlineGrow 0.4s ease-out both'
+                  animation: 'glowLine 0.4s ease both',
+                  boxShadow: `0 0 8px ${letterColors[i]}`
                 }} />
               )}
             </div>
@@ -360,154 +378,162 @@ export default function VineIntro({ onComplete }) {
 
         {/* Tagline */}
         <div style={{
+          marginTop: 20,
           overflow: 'hidden',
-          height:   showTagline ? 28 : 0,
-          transition:'height 0.5s ease',
-          marginTop: 12
+          height: showTagline ? 32 : 0,
+          transition: 'height 0.5s ease'
         }}>
           <p style={{
-            fontFamily:  "'Share Tech Mono', monospace",
-            fontSize:    'clamp(10px,1.2vw,13px)',
-            letterSpacing: 5,
-            color:       'rgba(134,239,172,0.65)',
-            margin:      0,
-            animation:   showTagline ? 'fadeSlideUp 0.6s ease forwards' : 'none'
+            fontFamily: "'Share Tech Mono',monospace",
+            fontSize: 'clamp(10px,1.3vw,14px)',
+            letterSpacing: 6,
+            color: 'rgba(134,239,172,0.7)',
+            margin: 0,
+            animation: showTagline ? 'slideUp 0.5s ease forwards' : 'none'
           }}>
-            {TAGLINE}
+            ECO INTELLIGENCE SYSTEM // v2.0
           </p>
         </div>
 
-        {/* CTA hint */}
+        {/* Tagline 2 */}
         {showTagline && (
           <p style={{
-            fontFamily:  "'Share Tech Mono'",
-            fontSize:    10, letterSpacing: 4,
-            color:       'rgba(34,197,94,0.3)',
-            margin:      '16px 0 0',
-            animation:   'blink 1.2s step-end infinite'
+            fontFamily: "'Share Tech Mono'",
+            fontSize: 10, letterSpacing: 4,
+            color: 'rgba(34,197,94,0.35)',
+            margin: '12px 0 0',
+            animation: 'blink 1.2s step-end infinite'
           }}>
             ▶ ENTERING ECOSYSTEM...
           </p>
         )}
       </div>
 
-      {/* ── CORNER DECORATIONS ──────────────────────────── */}
-      {[[0,0,'0 0 0 0'],[1,0,'0 0 0 0'],[0,1,'0 0 0 0'],[1,1,'0 0 0 0']].map((_,i)=>{
-        const left  = i%2===0 ? 20 : 'auto'
-        const right = i%2===1 ? 20 : 'auto'
-        const top   = i<2     ? 20 : 'auto'
-        const bot   = i>=2    ? 20 : 'auto'
-        const bTop  = i<2     ? '2px solid rgba(34,197,94,0.4)' : 'none'
-        const bBot  = i>=2    ? '2px solid rgba(34,197,94,0.4)' : 'none'
-        const bLeft = i%2===0 ? '2px solid rgba(34,197,94,0.4)' : 'none'
-        const bRight= i%2===1 ? '2px solid rgba(34,197,94,0.4)' : 'none'
-        return (
-          <div key={i} style={{
-            position: 'absolute',
-            left, right, top, bottom: bot,
-            width: 24, height: 24,
-            borderTop: bTop, borderBottom: bBot,
-            borderLeft: bLeft, borderRight: bRight,
-            zIndex: 2, opacity: 0.6
-          }} />
-        )
-      })}
-
-      {/* ── FLOATING PARTICLES ──────────────────────────── */}
-      {Array.from({length:18},(_,i)=>(
-        <div key={i} style={{
-          position:   'absolute',
-          left:       `${5+Math.random()*90}%`,
-          top:        `${10+Math.random()*80}%`,
-          width:      2+Math.random()*3,
-          height:     2+Math.random()*3,
-          borderRadius:'50%',
-          background: i%3===0?'#4ADE80':i%3===1?'#A3E635':'#FDE047',
-          opacity:    0.2+Math.random()*0.3,
-          animation:  `float ${3+Math.random()*4}s ${Math.random()*3}s ease-in-out infinite`,
-          pointerEvents:'none', zIndex:1
-        }}/>
+      {/* ── CORNER HUD ──────────────────────────────────── */}
+      {['tl', 'tr', 'bl', 'br'].map((pos, i) => (
+        <div key={pos} style={{
+          position: 'absolute', zIndex: 4,
+          top: pos.startsWith('t') ? 16 : 'auto',
+          bottom: pos.startsWith('b') ? 16 : 'auto',
+          left: pos.endsWith('l') ? 16 : 'auto',
+          right: pos.endsWith('r') ? 16 : 'auto',
+          width: 28, height: 28,
+          borderTop: pos.startsWith('t') ? '2px solid rgba(34,197,94,0.5)' : 'none',
+          borderBottom: pos.startsWith('b') ? '2px solid rgba(34,197,94,0.5)' : 'none',
+          borderLeft: pos.endsWith('l') ? '2px solid rgba(34,197,94,0.5)' : 'none',
+          borderRight: pos.endsWith('r') ? '2px solid rgba(34,197,94,0.5)' : 'none',
+          animation: `cornerFade 0.5s ease ${i * 0.1}s both`
+        }} />
       ))}
 
-      {/* ── PROGRESS BAR ────────────────────────────────── */}
+      {/* ── TOP STATUS ──────────────────────────────────── */}
       <div style={{
-        position:   'absolute', bottom: 0,
-        left: 0, right: 0, height: 3,
-        background: 'rgba(34,197,94,0.08)', zIndex: 3
+        position: 'absolute', top: 24, left: 32,
+        zIndex: 4, display: 'flex',
+        alignItems: 'center', gap: 8
       }}>
         <div style={{
-          height:     '100%',
-          background: 'linear-gradient(90deg,#16A34A,#22C55E,#4ADE80)',
-          boxShadow:  '0 0 10px rgba(74,222,128,0.6)',
-          transition: 'width 0.4s ease',
+          width: 6, height: 6, borderRadius: '50%',
+          background: '#4ADE80',
+          boxShadow: '0 0 8px #4ADE80',
+          animation: 'pulse 1.5s ease infinite'
+        }} />
+        <p style={{
+          fontFamily: "'Share Tech Mono'",
+          fontSize: 9, letterSpacing: 4,
+          color: 'rgba(74,222,128,0.5)', margin: 0
+        }}>
+          {phase === 'vine' && '// ECOSYSTEM INITIALIZING...'}
+          {phase === 'letters' && '// BIOME NETWORK ACTIVE...'}
+          {phase === 'tagline' && '// ALL SYSTEMS NOMINAL'}
+        </p>
+      </div>
+
+      {/* ── PROGRESS ────────────────────────────────────── */}
+      <div style={{
+        position: 'absolute', bottom: 0,
+        left: 0, right: 0, height: 3,
+        background: 'rgba(34,197,94,0.08)', zIndex: 4
+      }}>
+        <div style={{
+          height: '100%',
+          background: 'linear-gradient(90deg,#166534,#22C55E,#4ADE80)',
+          boxShadow: '0 0 12px rgba(74,222,128,0.7)',
+          transition: 'width 0.5s ease',
           width:
-            phase==='vine'    ? `${Math.min(65, (Date.now()%2200)/2200*65)}%` :
-            phase==='letters' ? `${65+lettersDone/LETTERS.length*25}%` :
-            phase==='tagline' ? '100%' : '100%'
-        }}/>
+            phase === 'vine' ? '40%' :
+              phase === 'letters' ? `${40 + lettersDone / LETTERS.length * 45}%` :
+                '100%'
+        }} />
       </div>
 
       {/* ── SKIP ────────────────────────────────────────── */}
       {showSkip && (
         <button onClick={finish} style={{
-          position:   'absolute', top: 20, right: 20,
-          zIndex:     4,
+          position: 'absolute', top: 20, right: 20,
+          zIndex: 5,
           background: 'rgba(34,197,94,0.08)',
-          border:     '1px solid rgba(34,197,94,0.25)',
+          border: '1px solid rgba(34,197,94,0.25)',
           borderRadius: 8,
-          color:      'rgba(74,222,128,0.55)',
-          fontFamily: "'Share Tech Mono',monospace",
-          fontSize:   10, letterSpacing: 3,
-          padding:    '7px 16px', cursor: 'pointer',
+          color: 'rgba(74,222,128,0.6)',
+          fontFamily: "'Share Tech Mono'",
+          fontSize: 10, letterSpacing: 3,
+          padding: '7px 18px', cursor: 'pointer',
           transition: 'all 0.2s'
         }}
-          onMouseEnter={e=>{
-            e.currentTarget.style.background='rgba(34,197,94,0.15)'
-            e.currentTarget.style.color='#4ADE80'
-          }}
-          onMouseLeave={e=>{
-            e.currentTarget.style.background='rgba(34,197,94,0.08)'
-            e.currentTarget.style.color='rgba(74,222,128,0.55)'
-          }}>
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(34,197,94,0.18)'; e.currentTarget.style.color = '#4ADE80' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(34,197,94,0.08)'; e.currentTarget.style.color = 'rgba(74,222,128,0.6)' }}>
           SKIP ►
         </button>
       )}
 
-      {/* ── ALL CSS ANIMATIONS ──────────────────────────── */}
       <style>{`
-        @keyframes vineDraw {
-          from { stroke-dashoffset: 3000; }
-          to   { stroke-dashoffset: 0; }
+        @keyframes vd {
+          from { stroke-dashoffset:3200 }
+          to   { stroke-dashoffset:0 }
         }
-        @keyframes branchDraw {
-          from { stroke-dashoffset: 30; }
-          to   { stroke-dashoffset: 0; }
+        @keyframes lp {
+          0%  { transform:scale(0) rotate(-20deg); opacity:0 }
+          60% { transform:scale(1.4) rotate(8deg); opacity:1 }
+          100%{ transform:scale(1) rotate(0deg);  opacity:0.95 }
         }
-        @keyframes leafPop {
-          0%   { transform: scale(0) rotate(0deg); opacity:0; }
-          60%  { transform: scale(1.3) rotate(5deg); opacity:1; }
-          100% { transform: scale(1) rotate(0deg); opacity:0.9; }
+        @keyframes bd {
+          from { stroke-dashoffset:60 }
+          to   { stroke-dashoffset:0 }
         }
-        @keyframes flowerBloom {
-          0%   { transform: scale(0) rotate(-30deg); opacity:0; }
-          60%  { transform: scale(1.2) rotate(5deg); opacity:1; }
-          100% { transform: scale(1) rotate(0deg); opacity:1; }
+        @keyframes flowerIn {
+          0%  { transform:translateX(-50%) scale(0) rotate(-40deg); opacity:0 }
+          60% { transform:translateX(-50%) scale(1.3) rotate(5deg); opacity:1 }
+          100%{ transform:translateX(-50%) scale(1) rotate(0deg);  opacity:1 }
         }
-        @keyframes underlineGrow {
-          from { transform: scaleX(0); }
-          to   { transform: scaleX(1); }
+        @keyframes glowLine {
+          from { transform:scaleX(0); opacity:0 }
+          to   { transform:scaleX(1); opacity:1 }
         }
-        @keyframes fadeSlideUp {
-          from { opacity:0; transform:translateY(10px); }
-          to   { opacity:1; transform:translateY(0); }
+        @keyframes iconDrop {
+          0%  { transform:translateY(-30px) scale(0); opacity:0 }
+          70% { transform:translateY(4px) scale(1.2);  opacity:1 }
+          100%{ transform:translateY(0) scale(1);      opacity:1 }
         }
-        @keyframes float {
-          0%,100% { transform: translateY(0) rotate(0deg); }
-          50%     { transform: translateY(-14px) rotate(8deg); }
+        @keyframes slideUp {
+          from { opacity:0; transform:translateY(12px) }
+          to   { opacity:1; transform:translateY(0) }
+        }
+        @keyframes cornerFade {
+          from { opacity:0; transform:scale(0.5) }
+          to   { opacity:1; transform:scale(1) }
+        }
+        @keyframes glowPulse {
+          0%,100%{ opacity:0.8 }
+          50%    { opacity:1.4 }
+        }
+        @keyframes pulse {
+          0%,100%{ opacity:1; transform:scale(1) }
+          50%    { opacity:0.4; transform:scale(1.4) }
         }
         @keyframes blink {
-          0%,100% { opacity:1; }
-          50%     { opacity:0; }
+          0%,100%{ opacity:1 }
+          50%    { opacity:0 }
         }
       `}</style>
     </div>
