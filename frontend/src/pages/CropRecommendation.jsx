@@ -192,6 +192,18 @@ export default function CropRecommendation() {
   const cropKey  = result?.recommended_crop?.toLowerCase().replace(/[\s_]/g,'')
   const cropInfo = CROP_INFO[cropKey] || { emoji:'🌱', profit:'N/A', season:'N/A', water:'N/A', days:'N/A' }
 
+  const conf      = parseFloat(result?.confidence || 0)
+  const confColor =
+    conf >= 75 ? '#22C55E' :
+    conf >= 55 ? '#FDE047' :
+    conf >= 35 ? '#F97316' : '#EF4444'
+
+  const confLabel =
+    conf >= 75 ? 'HIGH CONFIDENCE'   :
+    conf >= 55 ? 'GOOD CONFIDENCE'   :
+    conf >= 35 ? 'MODERATE — verify with local agronomist' :
+                 'LOW — input data may be approximate'
+
   return (
     <div style={{ padding:24, background:'var(--bg)', minHeight:'100vh' }}>
 
@@ -722,31 +734,59 @@ export default function CropRecommendation() {
                         </div>
                       </div>
                       <div style={{ textAlign:'right' }}>
-                        <p style={{ fontFamily:"'Courier New'", fontSize:8,
-                                     color:'#666680', letterSpacing:2,
-                                     margin:'0 0 4px' }}>
-                          {t('crop_nge.conf')}
-                        </p>
-                        <p style={{ fontFamily:"'Exo 2'", fontSize:30,
-                                     fontWeight:900, color:'#00FF41',
-                                     margin:0,
-                                     textShadow:'0 0 15px #00FF4188' }}>
-                          {result.confidence}
-                        </p>
+                        <div style={{
+                          display:        'flex',
+                          justifyContent: 'flex-end',
+                          alignItems:     'baseline',
+                          gap:            8,
+                          marginBottom:   4
+                        }}>
+                          <span style={{
+                            fontFamily: "'Share Tech Mono', monospace",
+                            fontSize:   9, letterSpacing: 2,
+                            color:      '#666680'
+                          }}>
+                            {t('crop_nge.conf')}
+                          </span>
+                          <span style={{
+                            fontFamily: "'Exo 2', sans-serif",
+                            fontSize:   28, fontWeight: 900,
+                            color:      confColor,
+                            textShadow: `0 0 15px ${confColor}88`
+                          }}>
+                            {conf}%
+                          </span>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Confidence bar */}
-                    <div style={{ height:6, background:'var(--primary-glow)',
-                                   borderRadius:1, overflow:'hidden',
-                                   marginBottom:16 }}>
-                      <motion.div
-                        initial={{ width:0 }}
-                        animate={{ width: result.confidence }}
-                        transition={{ duration:1.2, ease:'easeOut' }}
-                        style={{ height:'100%', borderRadius:1,
-                                  background:'linear-gradient(90deg,var(--primary-dim),#00FF41)',
-                                  boxShadow:'0 0 8px #00FF4166' }} />
+                    {/* Confidence bar & Label */}
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{
+                        height:       8,
+                        background:   'var(--primary-glow)',
+                        borderRadius: 4, overflow: 'hidden',
+                        marginBottom: 6
+                      }}>
+                        <motion.div
+                          initial={{ width:0 }}
+                          animate={{ width: `${conf}%` }}
+                          transition={{ duration:1.2, ease:'easeOut' }}
+                          style={{
+                            height:     '100%',
+                            borderRadius: 4,
+                            background: `linear-gradient(90deg, ${confColor}44, ${confColor})`,
+                            boxShadow:  `0 0 8px ${confColor}66`
+                          }} />
+                      </div>
+                      <p style={{
+                        fontFamily: "'Share Tech Mono', monospace",
+                        fontSize:   9, letterSpacing: 2,
+                        color:      confColor,
+                        margin:     0, opacity: 0.8
+                      }}>
+                        ● {confLabel}
+                      </p>
                     </div>
 
                     {/* Crop stats */}

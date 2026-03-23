@@ -1,37 +1,83 @@
-# backend/ml/augment_dataset.py
-
 import pandas as pd
 import numpy as np
+import os
 
-df = pd.read_csv("Crop_recommendation.csv")
-print(f"Original: {len(df)} rows")
+# Load original
+csv_path = os.path.join(os.path.dirname(__file__), "Crop_recommendation.csv")
+df       = pd.read_csv(csv_path)
 
-augmented_rows = []
+# Normalize column names
+df.columns = [c.strip().lower() for c in df.columns]
 
-for _, row in df.iterrows():
-    # Keep original row
-    augmented_rows.append(row.to_dict())
+# Find label column
+label_col = None
+for col in ['label', 'crop', 'class', 'target']:
+    if col in df.columns:
+        label_col = col
+        break
+if not label_col:
+    label_col = df.columns[-1]
 
-    # Generate 9 realistic variations per row
-    for _ in range(9):
-        new_row = {
-            'N':           max(0,   min(140, row['N']           + np.random.normal(0, 5))),
-            'P':           max(0,   min(145, row['P']           + np.random.normal(0, 3))),
-            'K':           max(0,   min(205, row['K']           + np.random.normal(0, 4))),
-            'temperature': max(5,   min(48,  row['temperature'] + np.random.normal(0, 1.5))),
-            'humidity':    max(10,  min(99,  row['humidity']    + np.random.normal(0, 3))),
-            'ph':          max(3.5, min(9.5, row['ph']          + np.random.normal(0, 0.2))),
-            'rainfall':    max(10,  min(400, row['rainfall']    + np.random.normal(0, 15))),
-            'label':       row['label']
-        }
-        augmented_rows.append(new_row)
+print(f"Original dataset: {len(df)} rows")
+print(f"Label column: '{label_col}'")
+print(f"Crops: {df[label_col].unique().tolist()}")
 
-augmented_df = pd.DataFrame(augmented_rows)
-augmented_df = augmented_df.sample(frac=1, random_state=42).reset_index(drop=True)
+# Rename to standard names
+df = df.rename(columns={
+    'n':           'N',
+    'p':           'P',
+    'k':           'K',
+    'temperature': 'temperature',
+    'humidity':    'humidity',
+    'ph':          'ph',
+    'rainfall':    'rainfall',
+    label_col:     'label'
+})
 
-print(f"Augmented: {len(augmented_df)} rows")
-print(f"Per crop: {len(augmented_df) // augmented_df['label'].nunique()} samples each")
-print(augmented_df['label'].value_counts())
+feature_cols = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
 
-augmented_df.to_csv("augmented_crop_data.csv", index=False)
-print("Saved as augmented_crop_data.csv")
+# Realistic bounds per feature
+BOUNDS = {
+    'N':           (0, 140),
+    'P':           (5, 145),
+    'K':           (5, 205),
+    'temperature': (8,  43),
+    'humidity':    (14, 99),
+    'ph':          (3.5, 9.5),
+    'rainfall':    (20, 400),
+}
+
+# Noise per crop type — tighter for specific crops
+NOISE = {
+    'N':           4,
+    'P':           3,
+    'K':           3,
+    'temperature': 1.2,
+    'humidity':    2.5,
+    'ph':          0.15,
+    'rainfall':    12,
+}
+
+augmented = [df.copy()]   # keep originals
+
+# 19 variations per row = 20x dataset = ~44,000 rows
+VARIATIONS = 19
+
+for _ in range(VARIATIONS):
+    new_df = df.copy()
+    for col in feature_cols:
+        noise = np.random.normal(0, NOISE[col], len(df))
+        new_df[col] = (df[col] + noise).clip(
+            BOUNDS[col][0], BOUNDS[col][1]
+        )
+    augmented.append(new_df)
+
+final = pd.concat(augmented, ignore_index=True)
+final = final.sample(frac=1, random_state=42).reset_index(drop=True)
+
+print(f"\nAugmented dataset: {len(final)} rows")
+print(f"Per crop: ~{len(final) // final['label'].nunique()} samples")
+
+out_path = os.path.join(os.path.dirname(__file__), "augmented_crop.csv")
+final.to_csv(out_path, index=False)
+print(f"Saved to: {out_path}")

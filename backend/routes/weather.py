@@ -114,19 +114,23 @@ async def get_weather(city: str):
             "last_updated": datetime.now().strftime("%d %b %Y, %I:%M %p")
         }
 
-    async with httpx.AsyncClient(timeout=10.0) as client:
-        current_res = await client.get(
-            "https://api.openweathermap.org/data/2.5/weather",
-            params={"q": city, "appid": API_KEY, "units": "metric"}
-        )
-        forecast_res = await client.get(
-            "https://api.openweathermap.org/data/2.5/forecast",
-            params={"q": city, "appid": API_KEY, "units": "metric"}
-        )
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            current_res = await client.get(
+                "https://api.openweathermap.org/data/2.5/weather",
+                params={"q": city, "appid": API_KEY, "units": "metric"}
+            )
+            forecast_res = await client.get(
+                "https://api.openweathermap.org/data/2.5/forecast",
+                params={"q": city, "appid": API_KEY, "units": "metric"}
+            )
 
-    if current_res.status_code != 200 or forecast_res.status_code != 200:
+        if current_res.status_code != 200 or forecast_res.status_code != 200:
+            from fastapi import HTTPException
+            raise HTTPException(status_code=400, detail="Weather API request failed. Ensure your OPENWEATHER_API_KEY is correct.")
+    except httpx.RequestError:
         from fastapi import HTTPException
-        raise HTTPException(status_code=400, detail="Weather API request failed. Ensure your OPENWEATHER_API_KEY is correct.")
+        raise HTTPException(status_code=503, detail="Weather API connection timeout or failure.")
 
     current = current_res.json()
     forecast = forecast_res.json()
@@ -213,12 +217,16 @@ async def get_weather_by_state(state_name: str):
             "source": "mock"
         }
 
-    async with httpx.AsyncClient(timeout=8.0) as client:
-        res = await client.get(
-            "https://api.openweathermap.org/data/2.5/weather",
-            params={"q":city,"appid":API_KEY,"units":"metric"}
-        )
-    data = res.json()
+    try:
+        async with httpx.AsyncClient(timeout=8.0) as client:
+            res = await client.get(
+                "https://api.openweathermap.org/data/2.5/weather",
+                params={"q":city,"appid":API_KEY,"units":"metric"}
+            )
+        data = res.json()
+    except httpx.RequestError:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=503, detail="Weather API connection failure.")
     return {
         "city":        city,
         "state":       state_name,

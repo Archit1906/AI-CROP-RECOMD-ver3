@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import VineBorder from '../components/VineBorder'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTheme } from '../contexts/ThemeContext'
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis,
   CartesianGrid, Tooltip, ResponsiveContainer,
