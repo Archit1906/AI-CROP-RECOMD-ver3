@@ -3,11 +3,13 @@ import VineBorder from '../components/VineBorder'
 import { useState, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import IndiaMap from '../components/IndiaMap'
-import { SOIL_DATA, STATE_CAPITALS } from '../data/soilData'
 import {
   STATE_DISTRICTS,
-  DISTRICT_SOIL_MODIFIERS,
-  DISTRICT_ZONES
+  getSoilForDistrict,
+  getWeatherForDistrict,
+  getAllStates,
+  getDistrictsForState,
+  getDistrictZone
 } from '../data/districtData'
 import api from '../api/axios'
 
@@ -61,7 +63,7 @@ export default function CropRecommendation() {
 
   // Filtered district list
   const districts = useMemo(() => {
-    const list = STATE_DISTRICTS[selectedState] || []
+    const list = getDistrictsForState(selectedState)
     if (!distSearch.trim()) return list
     return list.filter(d =>
       d.toLowerCase().includes(distSearch.toLowerCase())
@@ -79,21 +81,7 @@ export default function CropRecommendation() {
     setStep('district')
   }, [])
 
-  // Get district-adjusted soil data
-  const getDistrictSoil = useCallback((stateName, districtName) => {
-    const baseSoil = SOIL_DATA[stateName] || { N:80, P:40, K:50, ph:7.0, region:'central' }
-    const zone     = DISTRICT_ZONES[districtName] || 'default'
-    const mod      = DISTRICT_SOIL_MODIFIERS[zone]   || DISTRICT_SOIL_MODIFIERS.default
-
-    return {
-      ...baseSoil,
-      N:  Math.max(20, Math.min(140, baseSoil.N  + mod.N)),
-      P:  Math.max(10, Math.min(145, baseSoil.P  + mod.P)),
-      K:  Math.max(10, Math.min(205, baseSoil.K  + mod.K)),
-      ph: Math.max(4,  Math.min(9,   baseSoil.ph + mod.ph)),
-      zone
-    }
-  }, [])
+  // Helper functions now imported from districtData.js
 
   // Step 2 — district selected → fetch + predict
   const handleDistrictSelect = useCallback(async (districtName) => {
@@ -123,32 +111,15 @@ export default function CropRecommendation() {
         }
       } catch {
         // Region-based mock weather
-        const baseSoil = SOIL_DATA[selectedState] || {}
-        const zone     = DISTRICT_ZONES[districtName] || baseSoil.region || 'central'
-        const regionWeather = {
-          arid:         { temperature:36, humidity:22, rainfall:28  },
-          western:      { temperature:31, humidity:52, rainfall:68  },
-          gangetic:     { temperature:27, humidity:72, rainfall:115 },
-          southern:     { temperature:29, humidity:74, rainfall:135 },
-          coastal:      { temperature:28, humidity:82, rainfall:195 },
-          eastern:      { temperature:27, humidity:78, rainfall:165 },
-          northeastern: { temperature:22, humidity:88, rainfall:235 },
-          himalayan:    { temperature:12, humidity:62, rainfall:145 },
-          central:      { temperature:30, humidity:56, rainfall:88  },
-          default:      { temperature:28, humidity:65, rainfall:100 },
-        }
-        weatherData = {
-          ...(regionWeather[zone] || regionWeather.central),
-          description: 'Partly Cloudy',
-          city: districtName
-        }
+        const weatherFallback = getWeatherForDistrict(selectedState, districtName)
+        weatherData = { ...weatherFallback, description: 'Partly Cloudy', city: districtName }
       }
       setWeather(weatherData)
       await new Promise(r => setTimeout(r, 400))
 
       // Phase 3 — district-adjusted soil
       setLoadPhase(2)
-      const soilData = getDistrictSoil(selectedState, districtName)
+      const soilData = getSoilForDistrict(selectedState, districtName)
       setSoil(soilData)
       await new Promise(r => setTimeout(r, 400))
 
@@ -187,7 +158,7 @@ export default function CropRecommendation() {
       setError(`Analysis failed for ${districtName}. Check backend.`)
       setStep('district')
     }
-  }, [selectedState, getDistrictSoil])
+  }, [selectedState])
 
   const cropKey  = result?.recommended_crop?.toLowerCase().replace(/[\s_]/g,'')
   const cropInfo = CROP_INFO[cropKey] || { emoji:'🌱', profit:'N/A', season:'N/A', water:'N/A', days:'N/A' }
@@ -431,7 +402,7 @@ export default function CropRecommendation() {
                                   overflowY:'auto',
                                   paddingRight:4 }}>
                       {districts.map((district, i) => {
-                        const zone     = DISTRICT_ZONES[district] || 'default'
+                        const zone     = getDistrictZone(district)
                         const zoneColor = {
                           coastal:'var(--tertiary)', hill:'#10B981',
                           arid:'#A3E635', plain:'#00FF41',
