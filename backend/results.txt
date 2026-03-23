@@ -1,4 +1,0 @@
-Class name match exactly? False
-Rescaled -> Tomato___Septoria_leaf_spot (41.6%)
-Raw -> Pepper,_bell___Bacterial_spot (86.0%)
-MobileNet -> Pepper,_bell___Bacterial_spot (92.6%)

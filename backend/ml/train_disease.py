@@ -13,7 +13,10 @@ DATASET_PATH = "plantvillage dataset/color/"
 IMG_SIZE     = (224, 224)
 BATCH_SIZE   = 32
 EPOCHS       = 10
-NUM_CLASSES  = 38
+# Dynamically determine the number of classes based on subdirectories
+class_dirs = [d for d in os.listdir(DATASET_PATH) if os.path.isdir(os.path.join(DATASET_PATH, d))] if os.path.exists(DATASET_PATH) else []
+NUM_CLASSES  = len(class_dirs) if class_dirs else 38
+print(f"Detected {NUM_CLASSES} disease classes for training.")
 
 # Data generators
 train_gen = ImageDataGenerator(
@@ -71,7 +74,11 @@ if os.path.exists(DATASET_PATH):
     checkpoint_path = "../models/plant_disease_model.h5"
     if os.path.exists(checkpoint_path):
         print(f"Loading existing weights from {checkpoint_path}...")
-        model.load_weights(checkpoint_path)
+        try:
+            model.load_weights(checkpoint_path, by_name=True, skip_mismatch=True)
+            print("Successfully loaded matching weights! Mismatched layers (like the new output layer) will be re-initialized.")
+        except Exception as e:
+            print(f"Could not load all weights due to shape changes: {e}\nStarting fresh.")
 
     os.makedirs("../models", exist_ok=True)
     
