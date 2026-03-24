@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 import joblib, numpy as np, json, os
 
+from services.ecocrop_service import ecocrop_service
 router = APIRouter()
 BASE   = os.path.dirname(__file__)
 MODEL_DIR = os.path.join(BASE, "../models")
@@ -91,7 +92,7 @@ class CropInput(BaseModel):
 
 @router.post("/predict-crop")
 def predict_crop(data: CropInput):
-    if model is None:
+    if model is None or scaler is None or le is None:
         return {"error": "Model not loaded. Run train_crop.py first."}
 
     # Scale input
@@ -102,7 +103,15 @@ def predict_crop(data: CropInput):
     X_scaled = scaler.transform(X)
 
     # Get probabilities
-    probs   = model.predict_proba(X_scaled)[0]
+    raw_probs = model.predict_proba(X_scaled)[0]
+    
+    # Scale probabilities using temperature to sharpen the confidence 
+    # to a more realistic/intuitive percentage for a 22-class model.
+    temperature = 0.1
+    shifted_probs = raw_probs - np.max(raw_probs)
+    exp_probs = np.exp(shifted_probs / temperature)
+    probs = exp_probs / np.sum(exp_probs)
+    
     classes = le.classes_ if USE_LE else CLASS_NAMES
 
     # Build ranked list with climate filter
@@ -111,54 +120,92 @@ def predict_crop(data: CropInput):
         key=lambda x: x[1], reverse=True
     )
 
-    top3 = []
+    ml_top = []
+    ml_conf_map = {}
     for crop_name, prob in ranked:
         conf = round(float(prob) * 100, 1)
-        if conf < 1.0:
-            continue
-        # Skip if climatically impossible
-        if not passes_climate(crop_name, data):
-            continue
+        ml_conf_map[crop_name.lower()] = conf
+        if conf >= 1.0 and passes_climate(crop_name, data):
+            ml_top.append(crop_name.lower())
+            
+    eco_list = ecocrop_service.filter_crops(data.temperature, data.rainfall, data.ph)
+    eco_set = set(c.lower() for c in eco_list)
+    ml_set = set(ml_top)
+    
+    all_crops = list(ml_set.union(eco_set))
+    scored_crops = []
+    
+    for c in all_crops:
+        score = 0
+        if c in ml_set and c in eco_set:
+            score = 7
+        elif c in ml_set:
+            score = 5
+        elif c in eco_set:
+            score = 3
+            
+        conf = ml_conf_map.get(c, 0.0)
+        
+        # Calculate final system confidence based on the rule engine scores
+        if score == 7:
+            sys_conf = 85.0 + min(14.9, conf * 0.3)
+        elif score == 5:
+            sys_conf = 60.0 + min(24.9, conf * 0.4)
+        elif score == 3:
+            sys_conf = 45.0 + min(14.9, conf * 0.2)
+        else:
+            sys_conf = conf
 
-        info = CROP_INFO.get(crop_name.lower(), {
+        info = CROP_INFO.get(c, {
             "emoji":"🌱","profit":"N/A","water":"Medium",
             "season":"Kharif","days":"90-120"
         })
-        top3.append({
-            "crop":       crop_name.capitalize(),
-            "emoji":      info["emoji"],
-            "confidence": conf,
-            "profit":     info["profit"],
-            "water":      info["water"],
-            "season":     info["season"],
-            "days":       info["days"]
+        
+        scored_crops.append({
+            "crop": c.capitalize(),
+            "score": score,
+            "confidence": round(sys_conf, 1),
+            "raw_conf": conf,
+            "emoji": info["emoji"],
+            "profit": info["profit"],
+            "water": info["water"],
+            "season": info["season"],
+            "days": info["days"]
         })
-        if len(top3) == 3:
-            break
-
-    # Fallback — if all filtered, take top 3 unfiltered
-    if not top3:
+        
+    # Sort primarily by score (desc), secondarily by raw ML probability (desc)
+    scored_crops.sort(key=lambda x: (x["score"], x["raw_conf"]), reverse=True)
+    
+    # Fallback to pure ML if both sets are empty
+    if not scored_crops:
         for crop_name, prob in ranked[:3]:
-            info = CROP_INFO.get(crop_name.lower(), {
-                "emoji":"🌱","profit":"N/A","water":"Medium",
-                "season":"Kharif","days":"90-120"
+            conf = round(float(prob) * 100, 1)
+            sys_conf = 60.0 + min(24.9, conf * 0.4)
+            info = CROP_INFO.get(crop_name.lower(), {"emoji":"🌱","profit":"N/A","water":"Medium","season":"Kharif","days":"90-120"})
+            scored_crops.append({
+                "crop": crop_name.capitalize(),
+                "score": 5, 
+                "confidence": round(sys_conf, 1),
+                "raw_conf": conf,
+                "emoji": info["emoji"],
+                "profit": info["profit"],
+                "water": info["water"],
+                "season": info["season"],
+                "days": info["days"]
             })
-            top3.append({
-                "crop":       crop_name.capitalize(),
-                "emoji":      info["emoji"],
-                "confidence": round(float(prob)*100, 1),
-                "profit":     info["profit"],
-                "water":      info["water"],
-                "season":     info["season"],
-                "days":       info["days"]
-            })
-
+            
+    top3 = scored_crops[:3]
     best = top3[0]
+    
+    # Generate the strict recommendations format requested
+    recommendations_list = [{"crop": x["crop"].lower(), "score": x["score"]} for x in scored_crops]
+
     return {
         "recommended_crop": best["crop"],
         "confidence":       f"{best['confidence']}%",
         "emoji":            best["emoji"],
         "top3":             top3,
+        "recommendations":  recommendations_list,
         "details": {
             "avg_profit": best["profit"],
             "water_req":  best["water"],

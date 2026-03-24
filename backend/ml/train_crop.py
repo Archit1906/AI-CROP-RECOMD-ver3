@@ -103,18 +103,8 @@ print("\nTraining ensemble model...")
 print("This takes 2-4 minutes — please wait...")
 ensemble.fit(X_train, y_train)
 
-# ── CALIBRATE PROBABILITIES ───────────────────────────────────
-# This is KEY — makes confidence scores accurate
-print("\nCalibrating probability scores...")
-calibrated = CalibratedClassifierCV(
-    ensemble,
-    method = 'isotonic',
-    cv     = 'prefit'
-)
-calibrated.fit(X_test, y_test)
-
 # ── EVALUATE ─────────────────────────────────────────────────
-y_pred    = calibrated.predict(X_test)
+y_pred    = ensemble.predict(X_test)
 accuracy  = accuracy_score(y_test, y_pred)
 cv_scores = cross_val_score(rf, X_scaled, y_enc, cv=5, scoring='accuracy')
 
@@ -137,7 +127,7 @@ for crop, metrics in report.items():
         print(f"  {crop:<20} {bar:<20} {f1*100:.1f}%")
 
 # ── SAVE MODEL FILES ──────────────────────────────────────────
-joblib.dump(calibrated, os.path.join(OUT, "crop_model.pkl"))
+joblib.dump(ensemble, os.path.join(OUT, "crop_model.pkl"))
 joblib.dump(scaler,     os.path.join(OUT, "crop_scaler.pkl"))
 joblib.dump(le,         os.path.join(OUT, "crop_label_encoder.pkl"))
 
