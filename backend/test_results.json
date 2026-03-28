@@ -1,0 +1,21 @@
+{
+    "brown_response": {
+        "disease": "Tomato___Late_blight",
+        "confidence": 21.6,
+        "top3": [
+            {
+                "disease": "Tomato___Late_blight",
+                "confidence": 21.6
+            },
+            {
+                "disease": "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)",
+                "confidence": 8.5
+            },
+            {
+                "disease": "Soybean___healthy",
+                "confidence": 6.2
+            }
+        ],
+        "model_used": "real"
+    }
+}

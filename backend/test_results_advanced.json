@@ -1,0 +1,40 @@
+{
+    "partial_response": {
+        "disease": "Unknown",
+        "confidence": 22.5,
+        "top3": [
+            {
+                "disease": "Unknown",
+                "confidence": 22.5
+            },
+            {
+                "disease": "Unknown",
+                "confidence": 15.8
+            },
+            {
+                "disease": "Tomato___healthy",
+                "confidence": 10.9
+            }
+        ],
+        "model_used": "real"
+    },
+    "green_response": {
+        "disease": "Unknown",
+        "confidence": 42.4,
+        "top3": [
+            {
+                "disease": "Unknown",
+                "confidence": 42.4
+            },
+            {
+                "disease": "Unknown",
+                "confidence": 11.0
+            },
+            {
+                "disease": "Unknown",
+                "confidence": 6.1
+            }
+        ],
+        "model_used": "real"
+    }
+}

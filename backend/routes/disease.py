@@ -143,10 +143,45 @@ async def detect_disease(file: UploadFile = File(...)):
             for i in top3_indices
         ]
 
-        # KEY FIX — if top result is "healthy" but a disease
-        # is close behind (within 15%), prefer the disease
-        # Real-world rule: when in doubt, warn the farmer
+        # KEY FIXES — heuristics to catch false "healthy" predictions
         best = top3[0]
+
+        # 1. Advanced Color Heuristic: Diseased Pixel Ratio
+        # A leaf with significant brown/yellow/damage should not be classified as healthy.
+        img_array = img_batch[0]
+        
+        # Identify plant pixels (filter out dark background)
+        # Using a threshold of 0.1 on the green channel to find the leaf
+        plant_mask = img_array[:,:,1] > 0.15
+        
+        if np.any(plant_mask):
+            plant_pixels = img_array[plant_mask]
+            
+            # A pixel is considered diseased (brown/yellow/dead) if Red is prominent compared to Green.
+            # R > G - 0.05 captures yellow and brown while ignoring healthy green (where G is much higher).
+            diseased_pixels = np.sum(plant_pixels[:,0] > plant_pixels[:,1] - 0.05)
+            
+            total_plant_pixels = len(plant_pixels)
+            diseased_ratio = diseased_pixels / total_plant_pixels
+        else:
+            diseased_ratio = 0.0
+        
+        if "healthy" in best["disease"].lower() and diseased_ratio > 0.10:
+            # If more than 10% of the plant area is brown/yellow/diseased, it's not healthy!
+            fallback = None
+            for i, p in enumerate(top3):
+                if "healthy" not in p["disease"].lower() and p["disease"] != "Unknown":
+                    top3[0], top3[i] = top3[i], top3[0]
+                    fallback = top3[0]
+                    break
+            
+            if fallback is None:
+               top3[0] = {"disease": "Unknown Disease (Severe symptoms detected)", "confidence": best["confidence"]}
+               
+            best = top3[0]
+
+        # 2. Confidence Gap Heuristic: if disease is close behind (within 15%), prefer disease
+        # Real-world rule: when in doubt, warn the farmer
         if "healthy" in best["disease"].lower() and len(top3) > 1:
             second = top3[1]
             gap = best["confidence"] - second["confidence"]
